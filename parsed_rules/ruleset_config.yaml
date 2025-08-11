@@ -1,0 +1,8 @@
+load_rules:
+  - rules_misc.yaml
+  - rules_protocol.yaml
+  - rules_lfi.yaml
+  - rules_rce.yaml
+  - rules_rfi.yaml
+  - rules_xss.yaml
+  - rules_sqli.yaml
