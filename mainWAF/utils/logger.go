@@ -1,9 +1,11 @@
 package utils
 
 import (
+	"fmt"
 	"io"
 	"log"
 	"os"
+	"time"
 )
 
 var WAFLogger *log.Logger
@@ -19,6 +21,14 @@ func InitWAFLogger() {
 	// MultiWriter → writes to both file and console
 	multiWriter := io.MultiWriter(file, os.Stdout)
 
-	// Create logger
-	WAFLogger = log.New(multiWriter, "WAF: ", log.Ldate|log.Ltime|log.Lshortfile)
+	// Create logger (no waf.go:lineNumber clutter)
+	WAFLogger = log.New(multiWriter, "", 0)
+}
+
+// LogEvent formats and prints a clean WAF log entry
+func LogEvent(eventType, clientIP, method, uri, msg string) {
+	timestamp := time.Now().Format("2006-01-02 15:04:05")
+	logLine := fmt.Sprintf("[%s] [%s] ClientIP=%s Method=%s URI=%s Details=%s",
+		timestamp, eventType, clientIP, method, uri, msg)
+	WAFLogger.Println(logLine)
 }
