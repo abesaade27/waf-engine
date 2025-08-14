@@ -170,19 +170,30 @@ func saveYAML(path string, data interface{}) {
 }
 
 // saveYAMLWithSpacing writes each rule with a blank line between entries
+// func saveYAMLWithSpacing(path string, rules []Rule) {
+// 	file, _ := os.Create(path)
+// 	defer file.Close()
+
+// 	for i, rule := range rules {
+// 		enc := yaml.NewEncoder(file)
+// 		enc.SetIndent(2)
+// 		enc.Encode(rule)
+// 		enc.Close()
+
+// // Add a blank line after each rule except the last one
+// if i < len(rules)-1 {
+// 	file.WriteString("\n")
+// }
+// 	}
+//}
+
 func saveYAMLWithSpacing(path string, rules []Rule) {
 	file, _ := os.Create(path)
 	defer file.Close()
 
-	for i, rule := range rules {
-		enc := yaml.NewEncoder(file)
-		enc.SetIndent(2)
-		enc.Encode(rule)
-		enc.Close()
-
-		// Add a blank line after each rule except the last one
-		if i < len(rules)-1 {
-			file.WriteString("\n")
-		}
-	}
+	// Encode the entire slice at once as a YAML list
+	enc := yaml.NewEncoder(file)
+	enc.SetIndent(2)
+	enc.Encode(rules)
+	enc.Close()
 }
