@@ -6,6 +6,8 @@ import (
 	"os"
 	"path/filepath"
 	"regexp"
+	"sort"
+	"strconv"
 	"strings"
 
 	"gopkg.in/yaml.v3"
@@ -22,7 +24,7 @@ type Rule struct {
 }
 
 func main() {
-	crsPath := "crs/rules" // adjust if needed
+	crsPath := "coreruleset/rules" // adjust if needed
 	outputDir := "parsed_rules"
 
 	os.MkdirAll(outputDir, os.ModePerm)
@@ -94,10 +96,18 @@ func main() {
 		if len(rules) == 0 {
 			continue
 		}
+
+		// Sort rules by numeric ID
+		sort.Slice(rules, func(i, j int) bool {
+			id1, _ := strconv.Atoi(rules[i].ID)
+			id2, _ := strconv.Atoi(rules[j].ID)
+			return id1 < id2
+		})
+
 		filename := fmt.Sprintf("rules_%s.yaml", category)
 		filePath := filepath.Join(outputDir, filename)
 
-		saveYAML(filePath, rules)
+		saveYAMLWithSpacing(filePath, rules)
 		config.LoadRules = append(config.LoadRules, filename)
 	}
 
@@ -157,4 +167,22 @@ func saveYAML(path string, data interface{}) {
 	enc := yaml.NewEncoder(file)
 	enc.SetIndent(2)
 	enc.Encode(data)
+}
+
+// saveYAMLWithSpacing writes each rule with a blank line between entries
+func saveYAMLWithSpacing(path string, rules []Rule) {
+	file, _ := os.Create(path)
+	defer file.Close()
+
+	for i, rule := range rules {
+		enc := yaml.NewEncoder(file)
+		enc.SetIndent(2)
+		enc.Encode(rule)
+		enc.Close()
+
+		// Add a blank line after each rule except the last one
+		if i < len(rules)-1 {
+			file.WriteString("\n")
+		}
+	}
 }
