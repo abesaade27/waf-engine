@@ -1,1232 +1,1407 @@
-- id: "901340"
-  name: Enabling body inspection
-  variable: REQBODY_PROCESSOR
-  regex: '!@rx (?:URLENCODED|MULTIPART|XML|JSON)'
-  phase: 1
-  severity: ""
-  block: false
-- id: ""
-  name: ""
-  variable: REQBODY_PROCESSOR
-  regex: '!@rx (?:URLENCODED|MULTIPART|XML|JSON)'
-  phase: 0
-  severity: ""
-  block: false
-- id: "901410"
-  name: ""
-  variable: UNIQUE_ID
-  regex: '@rx ^[a-f]*([0-9])[a-f]*([0-9])'
-  phase: 1
-  severity: ""
-  block: false
-- id: "905100"
-  name: ""
-  variable: REQUEST_LINE
-  regex: '@streq GET /'
-  phase: 1
-  severity: ""
-  block: false
-- id: ""
-  name: ""
-  variable: REMOTE_ADDR
-  regex: '@ipMatch 127.0.0.1,::1'
-  phase: 0
-  severity: ""
-  block: false
-- id: "905110"
-  name: ""
-  variable: REMOTE_ADDR
-  regex: '@ipMatch 127.0.0.1,::1'
-  phase: 1
-  severity: ""
-  block: false
-- id: ""
-  name: ""
-  variable: REQUEST_HEADERS:User-Agent
-  regex: '@endsWith (internal dummy connection)'
-  phase: 0
-  severity: ""
-  block: false
-- id: ""
-  name: ""
-  variable: REQUEST_LINE
-  regex: '@rx ^(?:GET /|OPTIONS \*) HTTP/[12]\.[01]$'
-  phase: 0
-  severity: ""
-  block: false
-- id: "911100"
-  name: Method is not allowed by policy
-  variable: REQUEST_METHOD
-  regex: '!@within %{tx.allowed_methods}'
-  phase: 1
-  severity: '''CRITICAL'''
-  block: true
-- id: "913100"
-  name: Found User-Agent associated with security scanner
-  variable: REQUEST_HEADERS:User-Agent
-  regex: '@pmFromFile scanners-user-agents.data'
-  phase: 1
-  severity: '''CRITICAL'''
-  block: true
-- id: "920100"
-  name: Invalid HTTP Request Line
-  variable: REQUEST_LINE
-  regex: '!@rx (?i)^(?:get /[^#\?]*(?:\?[^\s\x0b#]*)?(?:#[^\s\x0b]*)?|(?:connect (?:(?:[0-9]{1,3}\.){3}[0-9]{1,3}\.?(?::[0-9]+)?|[\--9A-Z_a-z]+:[0-9]+)|options \*|[a-z]{3,10}[\s\x0b]+(?:[0-9A-Z_a-z]{3,7}?://[\--9A-Z_a-z]*(?::[0-9]+)?)?/[^#\?]*(?:\?[^\s\x0b#]*)?(?:#[^\s\x0b]*)?)[\s\x0b]+[\.-9A-Z_a-z]+)$'
-  phase: 1
-  severity: '''WARNING'''
-  block: true
-- id: "920160"
-  name: Content-Length HTTP header is not numeric
-  variable: REQUEST_HEADERS:Content-Length
-  regex: '!@rx ^\d+$'
-  phase: 1
-  severity: '''CRITICAL'''
-  block: true
-- id: "920170"
-  name: GET or HEAD Request with Body Content
-  variable: REQUEST_METHOD
-  regex: '@rx ^(?:GET|HEAD)$'
-  phase: 1
-  severity: '''CRITICAL'''
-  block: true
-- id: ""
-  name: ""
-  variable: REQUEST_HEADERS:Content-Length
-  regex: '!@rx ^0?$'
-  phase: 0
-  severity: ""
-  block: false
-- id: "920171"
-  name: GET or HEAD Request with Transfer-Encoding
-  variable: REQUEST_METHOD
-  regex: '@rx ^(?:GET|HEAD)$'
-  phase: 1
-  severity: '''CRITICAL'''
-  block: true
-- id: ""
-  name: ""
-  variable: '&REQUEST_HEADERS:Transfer-Encoding'
-  regex: '!@eq 0'
-  phase: 0
-  severity: ""
-  block: false
-- id: "920180"
-  name: POST without Content-Length or Transfer-Encoding headers
-  variable: REQUEST_PROTOCOL
-  regex: '!@within HTTP/2 HTTP/2.0 HTTP/3 HTTP/3.0'
-  phase: 1
-  severity: '''WARNING'''
-  block: true
-- id: ""
-  name: ""
-  variable: REQUEST_METHOD
-  regex: '@streq POST'
-  phase: 0
-  severity: ""
-  block: false
-- id: "920181"
-  name: Content-Length and Transfer-Encoding headers present
-  variable: '&REQUEST_HEADERS:Transfer-Encoding'
-  regex: '!@eq 0'
-  phase: 1
-  severity: '''WARNING'''
-  block: true
-- id: ""
-  name: ""
-  variable: '&REQUEST_HEADERS:Content-Length'
-  regex: '!@eq 0'
-  phase: 0
-  severity: ""
-  block: false
-- id: "920190"
-  name: 'Range: Invalid Last Byte Value'
-  variable: REQUEST_HEADERS:Range|REQUEST_HEADERS:Request-Range
-  regex: '@rx (\d+)-(\d+)'
-  phase: 1
-  severity: '''WARNING'''
-  block: true
-- id: "920210"
-  name: Multiple/Conflicting Connection Header Data Found
-  variable: REQUEST_HEADERS:Connection
-  regex: '@rx \b(?:keep-alive|close),\s?(?:keep-alive|close)\b'
-  phase: 1
-  severity: '''WARNING'''
-  block: true
-- id: ""
-  name: ""
-  variable: REQUEST_FILENAME|ARGS|ARGS_NAMES
-  regex: '@validateUtf8Encoding'
-  phase: 0
-  severity: ""
-  block: false
-- id: "920260"
-  name: Unicode Full/Half Width Abuse Attack Attempt
-  variable: REQUEST_URI|REQUEST_BODY
-  regex: '@rx (?i)%uff[0-9a-f]{2}'
-  phase: 2
-  severity: '''WARNING'''
-  block: true
-- id: "920270"
-  name: Invalid character in request (null character)
-  variable: REQUEST_URI_RAW|REQUEST_HEADERS|ARGS|ARGS_NAMES
-  regex: '@validateByteRange 1-255'
-  phase: 2
-  severity: '''CRITICAL'''
-  block: true
-- id: "920290"
-  name: Empty Host Header
-  variable: REQUEST_HEADERS:Host
-  regex: '@rx ^$'
-  phase: 1
-  severity: '''CRITICAL'''
-  block: true
-- id: "920310"
-  name: Request Has an Empty Accept Header
-  variable: REQUEST_HEADERS:Accept
-  regex: '@rx ^$'
-  phase: 1
-  severity: '''NOTICE'''
-  block: false
-- id: ""
-  name: ""
-  variable: REQUEST_METHOD
-  regex: '!@rx ^OPTIONS$'
-  phase: 0
-  severity: ""
-  block: false
-- id: ""
-  name: ""
-  variable: REQUEST_HEADERS:User-Agent
-  regex: '!@pm AppleWebKit Android Business Enterprise Entreprise'
-  phase: 0
-  severity: ""
-  block: false
-- id: "920311"
-  name: Request Has an Empty Accept Header
-  variable: REQUEST_HEADERS:Accept
-  regex: '@rx ^$'
-  phase: 1
-  severity: '''NOTICE'''
-  block: false
-- id: ""
-  name: ""
-  variable: REQUEST_METHOD
-  regex: '!@rx ^OPTIONS$'
-  phase: 0
-  severity: ""
-  block: false
-- id: "920330"
-  name: Empty User Agent Header
-  variable: REQUEST_HEADERS:User-Agent
-  regex: '@rx ^$'
-  phase: 1
-  severity: '''NOTICE'''
-  block: false
-- id: "920340"
-  name: Request Containing Content
-  variable: REQUEST_HEADERS:Content-Length
-  regex: '!@rx ^0$'
-  phase: 1
-  severity: '''NOTICE'''
-  block: false
-- id: "920350"
-  name: Host header is a numeric IP address
-  variable: REQUEST_HEADERS:Host
-  regex: '@rx (?:^([\d.]+|\[[\da-f:]+\]|[\da-f:]+)(:[\d]+)?$)'
-  phase: 1
-  severity: '''WARNING'''
-  block: true
-- id: ""
-  name: ""
-  variable: REQUEST_HEADERS:Content-Type
-  regex: '@rx ^(?i)multipart/form-data'
-  phase: 0
-  severity: ""
-  block: false
-- id: "920420"
-  name: Request content type is not allowed by policy
-  variable: REQUEST_HEADERS:Content-Type
-  regex: '@rx ^[^;\s]+'
-  phase: 1
-  severity: '''CRITICAL'''
-  block: true
-- id: "920530"
-  name: Multiple charsets detected in content type header
-  variable: REQUEST_HEADERS:Content-Type
-  regex: '@rx charset.*?charset'
-  phase: 1
-  severity: '''CRITICAL'''
-  block: true
-- id: "920430"
-  name: HTTP protocol version is not allowed by policy
-  variable: REQUEST_PROTOCOL
-  regex: '!@within %{tx.allowed_http_versions}'
-  phase: 1
-  severity: '''CRITICAL'''
-  block: true
-- id: "920440"
-  name: URL file extension is restricted by policy
-  variable: REQUEST_BASENAME
-  regex: '@rx \.([^.]+)$'
-  phase: 1
-  severity: '''CRITICAL'''
-  block: true
-- id: "920500"
-  name: Attempt to access a backup or working file
-  variable: REQUEST_FILENAME
-  regex: '@rx \.[^.~]+~(?:/.*|)$'
-  phase: 1
-  severity: '''CRITICAL'''
-  block: true
-- id: "920450"
-  name: HTTP header is restricted by policy (%{MATCHED_VAR})
-  variable: REQUEST_HEADERS_NAMES
-  regex: '@rx ^.*$'
-  phase: 1
-  severity: '''CRITICAL'''
-  block: true
-- id: "920540"
-  name: Possible Unicode character bypass detected
-  variable: REQBODY_PROCESSOR
-  regex: '!@streq JSON'
-  phase: 2
-  severity: '''CRITICAL'''
-  block: true
-- id: ""
-  name: ""
-  variable: REQUEST_URI|REQUEST_HEADERS|ARGS|ARGS_NAMES
-  regex: '@rx (?i)\x5cu[0-9a-f]{4}'
-  phase: 0
-  severity: ""
-  block: false
-- id: "920610"
-  name: Raw (unencoded) fragment in request URI
-  variable: REQUEST_URI_RAW
-  regex: '@contains #'
-  phase: 1
-  severity: '''CRITICAL'''
-  block: true
-- id: "920200"
-  name: 'Range: Too many fields (6 or more)'
-  variable: REQUEST_HEADERS:Range|REQUEST_HEADERS:Request-Range
-  regex: '@rx ^bytes=(?:(?:\d+)?-(?:\d+)?\s*,?\s*){6}'
-  phase: 1
-  severity: '''WARNING'''
-  block: true
-- id: ""
-  name: ""
-  variable: REQUEST_BASENAME
-  regex: '!@endsWith .pdf'
-  phase: 0
-  severity: ""
-  block: false
-- id: "920201"
-  name: 'Range: Too many fields for pdf request (63 or more)'
-  variable: REQUEST_BASENAME
-  regex: '@endsWith .pdf'
-  phase: 1
-  severity: '''WARNING'''
-  block: true
-- id: ""
-  name: ""
-  variable: REQUEST_HEADERS:Range|REQUEST_HEADERS:Request-Range
-  regex: '@rx ^bytes=(?:(?:\d+)?-(?:\d+)?\s*,?\s*){63}'
-  phase: 0
-  severity: ""
-  block: false
-- id: "920230"
-  name: Multiple URL Encoding Detected
-  variable: ARGS
-  regex: '@rx %[0-9a-fA-F]{2}'
-  phase: 2
-  severity: '''WARNING'''
-  block: true
-- id: "920271"
-  name: Invalid character in request (non printable characters)
-  variable: REQUEST_URI_RAW|REQUEST_HEADERS|ARGS|ARGS_NAMES
-  regex: '@validateByteRange 9,10,13,32-126,128-255'
-  phase: 2
-  severity: '''CRITICAL'''
-  block: true
-- id: "920341"
-  name: Request Containing Content Requires Content-Type header
-  variable: REQUEST_HEADERS:Content-Length
-  regex: '!@rx ^0$'
-  phase: 1
-  severity: '''CRITICAL'''
-  block: true
-- id: "920451"
-  name: HTTP header is restricted by policy (%{MATCHED_VAR})
-  variable: REQUEST_HEADERS_NAMES
-  regex: '@rx ^.*$'
-  phase: 1
-  severity: '''CRITICAL'''
-  block: true
-- id: "920240"
-  name: URL Encoding Abuse Attack Attempt
-  variable: REQUEST_HEADERS:Content-Type
-  regex: '@rx ^(?i)application/x-www-form-urlencoded'
-  phase: 2
-  severity: '''WARNING'''
-  block: true
-- id: ""
-  name: ""
-  variable: REQUEST_BODY
-  regex: '@rx \x25'
-  phase: 0
-  severity: ""
-  block: false
-- id: ""
-  name: ""
-  variable: REQUEST_BODY
-  regex: '@validateUrlEncoding'
-  phase: 0
-  severity: ""
-  block: false
-- id: "920272"
-  name: Invalid character in request (outside of printable chars below ascii 127)
-  variable: REQUEST_URI_RAW|REQUEST_HEADERS|ARGS|ARGS_NAMES|REQUEST_BODY
-  regex: '@validateByteRange 32-36,38-126'
-  phase: 2
-  severity: '''CRITICAL'''
-  block: true
-- id: ""
-  name: ""
-  variable: REQUEST_METHOD
-  regex: '!@rx ^(?:OPTIONS|CONNECT)$'
-  phase: 0
-  severity: ""
-  block: false
-- id: ""
-  name: ""
-  variable: REQUEST_HEADERS:User-Agent
-  regex: '!@pm AppleWebKit Android'
-  phase: 0
-  severity: ""
-  block: false
-- id: "920490"
-  name: Request header x-up-devcap-post-charset detected in combination with prefix \'UP\' to User-Agent
-  variable: '&REQUEST_HEADERS:x-up-devcap-post-charset'
-  regex: '@ge 1'
-  phase: 1
-  severity: '''CRITICAL'''
-  block: true
-- id: ""
-  name: ""
-  variable: REQUEST_HEADERS:User-Agent
-  regex: '@rx ^(?i)up'
-  phase: 0
-  severity: ""
-  block: false
-- id: ""
-  name: ""
-  variable: REQUEST_HEADERS:Cache-Control
-  regex: '!@rx ^(?:(?:max-age=[0-9]+|min-fresh=[0-9]+|no-cache|no-store|no-transform|only-if-cached|max-stale(?:=[0-9]+)?)(?:\s*\,\s*|$)){1,7}$'
-  phase: 0
-  severity: ""
-  block: false
-- id: "920521"
-  name: Illegal Accept-Encoding header
-  variable: REQUEST_HEADERS:Accept-Encoding
-  regex: '!@rx br|compress|deflate|(?:pack200-)?gzip|identity|\*|^$|aes128gcm|exi|zstd|x-(?:compress|gzip)'
-  phase: 1
-  severity: '''CRITICAL'''
-  block: true
-- id: "920202"
-  name: 'Range: Too many fields for pdf request (6 or more)'
-  variable: REQUEST_BASENAME
-  regex: '@endsWith .pdf'
-  phase: 1
-  severity: '''WARNING'''
-  block: true
-- id: ""
-  name: ""
-  variable: REQUEST_HEADERS:Range|REQUEST_HEADERS:Request-Range
-  regex: '@rx ^bytes=(?:(?:\d+)?-(?:\d+)?\s*,?\s*){6}'
-  phase: 0
-  severity: ""
-  block: false
-- id: "920273"
-  name: Invalid character in request (outside of very strict set)
-  variable: ARGS|ARGS_NAMES|REQUEST_BODY
-  regex: '@validateByteRange 38,44-46,48-58,61,65-90,95,97-122'
-  phase: 2
-  severity: '''CRITICAL'''
-  block: true
-- id: "920274"
-  name: Invalid character in request headers (outside of very strict set)
-  variable: REQUEST_HEADERS|!REQUEST_HEADERS:User-Agent|!REQUEST_HEADERS:Referer|!REQUEST_HEADERS:Cookie|!REQUEST_HEADERS:Sec-Fetch-User|!REQUEST_HEADERS:Sec-CH-UA|!REQUEST_HEADERS:Sec-CH-UA-Mobile
-  regex: '@validateByteRange 32,34,38,42-59,61,65-90,95,97-122'
-  phase: 1
-  severity: '''CRITICAL'''
-  block: true
-- id: "920275"
-  name: Invalid character in request headers (outside of very strict set)
-  variable: REQUEST_HEADERS:Sec-Fetch-User|REQUEST_HEADERS:Sec-CH-UA-Mobile
-  regex: '!@rx ^(?:\?[01])?$'
-  phase: 1
-  severity: '''CRITICAL'''
-  block: true
-- id: "920460"
-  name: Abnormal character escapes in request
-  variable: REQUEST_URI|REQUEST_HEADERS|ARGS|ARGS_NAMES
-  regex: '@rx (?:^|[^\x5c])\x5c[cdeghijklmpqwxyz123456789]'
-  phase: 2
-  severity: '''CRITICAL'''
-  block: true
-- id: "921110"
-  name: HTTP Request Smuggling Attack
-  variable: ARGS_NAMES|ARGS|REQUEST_BODY|XML:/*
-  regex: '@rx (?:get|post|head|options|connect|put|delete|trace|track|patch|propfind|propatch|mkcol|copy|move|lock|unlock)\s+[^\s]+\s+http/\d'
-  phase: 2
-  severity: '''CRITICAL'''
-  block: true
-- id: "921120"
-  name: HTTP Response Splitting Attack
-  variable: REQUEST_COOKIES|REQUEST_COOKIES_NAMES|ARGS_NAMES|ARGS|XML:/*
-  regex: '@rx [\r\n]\W*?(?:content-(?:type|length)|set-cookie|location):\s*\w'
-  phase: 2
-  severity: '''CRITICAL'''
-  block: true
-- id: "921130"
-  name: HTTP Response Splitting Attack
-  variable: REQUEST_COOKIES|REQUEST_COOKIES_NAMES|ARGS_NAMES|ARGS|XML:/*
-  regex: '@rx (?:\bhttp/\d|<(?:html|meta)\b)'
-  phase: 2
-  severity: '''CRITICAL'''
-  block: true
-- id: "921140"
-  name: HTTP Header Injection Attack via headers
-  variable: REQUEST_HEADERS_NAMES|REQUEST_HEADERS
-  regex: '@rx [\n\r]'
-  phase: 1
-  severity: '''CRITICAL'''
-  block: true
-- id: "921150"
-  name: HTTP Header Injection Attack via payload (CR/LF detected)
-  variable: ARGS_NAMES
-  regex: '@rx [\n\r]'
-  phase: 2
-  severity: '''CRITICAL'''
-  block: true
-- id: "921160"
-  name: HTTP Header Injection Attack via payload (CR/LF and header-name detected)
-  variable: ARGS_GET_NAMES|ARGS_GET
-  regex: '@rx [\n\r]+(?:\s|location|refresh|(?:set-)?cookie|(?:x-)?(?:forwarded-(?:for|host|server)|host|via|remote-ip|remote-addr|originating-IP))\s*:'
-  phase: 1
-  severity: '''CRITICAL'''
-  block: true
-- id: "921190"
-  name: HTTP Splitting (CR/LF in request filename detected)
-  variable: REQUEST_FILENAME
-  regex: '@rx [\n\r]'
-  phase: 1
-  severity: '''CRITICAL'''
-  block: true
-- id: "921200"
-  name: LDAP Injection Attack
-  variable: REQUEST_COOKIES|REQUEST_COOKIES_NAMES|ARGS_NAMES|ARGS|XML:/*
-  regex: '@rx ^[^:\(\)\&\|\!\<\>\~]*\)\s*(?:\((?:[^,\(\)\=\&\|\!\<\>\~]+[><~]?=|\s*[&!|]\s*(?:\)|\()?\s*)|\)\s*\(\s*[\&\|\!]\s*|[&!|]\s*\([^\(\)\=\&\|\!\<\>\~]+[><~]?=[^:\(\)\&\|\!\<\>\~]*)'
-  phase: 2
-  severity: '''CRITICAL'''
-  block: true
-- id: "921421"
-  name: 'Content-Type header: Dangerous content type outside the mime type declaration'
-  variable: REQUEST_HEADERS:Content-Type
-  regex: '@rx ^[^\s\x0b,;]+[\s\x0b,;].*?(?:application/(?:.+\+)?json|(?:application/(?:soap\+)?|text/)xml)'
-  phase: 1
-  severity: '''CRITICAL'''
-  block: true
-- id: "921240"
-  name: mod_proxy attack attempt detected
-  variable: REQUEST_URI_RAW
-  regex: '@rx unix:[^|]*\|'
-  phase: 1
-  severity: '''CRITICAL'''
-  block: true
-- id: "921250"
-  name: Old Cookies V1 usage attempt detected
-  variable: REQUEST_COOKIES:/\x22?\x24Version/
-  regex: '@streq 1'
-  phase: 1
-  severity: '''CRITICAL'''
-  block: true
-- id: "921151"
-  name: HTTP Header Injection Attack via payload (CR/LF detected)
-  variable: ARGS_GET
-  regex: '@rx [\n\r]'
-  phase: 1
-  severity: '''CRITICAL'''
-  block: true
-- id: "921422"
-  name: 'Content-Type header: Dangerous content type outside the mime type declaration'
-  variable: REQUEST_HEADERS:Content-Type
-  regex: '@rx ^[^\s\x0b,;]+[\s\x0b,;].*?\b(?:((?:tex|multipar)t|application)|((?:audi|vide)o|image|cs[sv]|(?:vn|relate)d|p(?:df|lain)|json|(?:soa|cs)p|x(?:ml|-www-form-urlencoded)|form-data|x-amf|(?:octe|repor)t|stream)|([\+/]))\b'
-  phase: 1
-  severity: '''CRITICAL'''
-  block: true
-- id: "921170"
-  name: ""
-  variable: ARGS_NAMES
-  regex: '@rx .'
-  phase: 2
-  severity: ""
-  block: false
-- id: "921210"
-  name: HTTP Parameter Pollution after detecting bogus char after parameter array
-  variable: ARGS_NAMES
-  regex: '@rx (][^\]]+$|][^\]]+\[)'
-  phase: 2
-  severity: '''CRITICAL'''
-  block: false
-- id: "921220"
-  name: HTTP Parameter Pollution possible via array notation
-  variable: ARGS_NAMES
-  regex: '@rx \['
-  phase: 2
-  severity: '''CRITICAL'''
-  block: false
-- id: "922100"
-  name: Multipart content type global _charset_ definition is not allowed by policy
-  variable: '&MULTIPART_PART_HEADERS:_charset_'
-  regex: '!@eq 0'
-  phase: 2
-  severity: '''CRITICAL'''
-  block: true
-- id: "922110"
-  name: 'Illegal MIME Multipart Header content-type: charset parameter'
-  variable: MULTIPART_PART_HEADERS
-  regex: '@rx ^content-type\s*:\s*(.*)$'
-  phase: 2
-  severity: '''CRITICAL'''
-  block: true
-- id: "922120"
-  name: Content-Transfer-Encoding was deprecated by rfc7578 in 2015 and should not be used
-  variable: MULTIPART_PART_HEADERS
-  regex: '@rx content-transfer-encoding:(.*)'
-  phase: 2
-  severity: '''CRITICAL'''
-  block: true
-- id: "922130"
-  name: Multipart header contains characters outside of valid range
-  variable: MULTIPART_PART_HEADERS
-  regex: '@rx [^\x21-\x7E][\x21-\x39\x3B-\x7E]*:'
-  phase: 2
-  severity: '''CRITICAL'''
-  block: true
-- id: "931100"
-  name: 'Possible Remote File Inclusion (RFI) Attack: URL Parameter using IP Address'
-  variable: ARGS
-  regex: '@rx ^(?i:file|ftps?|https?)://(?:\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})'
-  phase: 2
-  severity: '''CRITICAL'''
-  block: true
-- id: "931110"
-  name: 'Possible Remote File Inclusion (RFI) Attack: Common RFI Vulnerable Parameter Name used w/URL Payload'
-  variable: QUERY_STRING|REQUEST_BODY
-  regex: '@rx (?i)(?:\binclude\s*\([^)]*|mosConfig_absolute_path|_CONF\[path\]|_SERVER\[DOCUMENT_ROOT\]|GALLERY_BASEDIR|path\[docroot\]|appserv_root|config\[root_dir\])=(?:file|ftps?|https?)://'
-  phase: 2
-  severity: '''CRITICAL'''
-  block: true
-- id: "931120"
-  name: 'Possible Remote File Inclusion (RFI) Attack: URL Payload Used w/Trailing Question Mark Character (?)'
-  variable: ARGS
-  regex: '@rx ^(?i:file|ftps?|https?).*?\?+$'
-  phase: 2
-  severity: '''CRITICAL'''
-  block: true
-- id: "931130"
-  name: 'Possible Remote File Inclusion (RFI) Attack: Off-Domain Reference/Link'
-  variable: ARGS
-  regex: '@rx (?i)(?:(?:url|jar):)?(?:a(?:cap|f[ps]|ttachment)|b(?:eshare|itcoin|lob)|c(?:a(?:llto|p)|id|vs|ompress.(?:zlib|bzip2))|d(?:a(?:v|ta)|ict|n(?:s|tp))|e(?:d2k|xpect)|f(?:(?:ee)?d|i(?:le|nger|sh)|tps?)|g(?:it|o(?:pher)?|lob)|h(?:323|ttps?)|i(?:ax|cap|(?:ma|p)ps?|rc[6s]?)|ja(?:bbe)?r|l(?:dap[is]?|ocal_file)|m(?:a(?:ilto|ven)|ms|umble)|n(?:e(?:tdoc|ws)|fs|ntps?)|ogg|p(?:aparazzi|h(?:ar|p)|op(?:2|3s?)|r(?:es|oxy)|syc)|r(?:mi|sync|tm(?:f?p)?|ar)|s(?:3|ftp|ips?|m(?:[bs]|tps?)|n(?:ews|mp)|sh(?:2(?:.(?:s(?:hell|(?:ft|c)p)|exec|tunnel))?)?|vn(?:\+ssh)?)|t(?:e(?:amspeak|lnet)|ftp|urns?)|u(?:dp|nreal|t2004)|v(?:entrilo|iew-source|nc)|w(?:ebcal|ss?)|x(?:mpp|ri)|zip)://?(?:[^@]+@)?([^/]*)'
-  phase: 2
-  severity: '''CRITICAL'''
-  block: true
-- id: "931131"
-  name: 'Possible Remote File Inclusion (RFI) Attack: Off-Domain Reference/Link'
-  variable: REQUEST_FILENAME
-  regex: '@rx (?i)(?:(?:url|jar):)?(?:a(?:cap|f[ps]|ttachment)|b(?:eshare|itcoin|lob)|c(?:a(?:llto|p)|id|vs|ompress.(?:zlib|bzip2))|d(?:a(?:v|ta)|ict|n(?:s|tp))|e(?:d2k|xpect)|f(?:(?:ee)?d|i(?:le|nger|sh)|tps?)|g(?:it|o(?:pher)?|lob)|h(?:323|ttps?)|i(?:ax|cap|(?:ma|p)ps?|rc[6s]?)|ja(?:bbe)?r|l(?:dap[is]?|ocal_file)|m(?:a(?:ilto|ven)|ms|umble)|n(?:e(?:tdoc|ws)|fs|ntps?)|ogg|p(?:aparazzi|h(?:ar|p)|op(?:2|3s?)|r(?:es|oxy)|syc)|r(?:mi|sync|tm(?:f?p)?|ar)|s(?:3|ftp|ips?|m(?:[bs]|tps?)|n(?:ews|mp)|sh(?:2(?:.(?:s(?:hell|(?:ft|c)p)|exec|tunnel))?)?|vn(?:\+ssh)?)|t(?:e(?:amspeak|lnet)|ftp|urns?)|u(?:dp|nreal|t2004)|v(?:entrilo|iew-source|nc)|w(?:ebcal|ss?)|x(?:mpp|ri)|zip)://(?:[^@]+@)?([^/]*)'
-  phase: 1
-  severity: '''CRITICAL'''
-  block: true
-- id: "943100"
-  name: 'Possible Session Fixation Attack: Setting Cookie Values in HTML'
-  variable: REQUEST_COOKIES|REQUEST_COOKIES_NAMES|ARGS_NAMES|ARGS|XML:/*
-  regex: '@rx (?i:\.cookie\b.*?;\W*?(?:expires|domain)\W*?=|\bhttp-equiv\W+set-cookie\b)'
-  phase: 2
-  severity: '''CRITICAL'''
-  block: true
-- id: "943110"
-  name: 'Possible Session Fixation Attack: SessionID Parameter Name with Off-Domain Referer'
-  variable: ARGS_NAMES
-  regex: '@rx ^(?:jsessionid|aspsessionid|asp\.net_sessionid|phpsession|phpsessid|weblogicsession|session_id|session-id|sessionid|cfid|cftoken|cfsid|jservsession|jwsession|_flask_session|_session_id|connect\.sid|laravel_session)$'
-  phase: 2
-  severity: '''CRITICAL'''
-  block: true
-- id: ""
-  name: ""
-  variable: REQUEST_HEADERS:Referer
-  regex: '@rx ^(?:ht|f)tps?://(.*?)/'
-  phase: 0
-  severity: ""
-  block: false
-- id: "943120"
-  name: 'Possible Session Fixation Attack: SessionID Parameter Name with No Referer'
-  variable: ARGS_NAMES
-  regex: '@rx ^(?:jsessionid|aspsessionid|asp\.net_sessionid|phpsession|phpsessid|weblogicsession|session_id|session-id|sessionid|cfid|cftoken|cfsid|jservsession|jwsession|_flask_session|_session_id|connect\.sid|laravel_session)$'
-  phase: 2
-  severity: '''CRITICAL'''
-  block: true
-- id: "944100"
-  name: 'Remote Command Execution: Suspicious Java class detected'
-  variable: ARGS|ARGS_NAMES|REQUEST_COOKIES|REQUEST_COOKIES_NAMES|REQUEST_BODY|REQUEST_HEADERS|XML:/*|XML://@*
-  regex: '@rx java\.lang\.(?:runtime|processbuilder)'
-  phase: 2
-  severity: '''CRITICAL'''
-  block: true
-- id: "944110"
-  name: 'Remote Command Execution: Java process spawn (CVE-2017-9805)'
-  variable: ARGS|ARGS_NAMES|REQUEST_COOKIES|REQUEST_COOKIES_NAMES|REQUEST_BODY|REQUEST_HEADERS|XML:/*|XML://@*
-  regex: '@rx (?:runtime|processbuilder)'
-  phase: 2
-  severity: '''CRITICAL'''
-  block: true
-- id: ""
-  name: ""
-  variable: MATCHED_VARS|XML:/*|XML://@*
-  regex: '@rx (?i)(?:unmarshaller|base64data|java\.)'
-  phase: 0
-  severity: ""
-  block: false
-- id: "944120"
-  name: 'Remote Command Execution: Java serialization (CVE-2015-4852)'
-  variable: ARGS|ARGS_NAMES|REQUEST_COOKIES|REQUEST_COOKIES_NAMES|REQUEST_BODY|REQUEST_HEADERS|XML:/*|XML://@*
-  regex: '@rx (?:clonetransformer|forclosure|instantiatefactory|instantiatetransformer|invokertransformer|prototypeclonefactory|prototypeserializationfactory|whileclosure|getproperty|filewriter|xmldecoder)'
-  phase: 2
-  severity: '''CRITICAL'''
-  block: true
-- id: ""
-  name: ""
-  variable: MATCHED_VARS
-  regex: '@rx (?:runtime|processbuilder)'
-  phase: 0
-  severity: ""
-  block: false
-- id: "944130"
-  name: Suspicious Java class detected
-  variable: ARGS|ARGS_NAMES|REQUEST_COOKIES|REQUEST_COOKIES_NAMES|REQUEST_BODY|REQUEST_FILENAME|REQUEST_HEADERS|XML:/*|XML://@*
-  regex: '@pmFromFile java-classes.data'
-  phase: 2
-  severity: '''CRITICAL'''
-  block: true
-- id: "944140"
-  name: 'Java Injection Attack: Java Script File Upload Found'
-  variable: FILES|REQUEST_HEADERS:X-Filename|REQUEST_HEADERS:X_Filename|REQUEST_HEADERS:X.Filename|REQUEST_HEADERS:X-File-Name
-  regex: '@rx .*\.(?:jsp|jspx)\.*$'
-  phase: 2
-  severity: '''CRITICAL'''
-  block: true
-- id: "944150"
-  name: 'Potential Remote Command Execution: Log4j / Log4shell'
-  variable: REQUEST_LINE|ARGS|ARGS_NAMES|REQUEST_COOKIES|REQUEST_COOKIES_NAMES|REQUEST_HEADERS|XML:/*|XML://@*
-  regex: '@rx (?i)(?:\$|&dollar;?)(?:\{|&l(?:brace|cub);?)(?:[^\}]{0,15}(?:\$|&dollar;?)(?:\{|&l(?:brace|cub);?)|jndi|ctx)'
-  phase: 2
-  severity: '''CRITICAL'''
-  block: true
-- id: "944151"
-  name: 'Potential Remote Command Execution: Log4j / Log4shell'
-  variable: REQUEST_LINE|ARGS|ARGS_NAMES|REQUEST_COOKIES|REQUEST_COOKIES_NAMES|REQUEST_HEADERS|XML:/*|XML://@*
-  regex: '@rx (?i)(?:\$|&dollar;?)(?:\{|&l(?:brace|cub);?)(?:[^\}]*(?:\$|&dollar;?)(?:\{|&l(?:brace|cub);?)|jndi|ctx)'
-  phase: 2
-  severity: '''CRITICAL'''
-  block: true
-- id: "944200"
-  name: Magic bytes Detected
-  variable: ARGS|ARGS_NAMES|REQUEST_COOKIES|REQUEST_COOKIES_NAMES|REQUEST_BODY|REQUEST_HEADERS|XML:/*|XML://@*
-  regex: '@rx \xac\xed\x00\x05'
-  phase: 2
-  severity: '''CRITICAL'''
-  block: true
-- id: "944210"
-  name: Magic bytes Detected Base64 Encoded
-  variable: ARGS|ARGS_NAMES|REQUEST_COOKIES|REQUEST_COOKIES_NAMES|REQUEST_BODY|REQUEST_HEADERS|XML:/*|XML://@*
-  regex: '@rx (?:rO0ABQ|KztAAU|Cs7QAF)'
-  phase: 2
-  severity: '''CRITICAL'''
-  block: true
-- id: "944240"
-  name: 'Remote Command Execution: Java serialization (CVE-2015-4852)'
-  variable: ARGS|ARGS_NAMES|REQUEST_COOKIES|REQUEST_COOKIES_NAMES|REQUEST_BODY|REQUEST_HEADERS|XML:/*|XML://@*
-  regex: '@rx (?:clonetransformer|forclosure|instantiatefactory|instantiatetransformer|invokertransformer|prototypeclonefactory|prototypeserializationfactory|whileclosure|getproperty|filewriter|xmldecoder)'
-  phase: 2
-  severity: '''CRITICAL'''
-  block: true
-- id: "944250"
-  name: 'Remote Command Execution: Suspicious Java method detected'
-  variable: ARGS|ARGS_NAMES|REQUEST_COOKIES|REQUEST_COOKIES_NAMES|REQUEST_BODY|REQUEST_HEADERS|XML:/*|XML://@*
-  regex: '@rx java\b.+(?:runtime|processbuilder)'
-  phase: 2
-  severity: '''CRITICAL'''
-  block: true
-- id: "944260"
-  name: 'Remote Command Execution: Malicious class-loading payload'
-  variable: ARGS|ARGS_NAMES|REQUEST_COOKIES|REQUEST_COOKIES_NAMES|REQUEST_BODY|REQUEST_HEADERS|XML:/*|XML://@*
-  regex: '@rx (?:class\.module\.classLoader\.resources\.context\.parent\.pipeline|springframework\.context\.support\.FileSystemXmlApplicationContext)'
-  phase: 2
-  severity: '''CRITICAL'''
-  block: true
-- id: "944300"
-  name: Base64 encoded string matched suspicious keyword
-  variable: ARGS|ARGS_NAMES|REQUEST_COOKIES|REQUEST_COOKIES_NAMES|REQUEST_BODY|REQUEST_HEADERS|XML:/*|XML://@*
-  regex: '@rx (?:cnVudGltZQ|HJ1bnRpbWU|BydW50aW1l|cHJvY2Vzc2J1aWxkZXI|HByb2Nlc3NidWlsZGVy|Bwcm9jZXNzYnVpbGRlcg|Y2xvbmV0cmFuc2Zvcm1lcg|GNsb25ldHJhbnNmb3JtZXI|BjbG9uZXRyYW5zZm9ybWVy|Zm9yY2xvc3VyZQ|GZvcmNsb3N1cmU|Bmb3JjbG9zdXJl|aW5zdGFudGlhdGVmYWN0b3J5|Gluc3RhbnRpYXRlZmFjdG9yeQ|BpbnN0YW50aWF0ZWZhY3Rvcnk|aW5zdGFudGlhdGV0cmFuc2Zvcm1lcg|Gluc3RhbnRpYXRldHJhbnNmb3JtZXI|BpbnN0YW50aWF0ZXRyYW5zZm9ybWVy|aW52b2tlcnRyYW5zZm9ybWVy|Gludm9rZXJ0cmFuc2Zvcm1lcg|BpbnZva2VydHJhbnNmb3JtZXI|cHJvdG90eXBlY2xvbmVmYWN0b3J5|HByb3RvdHlwZWNsb25lZmFjdG9yeQ|Bwcm90b3R5cGVjbG9uZWZhY3Rvcnk|cHJvdG90eXBlc2VyaWFsaXphdGlvbmZhY3Rvcnk|HByb3RvdHlwZXNlcmlhbGl6YXRpb25mYWN0b3J5|Bwcm90b3R5cGVzZXJpYWxpemF0aW9uZmFjdG9yeQ|d2hpbGVjbG9zdXJl|HdoaWxlY2xvc3VyZQ|B3aGlsZWNsb3N1cmU)'
-  phase: 2
-  severity: '''CRITICAL'''
-  block: true
-- id: "944152"
-  name: 'Potential Remote Command Execution: Log4j / Log4shell'
-  variable: REQUEST_LINE|ARGS|ARGS_NAMES|REQUEST_COOKIES|REQUEST_COOKIES_NAMES|REQUEST_HEADERS|XML:/*|XML://@*
-  regex: '@rx (?i)(?:\$|&dollar;?)(?:\{|&l(?:brace|cub);?)'
-  phase: 2
-  severity: '''CRITICAL'''
-  block: true
-- id: "950010"
-  name: ""
-  variable: RESPONSE_HEADERS:Content-Encoding
-  regex: '@pm gzip compress deflate br zstd'
-  phase: 4
-  severity: ""
-  block: false
-- id: "950130"
-  name: Directory Listing
-  variable: RESPONSE_BODY
-  regex: '@rx (?:<(?:TITLE>Index of.*?<H|title>Index of.*?<h)1>Index of|>\[To Parent Directory\]</[Aa]><br>)'
-  phase: 4
-  severity: '''ERROR'''
-  block: true
-- id: "950140"
-  name: CGI source code leakage
-  variable: RESPONSE_BODY
-  regex: '@rx ^#\!\s?/'
-  phase: 4
-  severity: '''ERROR'''
-  block: true
-- id: "950150"
-  name: ASP.NET exception leakage
-  variable: RESPONSE_BODY
-  regex: '@pmFromFile asp-dotnet-errors.data'
-  phase: 4
-  severity: '''ERROR'''
-  block: true
-- id: "950100"
-  name: The Application Returned a 500-Level Status Code
-  variable: RESPONSE_STATUS
-  regex: '@rx ^5\d{2}$'
-  phase: 3
-  severity: '''ERROR'''
-  block: true
-- id: "951010"
-  name: ""
-  variable: RESPONSE_HEADERS:Content-Encoding
-  regex: '@pm gzip compress deflate br zstd'
-  phase: 4
-  severity: ""
-  block: false
-- id: "951100"
-  name: ""
-  variable: RESPONSE_BODY
-  regex: '!@pmFromFile sql-errors.data'
-  phase: 4
-  severity: ""
-  block: false
-- id: "951110"
-  name: Microsoft Access SQL Information Leakage
-  variable: RESPONSE_BODY
-  regex: '@rx (?i:JET Database Engine|Access Database Engine|\[Microsoft\]\[ODBC Microsoft Access Driver\])'
-  phase: 4
-  severity: '''CRITICAL'''
-  block: true
-- id: "951120"
-  name: Oracle SQL Information Leakage
-  variable: RESPONSE_BODY
-  regex: '@rx (?i)\bORA-[0-9][0-9][0-9][0-9][0-9]:|java\.sql\.SQLException|Oracle(?: erro|[^\(\)]{0,20}Drive)r|Warning.{1,10}o(?:ci_.{1,30}|ra_.{1,20})'
-  phase: 4
-  severity: '''CRITICAL'''
-  block: true
-- id: "951130"
-  name: DB2 SQL Information Leakage
-  variable: RESPONSE_BODY
-  regex: '@rx (?i:DB2 SQL error:|\[IBM\]\[CLI Driver\]\[DB2/6000\]|CLI Driver.*DB2|DB2 SQL error|db2_\w+\()'
-  phase: 4
-  severity: '''CRITICAL'''
-  block: true
-- id: "951140"
-  name: EMC SQL Information Leakage
-  variable: RESPONSE_BODY
-  regex: '@rx (?i:\[DM_QUERY_E_SYNTAX\]|has occurred in the vicinity of:)'
-  phase: 4
-  severity: '''CRITICAL'''
-  block: true
-- id: "951150"
-  name: firebird SQL Information Leakage
-  variable: RESPONSE_BODY
-  regex: '@rx (?i)Dynamic SQL Error'
-  phase: 4
-  severity: '''CRITICAL'''
-  block: true
-- id: "951160"
-  name: Frontbase SQL Information Leakage
-  variable: RESPONSE_BODY
-  regex: '@rx (?i)Exception (?:condition )?\d+\. Transaction rollback\.'
-  phase: 4
-  severity: '''CRITICAL'''
-  block: true
-- id: "951170"
-  name: hsqldb SQL Information Leakage
-  variable: RESPONSE_BODY
-  regex: '@rx (?i)org\.hsqldb\.jdbc'
-  phase: 4
-  severity: '''CRITICAL'''
-  block: true
-- id: "951180"
-  name: informix SQL Information Leakage
-  variable: RESPONSE_BODY
-  regex: '@rx (?i:An illegal character has been found in the statement|com\.informix\.jdbc|Exception.*Informix)'
-  phase: 4
-  severity: '''CRITICAL'''
-  block: true
-- id: "951190"
-  name: ingres SQL Information Leakage
-  variable: RESPONSE_BODY
-  regex: '@rx (?i:Warning.*ingres_|Ingres SQLSTATE|Ingres\W.*Driver)'
-  phase: 4
-  severity: '''CRITICAL'''
-  block: true
-- id: "951200"
-  name: interbase SQL Information Leakage
-  variable: RESPONSE_BODY
-  regex: '@rx (?i:<b>Warning</b>: ibase_|Unexpected end of command in statement)'
-  phase: 4
-  severity: '''CRITICAL'''
-  block: true
-- id: "951210"
-  name: maxDB SQL Information Leakage
-  variable: RESPONSE_BODY
-  regex: '@rx (?i:SQL error.*POS[0-9]+.*|Warning.*maxdb.*)'
-  phase: 4
-  severity: '''CRITICAL'''
-  block: true
-- id: "951220"
-  name: mssql SQL Information Leakage
-  variable: RESPONSE_BODY
-  regex: '@rx (?i)(?:System\.Data\.OleDb\.OleDbException|\[Microsoft\]\[ODBC SQL Server Driver\]|\[Macromedia\]\[SQLServer JDBC Driver\]|\[SqlException|System\.Data\.SqlClient\.SqlException|Unclosed quotation mark after the character string|''80040e14''|mssql_query\(\)|Microsoft OLE DB Provider for ODBC Drivers|Microsoft OLE DB Provider for SQL Server|Incorrect syntax near|Sintaxis incorrecta cerca de|Syntax error in string in query expression|Procedure or function ''.{1,128}'' expects parameter|Unclosed quotation mark before the character string|Syntax error .* in query expression|Data type mismatch in criteria expression\.|ADODB\.Field \(0x800A0BCD\)|the used select statements have different number of columns|OLE DB.*SQL Server|Warning.*mssql_.*|Driver.*SQL[ _-]*Server|Exception.*\WSystem\.Data\.SqlClient\.|Conversion failed when converting the varchar value .*? to data type int\.)'
-  phase: 4
-  severity: '''CRITICAL'''
-  block: true
-- id: "951230"
-  name: mysql SQL Information Leakage
-  variable: RESPONSE_BODY
-  regex: '@rx (?i)(?:supplied argument is not a valid |SQL syntax.*)MySQL|Column count doesn''t match(?: value count at row)?|mysql_fetch_array\(\)|on MySQL result index|You have an error in your SQL syntax(?:;| near)|MyS(?:QL server version for the right syntax to use|qlClient\.)|\[MySQL\]\[ODBC|(?:Table ''[^'']+'' doesn''t exis|valid MySQL resul)t|Warning.{1,10}mysql_(?:[\(\)_a-z]{1,26})?|(?:ERROR [0-9]{4} \([0-9a-z]{5}\)|XPATH syntax error):'
-  phase: 4
-  severity: '''CRITICAL'''
-  block: true
-- id: "951240"
-  name: postgres SQL Information Leakage
-  variable: RESPONSE_BODY
-  regex: '@rx (?i)P(?:ostgreSQL(?: query failed:|.{1,20}ERROR)|G::[a-z]*Error)|(?:pg_(?:query|exec)\(\) \[|org\.postgresql\.util\.PSQLException):|Warning.{1,20}\bpg_.*|valid PostgreSQL result|Npgsql\.|Supplied argument is not a valid PostgreSQL .*? resource|(?:Unable to connect to PostgreSQL serv|invalid input syntax for integ)er'
-  phase: 4
-  severity: '''CRITICAL'''
-  block: true
-- id: "951250"
-  name: sqlite SQL Information Leakage
-  variable: RESPONSE_BODY
-  regex: '@rx (?i)(?:Warning.*sqlite_|Warning.*SQLite3::|SQLite/JDBCDriver|SQLite\.Exception|System\.Data\.SQLite\.SQLiteException)'
-  phase: 4
-  severity: '''CRITICAL'''
-  block: true
-- id: "951260"
-  name: Sybase SQL Information Leakage
-  variable: RESPONSE_BODY
-  regex: '@rx (?i)(?:Sybase message:|Warning.{2,20}sybase|Sybase.*Server message)'
-  phase: 4
-  severity: '''CRITICAL'''
-  block: true
-- id: "952010"
-  name: ""
-  variable: RESPONSE_HEADERS:Content-Encoding
-  regex: '@pm gzip compress deflate br zstd'
-  phase: 4
-  severity: ""
-  block: false
-- id: "953010"
-  name: ""
-  variable: RESPONSE_HEADERS:Content-Encoding
-  regex: '@pm gzip compress deflate br zstd'
-  phase: 4
-  severity: ""
-  block: false
-- id: "953100"
-  name: PHP Information Leakage
-  variable: RESPONSE_BODY
-  regex: '@pmFromFile php-errors.data'
-  phase: 4
-  severity: '''ERROR'''
-  block: true
-- id: "953110"
-  name: PHP source code leakage
-  variable: RESPONSE_BODY
-  regex: '@rx (?:\b(?:f(?:tp_(?:nb_)?f?(?:ge|pu)t|get(?:s?s|c)|scanf|write|open|read)|gz(?:(?:encod|writ)e|compress|open|read)|s(?:ession_start|candir)|read(?:(?:gz)?file|dir)|move_uploaded_file|(?:proc_|bz)open|call_user_func)|\$_(?:(?:pos|ge)t|session))\b'
-  phase: 4
-  severity: '''ERROR'''
-  block: true
-- id: "953120"
-  name: PHP source code leakage
-  variable: RESPONSE_BODY
-  regex: '@rx (?i)<\?(?:=|php)?\s+'
-  phase: 4
-  severity: '''ERROR'''
-  block: true
-- id: "953101"
-  name: PHP Information Leakage
-  variable: RESPONSE_BODY
-  regex: '@pmFromFile php-errors-pl2.data'
-  phase: 4
-  severity: '''ERROR'''
-  block: true
-- id: "954010"
-  name: ""
-  variable: RESPONSE_HEADERS:Content-Encoding
-  regex: '@pm gzip compress deflate br zstd'
-  phase: 4
-  severity: ""
-  block: false
-- id: "954100"
-  name: Disclosure of IIS install location
-  variable: RESPONSE_BODY
-  regex: '@rx (?i)[a-z]:[\x5c/]inetpub\b'
-  phase: 4
-  severity: '''ERROR'''
-  block: true
-- id: "954110"
-  name: Application Availability Error
-  variable: RESPONSE_BODY
-  regex: '@rx (?:Microsoft OLE DB Provider for SQL Server(?:</font>.{1,20}?error ''800(?:04005|40e31)''.{1,40}?Timeout expired| \(0x80040e31\)<br>Timeout expired<br>)|<h1>internal server error</h1>.*?<h2>part of the server has crashed or it has a configuration error\.</h2>|cannot connect to the server: timed out)'
-  phase: 4
-  severity: '''ERROR'''
-  block: true
-- id: "954120"
-  name: IIS Information Leakage
-  variable: RESPONSE_BODY
-  regex: '@pmFromFile iis-errors.data'
-  phase: 4
-  severity: '''ERROR'''
-  block: true
-- id: "954130"
-  name: IIS Information Leakage
-  variable: RESPONSE_STATUS
-  regex: '!@rx ^404$'
-  phase: 4
-  severity: '''ERROR'''
-  block: true
-- id: ""
-  name: ""
-  variable: RESPONSE_BODY
-  regex: '@rx \bServer Error in.{0,50}?\bApplication\b'
-  phase: 0
-  severity: ""
-  block: false
-- id: "955010"
-  name: ""
-  variable: RESPONSE_HEADERS:Content-Encoding
-  regex: '@pm gzip compress deflate br zstd'
-  phase: 4
-  severity: ""
-  block: false
-- id: "955100"
-  name: PHP Web shell detected
-  variable: RESPONSE_BODY
-  regex: '@pmFromFile web-shells-php.data'
-  phase: 4
-  severity: '''CRITICAL'''
-  block: true
-- id: "955110"
-  name: r57 web shell
-  variable: RESPONSE_BODY
-  regex: '@rx <title>r57 Shell Version [0-9.]+</title>|<title>r57 shell</title>'
-  phase: 4
-  severity: '''CRITICAL'''
-  block: true
-- id: "955120"
-  name: WSO web shell
-  variable: RESPONSE_BODY
-  regex: '@rx ^<html><head><meta http-equiv=''Content-Type'' content=''text/html; charset=(?:Windows-1251|UTF-8)?''><title>.*?(?: -)? W[Ss][Oo] [0-9.]+</title>'
-  phase: 4
-  severity: '''CRITICAL'''
-  block: true
-- id: "955130"
-  name: b4tm4n web shell
-  variable: RESPONSE_BODY
-  regex: '@rx B4TM4N SH3LL</title>[^<]*<meta name=''author'' content=''k4mpr3t''/>'
-  phase: 4
-  severity: '''CRITICAL'''
-  block: true
-- id: "955140"
-  name: Mini Shell web shell
-  variable: RESPONSE_BODY
-  regex: '@rx <title>Mini Shell</title>[^D]*Developed By LameHacker'
-  phase: 4
-  severity: '''CRITICAL'''
-  block: true
-- id: "955150"
-  name: Ashiyane web shell
-  variable: RESPONSE_BODY
-  regex: '@rx <title>\.:: [^~]*~ Ashiyane V [0-9.]+ ::\.</title>'
-  phase: 4
-  severity: '''CRITICAL'''
-  block: true
-- id: "955160"
-  name: Symlink_Sa web shell
-  variable: RESPONSE_BODY
-  regex: '@rx <title>Symlink_Sa [0-9.]+</title>'
-  phase: 4
-  severity: '''CRITICAL'''
-  block: true
-- id: "955170"
-  name: CasuS web shell
-  variable: RESPONSE_BODY
-  regex: '@rx <title>CasuS [0-9.]+ by MafiABoY</title>'
-  phase: 4
-  severity: '''CRITICAL'''
-  block: true
-- id: "955180"
-  name: GRP WebShell
-  variable: RESPONSE_BODY
-  regex: '@rx ^<html>\r\n<head>\r\n<title>GRP WebShell [0-9.]+ '
-  phase: 4
-  severity: '''CRITICAL'''
-  block: true
-- id: "955190"
-  name: NGHshell web shell
-  variable: RESPONSE_BODY
-  regex: '@rx <small>NGHshell [0-9.]+ by Cr4sh</body></html>\n$'
-  phase: 4
-  severity: '''CRITICAL'''
-  block: true
-- id: "955200"
-  name: SimAttacker web shell
-  variable: RESPONSE_BODY
-  regex: '@rx <title>SimAttacker - (?:Version|Vrsion) : [0-9.]+ - '
-  phase: 4
-  severity: '''CRITICAL'''
-  block: true
-- id: "955210"
-  name: Unknown web shell
-  variable: RESPONSE_BODY
-  regex: '@rx ^<!DOCTYPE html>\n<html>\n<!-- By Artyum [^<]*<title>Web Shell</title>'
-  phase: 4
-  severity: '''CRITICAL'''
-  block: true
-- id: "955220"
-  name: lama\'s\'hell web shell
-  variable: RESPONSE_BODY
-  regex: '@rx <title>lama''s''hell v. [0-9.]+</title>'
-  phase: 4
-  severity: '''CRITICAL'''
-  block: true
-- id: "955230"
-  name: lostDC web shell
-  variable: RESPONSE_BODY
-  regex: '@rx ^ *<html>\n[ ]+<head>\n[ ]+<title>lostDC - '
-  phase: 4
-  severity: '''CRITICAL'''
-  block: true
-- id: "955240"
-  name: Unknown web shell
-  variable: RESPONSE_BODY
-  regex: '@rx ^<title>PHP Web Shell</title>\r\n<html>\r\n<body>\r\n    <!-- Replaces command with Base64-encoded Data -->'
-  phase: 4
-  severity: '''CRITICAL'''
-  block: true
-- id: "955260"
-  name: Ru24PostWebShell web shell
-  variable: RESPONSE_BODY
-  regex: '@rx ^<html>\n<head>\n<title>Ru24PostWebShell '
-  phase: 4
-  severity: '''CRITICAL'''
-  block: true
-- id: "955270"
-  name: s72 Shell web shell
-  variable: RESPONSE_BODY
-  regex: '@rx <title>s72 Shell v[0-9.]+ Codinf by Cr@zy_King</title>'
-  phase: 4
-  severity: '''CRITICAL'''
-  block: true
-- id: "955290"
-  name: g00nshell web shell
-  variable: RESPONSE_BODY
-  regex: '@rx ^ <html>\n\n<head>\n\n<title>g00nshell v[0-9.]+ '
-  phase: 4
-  severity: '''CRITICAL'''
-  block: true
-- id: "955300"
-  name: PuNkHoLic shell web shell
-  variable: RESPONSE_BODY
-  regex: '@contains <title>punkholicshell</title>'
-  phase: 4
-  severity: '''CRITICAL'''
-  block: true
-- id: "955310"
-  name: azrail web shell
-  variable: RESPONSE_BODY
-  regex: '@rx ^<html>\n      <head>\n             <title>azrail [0-9.]+ by C-W-M</title>'
-  phase: 4
-  severity: '''CRITICAL'''
-  block: true
-- id: "955320"
-  name: SmEvK_PaThAn Shell web shell
-  variable: RESPONSE_BODY
-  regex: '@rx >SmEvK_PaThAn Shell v[0-9]+ coded by <a href='
-  phase: 4
-  severity: '''CRITICAL'''
-  block: true
-- id: "955330"
-  name: Shell I web shell
-  variable: RESPONSE_BODY
-  regex: '@rx ^<html>\n<title>[^~]*~ Shell I</title>\n<head>\n<style>'
-  phase: 4
-  severity: '''CRITICAL'''
-  block: true
-- id: "955340"
-  name: b374k m1n1 web shell
-  variable: RESPONSE_BODY
-  regex: '@rx ^ <html><head><title>:: b374k m1n1 [0-9.]+ ::</title>'
-  phase: 4
-  severity: '''CRITICAL'''
-  block: true
-- id: "955400"
-  name: ASP Web shell detected
-  variable: RESPONSE_BODY
-  regex: '@pmFromFile web-shells-asp.data'
-  phase: 4
-  severity: '''CRITICAL'''
-  block: true
-- id: "956010"
-  name: ""
-  variable: RESPONSE_HEADERS:Content-Encoding
-  regex: '@pm gzip compress deflate br zstd'
-  phase: 4
-  severity: ""
-  block: false
-- id: "956100"
-  name: RUBY Information Leakage
-  variable: RESPONSE_BODY
-  regex: '@pmFromFile ruby-errors.data'
-  phase: 4
-  severity: '''ERROR'''
-  block: true
-- id: "956110"
-  name: Ruby source code leakage
-  variable: RESPONSE_BODY
-  regex: '@rx (?i)(?:<%=?\s+|#\{[^}]*\})'
-  phase: 4
-  severity: '''ERROR'''
-  block: true
+id: ""
+name: ""
+variable: REQUEST_HEADERS:Cache-Control
+regex: '!@rx ^(?:(?:max-age=[0-9]+|min-fresh=[0-9]+|no-cache|no-store|no-transform|only-if-cached|max-stale(?:=[0-9]+)?)(?:\s*\,\s*|$)){1,7}$'
+phase: 0
+severity: ""
+block: false
+
+id: ""
+name: ""
+variable: REQUEST_HEADERS:Content-Type
+regex: '@rx ^(?i)multipart/form-data'
+phase: 0
+severity: ""
+block: false
+
+id: ""
+name: ""
+variable: REQUEST_BASENAME
+regex: '!@endsWith .pdf'
+phase: 0
+severity: ""
+block: false
+
+id: ""
+name: ""
+variable: REQUEST_HEADERS:Range|REQUEST_HEADERS:Request-Range
+regex: '@rx ^bytes=(?:(?:\d+)?-(?:\d+)?\s*,?\s*){63}'
+phase: 0
+severity: ""
+block: false
+
+id: ""
+name: ""
+variable: REMOTE_ADDR
+regex: '@ipMatch 127.0.0.1,::1'
+phase: 0
+severity: ""
+block: false
+
+id: ""
+name: ""
+variable: REQUEST_URI|REQUEST_HEADERS|ARGS|ARGS_NAMES
+regex: '@rx (?i)\x5cu[0-9a-f]{4}'
+phase: 0
+severity: ""
+block: false
+
+id: ""
+name: ""
+variable: REQUEST_HEADERS:User-Agent
+regex: '@endsWith (internal dummy connection)'
+phase: 0
+severity: ""
+block: false
+
+id: ""
+name: ""
+variable: REQUEST_LINE
+regex: '@rx ^(?:GET /|OPTIONS \*) HTTP/[12]\.[01]$'
+phase: 0
+severity: ""
+block: false
+
+id: ""
+name: ""
+variable: REQUEST_BODY
+regex: '@rx \x25'
+phase: 0
+severity: ""
+block: false
+
+id: ""
+name: ""
+variable: MATCHED_VARS|XML:/*|XML://@*
+regex: '@rx (?i)(?:unmarshaller|base64data|java\.)'
+phase: 0
+severity: ""
+block: false
+
+id: ""
+name: ""
+variable: REQUEST_METHOD
+regex: '!@rx ^(?:OPTIONS|CONNECT)$'
+phase: 0
+severity: ""
+block: false
+
+id: ""
+name: ""
+variable: REQUEST_HEADERS:User-Agent
+regex: '!@pm AppleWebKit Android'
+phase: 0
+severity: ""
+block: false
+
+id: ""
+name: ""
+variable: REQUEST_HEADERS:User-Agent
+regex: '@rx ^(?i)up'
+phase: 0
+severity: ""
+block: false
+
+id: ""
+name: ""
+variable: REQUEST_HEADERS:Content-Length
+regex: '!@rx ^0?$'
+phase: 0
+severity: ""
+block: false
+
+id: ""
+name: ""
+variable: REQUEST_FILENAME|ARGS|ARGS_NAMES
+regex: '@validateUtf8Encoding'
+phase: 0
+severity: ""
+block: false
+
+id: ""
+name: ""
+variable: REQUEST_HEADERS:Referer
+regex: '@rx ^(?:ht|f)tps?://(.*?)/'
+phase: 0
+severity: ""
+block: false
+
+id: ""
+name: ""
+variable: REQUEST_HEADERS:Range|REQUEST_HEADERS:Request-Range
+regex: '@rx ^bytes=(?:(?:\d+)?-(?:\d+)?\s*,?\s*){6}'
+phase: 0
+severity: ""
+block: false
+
+id: ""
+name: ""
+variable: REQUEST_METHOD
+regex: '@streq POST'
+phase: 0
+severity: ""
+block: false
+
+id: ""
+name: ""
+variable: REQUEST_METHOD
+regex: '!@rx ^OPTIONS$'
+phase: 0
+severity: ""
+block: false
+
+id: ""
+name: ""
+variable: '&REQUEST_HEADERS:Content-Length'
+regex: '!@eq 0'
+phase: 0
+severity: ""
+block: false
+
+id: ""
+name: ""
+variable: REQUEST_HEADERS:User-Agent
+regex: '!@pm AppleWebKit Android Business Enterprise Entreprise'
+phase: 0
+severity: ""
+block: false
+
+id: ""
+name: ""
+variable: REQUEST_METHOD
+regex: '!@rx ^OPTIONS$'
+phase: 0
+severity: ""
+block: false
+
+id: ""
+name: ""
+variable: REQBODY_PROCESSOR
+regex: '!@rx (?:URLENCODED|MULTIPART|XML|JSON)'
+phase: 0
+severity: ""
+block: false
+
+id: ""
+name: ""
+variable: '&REQUEST_HEADERS:Transfer-Encoding'
+regex: '!@eq 0'
+phase: 0
+severity: ""
+block: false
+
+id: ""
+name: ""
+variable: REQUEST_BODY
+regex: '@validateUrlEncoding'
+phase: 0
+severity: ""
+block: false
+
+id: ""
+name: ""
+variable: MATCHED_VARS
+regex: '@rx (?:runtime|processbuilder)'
+phase: 0
+severity: ""
+block: false
+
+id: ""
+name: ""
+variable: RESPONSE_BODY
+regex: '@rx \bServer Error in.{0,50}?\bApplication\b'
+phase: 0
+severity: ""
+block: false
+
+id: "901340"
+name: Enabling body inspection
+variable: REQBODY_PROCESSOR
+regex: '!@rx (?:URLENCODED|MULTIPART|XML|JSON)'
+phase: 1
+severity: ""
+block: false
+
+id: "901410"
+name: ""
+variable: UNIQUE_ID
+regex: '@rx ^[a-f]*([0-9])[a-f]*([0-9])'
+phase: 1
+severity: ""
+block: false
+
+id: "905100"
+name: ""
+variable: REQUEST_LINE
+regex: '@streq GET /'
+phase: 1
+severity: ""
+block: false
+
+id: "905110"
+name: ""
+variable: REMOTE_ADDR
+regex: '@ipMatch 127.0.0.1,::1'
+phase: 1
+severity: ""
+block: false
+
+id: "911100"
+name: Method is not allowed by policy
+variable: REQUEST_METHOD
+regex: '!@within %{tx.allowed_methods}'
+phase: 1
+severity: '''CRITICAL'''
+block: true
+
+id: "913100"
+name: Found User-Agent associated with security scanner
+variable: REQUEST_HEADERS:User-Agent
+regex: '@pmFromFile scanners-user-agents.data'
+phase: 1
+severity: '''CRITICAL'''
+block: true
+
+id: "920100"
+name: Invalid HTTP Request Line
+variable: REQUEST_LINE
+regex: '!@rx (?i)^(?:get /[^#\?]*(?:\?[^\s\x0b#]*)?(?:#[^\s\x0b]*)?|(?:connect (?:(?:[0-9]{1,3}\.){3}[0-9]{1,3}\.?(?::[0-9]+)?|[\--9A-Z_a-z]+:[0-9]+)|options \*|[a-z]{3,10}[\s\x0b]+(?:[0-9A-Z_a-z]{3,7}?://[\--9A-Z_a-z]*(?::[0-9]+)?)?/[^#\?]*(?:\?[^\s\x0b#]*)?(?:#[^\s\x0b]*)?)[\s\x0b]+[\.-9A-Z_a-z]+)$'
+phase: 1
+severity: '''WARNING'''
+block: true
+
+id: "920160"
+name: Content-Length HTTP header is not numeric
+variable: REQUEST_HEADERS:Content-Length
+regex: '!@rx ^\d+$'
+phase: 1
+severity: '''CRITICAL'''
+block: true
+
+id: "920170"
+name: GET or HEAD Request with Body Content
+variable: REQUEST_METHOD
+regex: '@rx ^(?:GET|HEAD)$'
+phase: 1
+severity: '''CRITICAL'''
+block: true
+
+id: "920171"
+name: GET or HEAD Request with Transfer-Encoding
+variable: REQUEST_METHOD
+regex: '@rx ^(?:GET|HEAD)$'
+phase: 1
+severity: '''CRITICAL'''
+block: true
+
+id: "920180"
+name: POST without Content-Length or Transfer-Encoding headers
+variable: REQUEST_PROTOCOL
+regex: '!@within HTTP/2 HTTP/2.0 HTTP/3 HTTP/3.0'
+phase: 1
+severity: '''WARNING'''
+block: true
+
+id: "920181"
+name: Content-Length and Transfer-Encoding headers present
+variable: '&REQUEST_HEADERS:Transfer-Encoding'
+regex: '!@eq 0'
+phase: 1
+severity: '''WARNING'''
+block: true
+
+id: "920190"
+name: 'Range: Invalid Last Byte Value'
+variable: REQUEST_HEADERS:Range|REQUEST_HEADERS:Request-Range
+regex: '@rx (\d+)-(\d+)'
+phase: 1
+severity: '''WARNING'''
+block: true
+
+id: "920200"
+name: 'Range: Too many fields (6 or more)'
+variable: REQUEST_HEADERS:Range|REQUEST_HEADERS:Request-Range
+regex: '@rx ^bytes=(?:(?:\d+)?-(?:\d+)?\s*,?\s*){6}'
+phase: 1
+severity: '''WARNING'''
+block: true
+
+id: "920201"
+name: 'Range: Too many fields for pdf request (63 or more)'
+variable: REQUEST_BASENAME
+regex: '@endsWith .pdf'
+phase: 1
+severity: '''WARNING'''
+block: true
+
+id: "920202"
+name: 'Range: Too many fields for pdf request (6 or more)'
+variable: REQUEST_BASENAME
+regex: '@endsWith .pdf'
+phase: 1
+severity: '''WARNING'''
+block: true
+
+id: "920210"
+name: Multiple/Conflicting Connection Header Data Found
+variable: REQUEST_HEADERS:Connection
+regex: '@rx \b(?:keep-alive|close),\s?(?:keep-alive|close)\b'
+phase: 1
+severity: '''WARNING'''
+block: true
+
+id: "920230"
+name: Multiple URL Encoding Detected
+variable: ARGS
+regex: '@rx %[0-9a-fA-F]{2}'
+phase: 2
+severity: '''WARNING'''
+block: true
+
+id: "920240"
+name: URL Encoding Abuse Attack Attempt
+variable: REQUEST_HEADERS:Content-Type
+regex: '@rx ^(?i)application/x-www-form-urlencoded'
+phase: 2
+severity: '''WARNING'''
+block: true
+
+id: "920260"
+name: Unicode Full/Half Width Abuse Attack Attempt
+variable: REQUEST_URI|REQUEST_BODY
+regex: '@rx (?i)%uff[0-9a-f]{2}'
+phase: 2
+severity: '''WARNING'''
+block: true
+
+id: "920270"
+name: Invalid character in request (null character)
+variable: REQUEST_URI_RAW|REQUEST_HEADERS|ARGS|ARGS_NAMES
+regex: '@validateByteRange 1-255'
+phase: 2
+severity: '''CRITICAL'''
+block: true
+
+id: "920271"
+name: Invalid character in request (non printable characters)
+variable: REQUEST_URI_RAW|REQUEST_HEADERS|ARGS|ARGS_NAMES
+regex: '@validateByteRange 9,10,13,32-126,128-255'
+phase: 2
+severity: '''CRITICAL'''
+block: true
+
+id: "920272"
+name: Invalid character in request (outside of printable chars below ascii 127)
+variable: REQUEST_URI_RAW|REQUEST_HEADERS|ARGS|ARGS_NAMES|REQUEST_BODY
+regex: '@validateByteRange 32-36,38-126'
+phase: 2
+severity: '''CRITICAL'''
+block: true
+
+id: "920273"
+name: Invalid character in request (outside of very strict set)
+variable: ARGS|ARGS_NAMES|REQUEST_BODY
+regex: '@validateByteRange 38,44-46,48-58,61,65-90,95,97-122'
+phase: 2
+severity: '''CRITICAL'''
+block: true
+
+id: "920274"
+name: Invalid character in request headers (outside of very strict set)
+variable: REQUEST_HEADERS|!REQUEST_HEADERS:User-Agent|!REQUEST_HEADERS:Referer|!REQUEST_HEADERS:Cookie|!REQUEST_HEADERS:Sec-Fetch-User|!REQUEST_HEADERS:Sec-CH-UA|!REQUEST_HEADERS:Sec-CH-UA-Mobile
+regex: '@validateByteRange 32,34,38,42-59,61,65-90,95,97-122'
+phase: 1
+severity: '''CRITICAL'''
+block: true
+
+id: "920275"
+name: Invalid character in request headers (outside of very strict set)
+variable: REQUEST_HEADERS:Sec-Fetch-User|REQUEST_HEADERS:Sec-CH-UA-Mobile
+regex: '!@rx ^(?:\?[01])?$'
+phase: 1
+severity: '''CRITICAL'''
+block: true
+
+id: "920290"
+name: Empty Host Header
+variable: REQUEST_HEADERS:Host
+regex: '@rx ^$'
+phase: 1
+severity: '''CRITICAL'''
+block: true
+
+id: "920310"
+name: Request Has an Empty Accept Header
+variable: REQUEST_HEADERS:Accept
+regex: '@rx ^$'
+phase: 1
+severity: '''NOTICE'''
+block: false
+
+id: "920311"
+name: Request Has an Empty Accept Header
+variable: REQUEST_HEADERS:Accept
+regex: '@rx ^$'
+phase: 1
+severity: '''NOTICE'''
+block: false
+
+id: "920330"
+name: Empty User Agent Header
+variable: REQUEST_HEADERS:User-Agent
+regex: '@rx ^$'
+phase: 1
+severity: '''NOTICE'''
+block: false
+
+id: "920340"
+name: Request Containing Content
+variable: REQUEST_HEADERS:Content-Length
+regex: '!@rx ^0$'
+phase: 1
+severity: '''NOTICE'''
+block: false
+
+id: "920341"
+name: Request Containing Content Requires Content-Type header
+variable: REQUEST_HEADERS:Content-Length
+regex: '!@rx ^0$'
+phase: 1
+severity: '''CRITICAL'''
+block: true
+
+id: "920350"
+name: Host header is a numeric IP address
+variable: REQUEST_HEADERS:Host
+regex: '@rx (?:^([\d.]+|\[[\da-f:]+\]|[\da-f:]+)(:[\d]+)?$)'
+phase: 1
+severity: '''WARNING'''
+block: true
+
+id: "920420"
+name: Request content type is not allowed by policy
+variable: REQUEST_HEADERS:Content-Type
+regex: '@rx ^[^;\s]+'
+phase: 1
+severity: '''CRITICAL'''
+block: true
+
+id: "920430"
+name: HTTP protocol version is not allowed by policy
+variable: REQUEST_PROTOCOL
+regex: '!@within %{tx.allowed_http_versions}'
+phase: 1
+severity: '''CRITICAL'''
+block: true
+
+id: "920440"
+name: URL file extension is restricted by policy
+variable: REQUEST_BASENAME
+regex: '@rx \.([^.]+)$'
+phase: 1
+severity: '''CRITICAL'''
+block: true
+
+id: "920450"
+name: HTTP header is restricted by policy (%{MATCHED_VAR})
+variable: REQUEST_HEADERS_NAMES
+regex: '@rx ^.*$'
+phase: 1
+severity: '''CRITICAL'''
+block: true
+
+id: "920451"
+name: HTTP header is restricted by policy (%{MATCHED_VAR})
+variable: REQUEST_HEADERS_NAMES
+regex: '@rx ^.*$'
+phase: 1
+severity: '''CRITICAL'''
+block: true
+
+id: "920460"
+name: Abnormal character escapes in request
+variable: REQUEST_URI|REQUEST_HEADERS|ARGS|ARGS_NAMES
+regex: '@rx (?:^|[^\x5c])\x5c[cdeghijklmpqwxyz123456789]'
+phase: 2
+severity: '''CRITICAL'''
+block: true
+
+id: "920490"
+name: Request header x-up-devcap-post-charset detected in combination with prefix \'UP\' to User-Agent
+variable: '&REQUEST_HEADERS:x-up-devcap-post-charset'
+regex: '@ge 1'
+phase: 1
+severity: '''CRITICAL'''
+block: true
+
+id: "920500"
+name: Attempt to access a backup or working file
+variable: REQUEST_FILENAME
+regex: '@rx \.[^.~]+~(?:/.*|)$'
+phase: 1
+severity: '''CRITICAL'''
+block: true
+
+id: "920521"
+name: Illegal Accept-Encoding header
+variable: REQUEST_HEADERS:Accept-Encoding
+regex: '!@rx br|compress|deflate|(?:pack200-)?gzip|identity|\*|^$|aes128gcm|exi|zstd|x-(?:compress|gzip)'
+phase: 1
+severity: '''CRITICAL'''
+block: true
+
+id: "920530"
+name: Multiple charsets detected in content type header
+variable: REQUEST_HEADERS:Content-Type
+regex: '@rx charset.*?charset'
+phase: 1
+severity: '''CRITICAL'''
+block: true
+
+id: "920540"
+name: Possible Unicode character bypass detected
+variable: REQBODY_PROCESSOR
+regex: '!@streq JSON'
+phase: 2
+severity: '''CRITICAL'''
+block: true
+
+id: "920610"
+name: Raw (unencoded) fragment in request URI
+variable: REQUEST_URI_RAW
+regex: '@contains #'
+phase: 1
+severity: '''CRITICAL'''
+block: true
+
+id: "921110"
+name: HTTP Request Smuggling Attack
+variable: ARGS_NAMES|ARGS|REQUEST_BODY|XML:/*
+regex: '@rx (?:get|post|head|options|connect|put|delete|trace|track|patch|propfind|propatch|mkcol|copy|move|lock|unlock)\s+[^\s]+\s+http/\d'
+phase: 2
+severity: '''CRITICAL'''
+block: true
+
+id: "921120"
+name: HTTP Response Splitting Attack
+variable: REQUEST_COOKIES|REQUEST_COOKIES_NAMES|ARGS_NAMES|ARGS|XML:/*
+regex: '@rx [\r\n]\W*?(?:content-(?:type|length)|set-cookie|location):\s*\w'
+phase: 2
+severity: '''CRITICAL'''
+block: true
+
+id: "921130"
+name: HTTP Response Splitting Attack
+variable: REQUEST_COOKIES|REQUEST_COOKIES_NAMES|ARGS_NAMES|ARGS|XML:/*
+regex: '@rx (?:\bhttp/\d|<(?:html|meta)\b)'
+phase: 2
+severity: '''CRITICAL'''
+block: true
+
+id: "921140"
+name: HTTP Header Injection Attack via headers
+variable: REQUEST_HEADERS_NAMES|REQUEST_HEADERS
+regex: '@rx [\n\r]'
+phase: 1
+severity: '''CRITICAL'''
+block: true
+
+id: "921150"
+name: HTTP Header Injection Attack via payload (CR/LF detected)
+variable: ARGS_NAMES
+regex: '@rx [\n\r]'
+phase: 2
+severity: '''CRITICAL'''
+block: true
+
+id: "921151"
+name: HTTP Header Injection Attack via payload (CR/LF detected)
+variable: ARGS_GET
+regex: '@rx [\n\r]'
+phase: 1
+severity: '''CRITICAL'''
+block: true
+
+id: "921160"
+name: HTTP Header Injection Attack via payload (CR/LF and header-name detected)
+variable: ARGS_GET_NAMES|ARGS_GET
+regex: '@rx [\n\r]+(?:\s|location|refresh|(?:set-)?cookie|(?:x-)?(?:forwarded-(?:for|host|server)|host|via|remote-ip|remote-addr|originating-IP))\s*:'
+phase: 1
+severity: '''CRITICAL'''
+block: true
+
+id: "921170"
+name: ""
+variable: ARGS_NAMES
+regex: '@rx .'
+phase: 2
+severity: ""
+block: false
+
+id: "921190"
+name: HTTP Splitting (CR/LF in request filename detected)
+variable: REQUEST_FILENAME
+regex: '@rx [\n\r]'
+phase: 1
+severity: '''CRITICAL'''
+block: true
+
+id: "921200"
+name: LDAP Injection Attack
+variable: REQUEST_COOKIES|REQUEST_COOKIES_NAMES|ARGS_NAMES|ARGS|XML:/*
+regex: '@rx ^[^:\(\)\&\|\!\<\>\~]*\)\s*(?:\((?:[^,\(\)\=\&\|\!\<\>\~]+[><~]?=|\s*[&!|]\s*(?:\)|\()?\s*)|\)\s*\(\s*[\&\|\!]\s*|[&!|]\s*\([^\(\)\=\&\|\!\<\>\~]+[><~]?=[^:\(\)\&\|\!\<\>\~]*)'
+phase: 2
+severity: '''CRITICAL'''
+block: true
+
+id: "921210"
+name: HTTP Parameter Pollution after detecting bogus char after parameter array
+variable: ARGS_NAMES
+regex: '@rx (][^\]]+$|][^\]]+\[)'
+phase: 2
+severity: '''CRITICAL'''
+block: false
+
+id: "921220"
+name: HTTP Parameter Pollution possible via array notation
+variable: ARGS_NAMES
+regex: '@rx \['
+phase: 2
+severity: '''CRITICAL'''
+block: false
+
+id: "921240"
+name: mod_proxy attack attempt detected
+variable: REQUEST_URI_RAW
+regex: '@rx unix:[^|]*\|'
+phase: 1
+severity: '''CRITICAL'''
+block: true
+
+id: "921250"
+name: Old Cookies V1 usage attempt detected
+variable: REQUEST_COOKIES:/\x22?\x24Version/
+regex: '@streq 1'
+phase: 1
+severity: '''CRITICAL'''
+block: true
+
+id: "921421"
+name: 'Content-Type header: Dangerous content type outside the mime type declaration'
+variable: REQUEST_HEADERS:Content-Type
+regex: '@rx ^[^\s\x0b,;]+[\s\x0b,;].*?(?:application/(?:.+\+)?json|(?:application/(?:soap\+)?|text/)xml)'
+phase: 1
+severity: '''CRITICAL'''
+block: true
+
+id: "921422"
+name: 'Content-Type header: Dangerous content type outside the mime type declaration'
+variable: REQUEST_HEADERS:Content-Type
+regex: '@rx ^[^\s\x0b,;]+[\s\x0b,;].*?\b(?:((?:tex|multipar)t|application)|((?:audi|vide)o|image|cs[sv]|(?:vn|relate)d|p(?:df|lain)|json|(?:soa|cs)p|x(?:ml|-www-form-urlencoded)|form-data|x-amf|(?:octe|repor)t|stream)|([\+/]))\b'
+phase: 1
+severity: '''CRITICAL'''
+block: true
+
+id: "922100"
+name: Multipart content type global _charset_ definition is not allowed by policy
+variable: '&MULTIPART_PART_HEADERS:_charset_'
+regex: '!@eq 0'
+phase: 2
+severity: '''CRITICAL'''
+block: true
+
+id: "922110"
+name: 'Illegal MIME Multipart Header content-type: charset parameter'
+variable: MULTIPART_PART_HEADERS
+regex: '@rx ^content-type\s*:\s*(.*)$'
+phase: 2
+severity: '''CRITICAL'''
+block: true
+
+id: "922120"
+name: Content-Transfer-Encoding was deprecated by rfc7578 in 2015 and should not be used
+variable: MULTIPART_PART_HEADERS
+regex: '@rx content-transfer-encoding:(.*)'
+phase: 2
+severity: '''CRITICAL'''
+block: true
+
+id: "922130"
+name: Multipart header contains characters outside of valid range
+variable: MULTIPART_PART_HEADERS
+regex: '@rx [^\x21-\x7E][\x21-\x39\x3B-\x7E]*:'
+phase: 2
+severity: '''CRITICAL'''
+block: true
+
+id: "931100"
+name: 'Possible Remote File Inclusion (RFI) Attack: URL Parameter using IP Address'
+variable: ARGS
+regex: '@rx ^(?i:file|ftps?|https?)://(?:\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})'
+phase: 2
+severity: '''CRITICAL'''
+block: true
+
+id: "931110"
+name: 'Possible Remote File Inclusion (RFI) Attack: Common RFI Vulnerable Parameter Name used w/URL Payload'
+variable: QUERY_STRING|REQUEST_BODY
+regex: '@rx (?i)(?:\binclude\s*\([^)]*|mosConfig_absolute_path|_CONF\[path\]|_SERVER\[DOCUMENT_ROOT\]|GALLERY_BASEDIR|path\[docroot\]|appserv_root|config\[root_dir\])=(?:file|ftps?|https?)://'
+phase: 2
+severity: '''CRITICAL'''
+block: true
+
+id: "931120"
+name: 'Possible Remote File Inclusion (RFI) Attack: URL Payload Used w/Trailing Question Mark Character (?)'
+variable: ARGS
+regex: '@rx ^(?i:file|ftps?|https?).*?\?+$'
+phase: 2
+severity: '''CRITICAL'''
+block: true
+
+id: "931130"
+name: 'Possible Remote File Inclusion (RFI) Attack: Off-Domain Reference/Link'
+variable: ARGS
+regex: '@rx (?i)(?:(?:url|jar):)?(?:a(?:cap|f[ps]|ttachment)|b(?:eshare|itcoin|lob)|c(?:a(?:llto|p)|id|vs|ompress.(?:zlib|bzip2))|d(?:a(?:v|ta)|ict|n(?:s|tp))|e(?:d2k|xpect)|f(?:(?:ee)?d|i(?:le|nger|sh)|tps?)|g(?:it|o(?:pher)?|lob)|h(?:323|ttps?)|i(?:ax|cap|(?:ma|p)ps?|rc[6s]?)|ja(?:bbe)?r|l(?:dap[is]?|ocal_file)|m(?:a(?:ilto|ven)|ms|umble)|n(?:e(?:tdoc|ws)|fs|ntps?)|ogg|p(?:aparazzi|h(?:ar|p)|op(?:2|3s?)|r(?:es|oxy)|syc)|r(?:mi|sync|tm(?:f?p)?|ar)|s(?:3|ftp|ips?|m(?:[bs]|tps?)|n(?:ews|mp)|sh(?:2(?:.(?:s(?:hell|(?:ft|c)p)|exec|tunnel))?)?|vn(?:\+ssh)?)|t(?:e(?:amspeak|lnet)|ftp|urns?)|u(?:dp|nreal|t2004)|v(?:entrilo|iew-source|nc)|w(?:ebcal|ss?)|x(?:mpp|ri)|zip)://?(?:[^@]+@)?([^/]*)'
+phase: 2
+severity: '''CRITICAL'''
+block: true
+
+id: "931131"
+name: 'Possible Remote File Inclusion (RFI) Attack: Off-Domain Reference/Link'
+variable: REQUEST_FILENAME
+regex: '@rx (?i)(?:(?:url|jar):)?(?:a(?:cap|f[ps]|ttachment)|b(?:eshare|itcoin|lob)|c(?:a(?:llto|p)|id|vs|ompress.(?:zlib|bzip2))|d(?:a(?:v|ta)|ict|n(?:s|tp))|e(?:d2k|xpect)|f(?:(?:ee)?d|i(?:le|nger|sh)|tps?)|g(?:it|o(?:pher)?|lob)|h(?:323|ttps?)|i(?:ax|cap|(?:ma|p)ps?|rc[6s]?)|ja(?:bbe)?r|l(?:dap[is]?|ocal_file)|m(?:a(?:ilto|ven)|ms|umble)|n(?:e(?:tdoc|ws)|fs|ntps?)|ogg|p(?:aparazzi|h(?:ar|p)|op(?:2|3s?)|r(?:es|oxy)|syc)|r(?:mi|sync|tm(?:f?p)?|ar)|s(?:3|ftp|ips?|m(?:[bs]|tps?)|n(?:ews|mp)|sh(?:2(?:.(?:s(?:hell|(?:ft|c)p)|exec|tunnel))?)?|vn(?:\+ssh)?)|t(?:e(?:amspeak|lnet)|ftp|urns?)|u(?:dp|nreal|t2004)|v(?:entrilo|iew-source|nc)|w(?:ebcal|ss?)|x(?:mpp|ri)|zip)://(?:[^@]+@)?([^/]*)'
+phase: 1
+severity: '''CRITICAL'''
+block: true
+
+id: "943100"
+name: 'Possible Session Fixation Attack: Setting Cookie Values in HTML'
+variable: REQUEST_COOKIES|REQUEST_COOKIES_NAMES|ARGS_NAMES|ARGS|XML:/*
+regex: '@rx (?i:\.cookie\b.*?;\W*?(?:expires|domain)\W*?=|\bhttp-equiv\W+set-cookie\b)'
+phase: 2
+severity: '''CRITICAL'''
+block: true
+
+id: "943110"
+name: 'Possible Session Fixation Attack: SessionID Parameter Name with Off-Domain Referer'
+variable: ARGS_NAMES
+regex: '@rx ^(?:jsessionid|aspsessionid|asp\.net_sessionid|phpsession|phpsessid|weblogicsession|session_id|session-id|sessionid|cfid|cftoken|cfsid|jservsession|jwsession|_flask_session|_session_id|connect\.sid|laravel_session)$'
+phase: 2
+severity: '''CRITICAL'''
+block: true
+
+id: "943120"
+name: 'Possible Session Fixation Attack: SessionID Parameter Name with No Referer'
+variable: ARGS_NAMES
+regex: '@rx ^(?:jsessionid|aspsessionid|asp\.net_sessionid|phpsession|phpsessid|weblogicsession|session_id|session-id|sessionid|cfid|cftoken|cfsid|jservsession|jwsession|_flask_session|_session_id|connect\.sid|laravel_session)$'
+phase: 2
+severity: '''CRITICAL'''
+block: true
+
+id: "944100"
+name: 'Remote Command Execution: Suspicious Java class detected'
+variable: ARGS|ARGS_NAMES|REQUEST_COOKIES|REQUEST_COOKIES_NAMES|REQUEST_BODY|REQUEST_HEADERS|XML:/*|XML://@*
+regex: '@rx java\.lang\.(?:runtime|processbuilder)'
+phase: 2
+severity: '''CRITICAL'''
+block: true
+
+id: "944110"
+name: 'Remote Command Execution: Java process spawn (CVE-2017-9805)'
+variable: ARGS|ARGS_NAMES|REQUEST_COOKIES|REQUEST_COOKIES_NAMES|REQUEST_BODY|REQUEST_HEADERS|XML:/*|XML://@*
+regex: '@rx (?:runtime|processbuilder)'
+phase: 2
+severity: '''CRITICAL'''
+block: true
+
+id: "944120"
+name: 'Remote Command Execution: Java serialization (CVE-2015-4852)'
+variable: ARGS|ARGS_NAMES|REQUEST_COOKIES|REQUEST_COOKIES_NAMES|REQUEST_BODY|REQUEST_HEADERS|XML:/*|XML://@*
+regex: '@rx (?:clonetransformer|forclosure|instantiatefactory|instantiatetransformer|invokertransformer|prototypeclonefactory|prototypeserializationfactory|whileclosure|getproperty|filewriter|xmldecoder)'
+phase: 2
+severity: '''CRITICAL'''
+block: true
+
+id: "944130"
+name: Suspicious Java class detected
+variable: ARGS|ARGS_NAMES|REQUEST_COOKIES|REQUEST_COOKIES_NAMES|REQUEST_BODY|REQUEST_FILENAME|REQUEST_HEADERS|XML:/*|XML://@*
+regex: '@pmFromFile java-classes.data'
+phase: 2
+severity: '''CRITICAL'''
+block: true
+
+id: "944140"
+name: 'Java Injection Attack: Java Script File Upload Found'
+variable: FILES|REQUEST_HEADERS:X-Filename|REQUEST_HEADERS:X_Filename|REQUEST_HEADERS:X.Filename|REQUEST_HEADERS:X-File-Name
+regex: '@rx .*\.(?:jsp|jspx)\.*$'
+phase: 2
+severity: '''CRITICAL'''
+block: true
+
+id: "944150"
+name: 'Potential Remote Command Execution: Log4j / Log4shell'
+variable: REQUEST_LINE|ARGS|ARGS_NAMES|REQUEST_COOKIES|REQUEST_COOKIES_NAMES|REQUEST_HEADERS|XML:/*|XML://@*
+regex: '@rx (?i)(?:\$|&dollar;?)(?:\{|&l(?:brace|cub);?)(?:[^\}]{0,15}(?:\$|&dollar;?)(?:\{|&l(?:brace|cub);?)|jndi|ctx)'
+phase: 2
+severity: '''CRITICAL'''
+block: true
+
+id: "944151"
+name: 'Potential Remote Command Execution: Log4j / Log4shell'
+variable: REQUEST_LINE|ARGS|ARGS_NAMES|REQUEST_COOKIES|REQUEST_COOKIES_NAMES|REQUEST_HEADERS|XML:/*|XML://@*
+regex: '@rx (?i)(?:\$|&dollar;?)(?:\{|&l(?:brace|cub);?)(?:[^\}]*(?:\$|&dollar;?)(?:\{|&l(?:brace|cub);?)|jndi|ctx)'
+phase: 2
+severity: '''CRITICAL'''
+block: true
+
+id: "944152"
+name: 'Potential Remote Command Execution: Log4j / Log4shell'
+variable: REQUEST_LINE|ARGS|ARGS_NAMES|REQUEST_COOKIES|REQUEST_COOKIES_NAMES|REQUEST_HEADERS|XML:/*|XML://@*
+regex: '@rx (?i)(?:\$|&dollar;?)(?:\{|&l(?:brace|cub);?)'
+phase: 2
+severity: '''CRITICAL'''
+block: true
+
+id: "944200"
+name: Magic bytes Detected
+variable: ARGS|ARGS_NAMES|REQUEST_COOKIES|REQUEST_COOKIES_NAMES|REQUEST_BODY|REQUEST_HEADERS|XML:/*|XML://@*
+regex: '@rx \xac\xed\x00\x05'
+phase: 2
+severity: '''CRITICAL'''
+block: true
+
+id: "944210"
+name: Magic bytes Detected Base64 Encoded
+variable: ARGS|ARGS_NAMES|REQUEST_COOKIES|REQUEST_COOKIES_NAMES|REQUEST_BODY|REQUEST_HEADERS|XML:/*|XML://@*
+regex: '@rx (?:rO0ABQ|KztAAU|Cs7QAF)'
+phase: 2
+severity: '''CRITICAL'''
+block: true
+
+id: "944240"
+name: 'Remote Command Execution: Java serialization (CVE-2015-4852)'
+variable: ARGS|ARGS_NAMES|REQUEST_COOKIES|REQUEST_COOKIES_NAMES|REQUEST_BODY|REQUEST_HEADERS|XML:/*|XML://@*
+regex: '@rx (?:clonetransformer|forclosure|instantiatefactory|instantiatetransformer|invokertransformer|prototypeclonefactory|prototypeserializationfactory|whileclosure|getproperty|filewriter|xmldecoder)'
+phase: 2
+severity: '''CRITICAL'''
+block: true
+
+id: "944250"
+name: 'Remote Command Execution: Suspicious Java method detected'
+variable: ARGS|ARGS_NAMES|REQUEST_COOKIES|REQUEST_COOKIES_NAMES|REQUEST_BODY|REQUEST_HEADERS|XML:/*|XML://@*
+regex: '@rx java\b.+(?:runtime|processbuilder)'
+phase: 2
+severity: '''CRITICAL'''
+block: true
+
+id: "944260"
+name: 'Remote Command Execution: Malicious class-loading payload'
+variable: ARGS|ARGS_NAMES|REQUEST_COOKIES|REQUEST_COOKIES_NAMES|REQUEST_BODY|REQUEST_HEADERS|XML:/*|XML://@*
+regex: '@rx (?:class\.module\.classLoader\.resources\.context\.parent\.pipeline|springframework\.context\.support\.FileSystemXmlApplicationContext)'
+phase: 2
+severity: '''CRITICAL'''
+block: true
+
+id: "944300"
+name: Base64 encoded string matched suspicious keyword
+variable: ARGS|ARGS_NAMES|REQUEST_COOKIES|REQUEST_COOKIES_NAMES|REQUEST_BODY|REQUEST_HEADERS|XML:/*|XML://@*
+regex: '@rx (?:cnVudGltZQ|HJ1bnRpbWU|BydW50aW1l|cHJvY2Vzc2J1aWxkZXI|HByb2Nlc3NidWlsZGVy|Bwcm9jZXNzYnVpbGRlcg|Y2xvbmV0cmFuc2Zvcm1lcg|GNsb25ldHJhbnNmb3JtZXI|BjbG9uZXRyYW5zZm9ybWVy|Zm9yY2xvc3VyZQ|GZvcmNsb3N1cmU|Bmb3JjbG9zdXJl|aW5zdGFudGlhdGVmYWN0b3J5|Gluc3RhbnRpYXRlZmFjdG9yeQ|BpbnN0YW50aWF0ZWZhY3Rvcnk|aW5zdGFudGlhdGV0cmFuc2Zvcm1lcg|Gluc3RhbnRpYXRldHJhbnNmb3JtZXI|BpbnN0YW50aWF0ZXRyYW5zZm9ybWVy|aW52b2tlcnRyYW5zZm9ybWVy|Gludm9rZXJ0cmFuc2Zvcm1lcg|BpbnZva2VydHJhbnNmb3JtZXI|cHJvdG90eXBlY2xvbmVmYWN0b3J5|HByb3RvdHlwZWNsb25lZmFjdG9yeQ|Bwcm90b3R5cGVjbG9uZWZhY3Rvcnk|cHJvdG90eXBlc2VyaWFsaXphdGlvbmZhY3Rvcnk|HByb3RvdHlwZXNlcmlhbGl6YXRpb25mYWN0b3J5|Bwcm90b3R5cGVzZXJpYWxpemF0aW9uZmFjdG9yeQ|d2hpbGVjbG9zdXJl|HdoaWxlY2xvc3VyZQ|B3aGlsZWNsb3N1cmU)'
+phase: 2
+severity: '''CRITICAL'''
+block: true
+
+id: "950010"
+name: ""
+variable: RESPONSE_HEADERS:Content-Encoding
+regex: '@pm gzip compress deflate br zstd'
+phase: 4
+severity: ""
+block: false
+
+id: "950100"
+name: The Application Returned a 500-Level Status Code
+variable: RESPONSE_STATUS
+regex: '@rx ^5\d{2}$'
+phase: 3
+severity: '''ERROR'''
+block: true
+
+id: "950130"
+name: Directory Listing
+variable: RESPONSE_BODY
+regex: '@rx (?:<(?:TITLE>Index of.*?<H|title>Index of.*?<h)1>Index of|>\[To Parent Directory\]</[Aa]><br>)'
+phase: 4
+severity: '''ERROR'''
+block: true
+
+id: "950140"
+name: CGI source code leakage
+variable: RESPONSE_BODY
+regex: '@rx ^#\!\s?/'
+phase: 4
+severity: '''ERROR'''
+block: true
+
+id: "950150"
+name: ASP.NET exception leakage
+variable: RESPONSE_BODY
+regex: '@pmFromFile asp-dotnet-errors.data'
+phase: 4
+severity: '''ERROR'''
+block: true
+
+id: "951010"
+name: ""
+variable: RESPONSE_HEADERS:Content-Encoding
+regex: '@pm gzip compress deflate br zstd'
+phase: 4
+severity: ""
+block: false
+
+id: "951100"
+name: ""
+variable: RESPONSE_BODY
+regex: '!@pmFromFile sql-errors.data'
+phase: 4
+severity: ""
+block: false
+
+id: "951110"
+name: Microsoft Access SQL Information Leakage
+variable: RESPONSE_BODY
+regex: '@rx (?i:JET Database Engine|Access Database Engine|\[Microsoft\]\[ODBC Microsoft Access Driver\])'
+phase: 4
+severity: '''CRITICAL'''
+block: true
+
+id: "951120"
+name: Oracle SQL Information Leakage
+variable: RESPONSE_BODY
+regex: '@rx (?i)\bORA-[0-9][0-9][0-9][0-9][0-9]:|java\.sql\.SQLException|Oracle(?: erro|[^\(\)]{0,20}Drive)r|Warning.{1,10}o(?:ci_.{1,30}|ra_.{1,20})'
+phase: 4
+severity: '''CRITICAL'''
+block: true
+
+id: "951130"
+name: DB2 SQL Information Leakage
+variable: RESPONSE_BODY
+regex: '@rx (?i:DB2 SQL error:|\[IBM\]\[CLI Driver\]\[DB2/6000\]|CLI Driver.*DB2|DB2 SQL error|db2_\w+\()'
+phase: 4
+severity: '''CRITICAL'''
+block: true
+
+id: "951140"
+name: EMC SQL Information Leakage
+variable: RESPONSE_BODY
+regex: '@rx (?i:\[DM_QUERY_E_SYNTAX\]|has occurred in the vicinity of:)'
+phase: 4
+severity: '''CRITICAL'''
+block: true
+
+id: "951150"
+name: firebird SQL Information Leakage
+variable: RESPONSE_BODY
+regex: '@rx (?i)Dynamic SQL Error'
+phase: 4
+severity: '''CRITICAL'''
+block: true
+
+id: "951160"
+name: Frontbase SQL Information Leakage
+variable: RESPONSE_BODY
+regex: '@rx (?i)Exception (?:condition )?\d+\. Transaction rollback\.'
+phase: 4
+severity: '''CRITICAL'''
+block: true
+
+id: "951170"
+name: hsqldb SQL Information Leakage
+variable: RESPONSE_BODY
+regex: '@rx (?i)org\.hsqldb\.jdbc'
+phase: 4
+severity: '''CRITICAL'''
+block: true
+
+id: "951180"
+name: informix SQL Information Leakage
+variable: RESPONSE_BODY
+regex: '@rx (?i:An illegal character has been found in the statement|com\.informix\.jdbc|Exception.*Informix)'
+phase: 4
+severity: '''CRITICAL'''
+block: true
+
+id: "951190"
+name: ingres SQL Information Leakage
+variable: RESPONSE_BODY
+regex: '@rx (?i:Warning.*ingres_|Ingres SQLSTATE|Ingres\W.*Driver)'
+phase: 4
+severity: '''CRITICAL'''
+block: true
+
+id: "951200"
+name: interbase SQL Information Leakage
+variable: RESPONSE_BODY
+regex: '@rx (?i:<b>Warning</b>: ibase_|Unexpected end of command in statement)'
+phase: 4
+severity: '''CRITICAL'''
+block: true
+
+id: "951210"
+name: maxDB SQL Information Leakage
+variable: RESPONSE_BODY
+regex: '@rx (?i:SQL error.*POS[0-9]+.*|Warning.*maxdb.*)'
+phase: 4
+severity: '''CRITICAL'''
+block: true
+
+id: "951220"
+name: mssql SQL Information Leakage
+variable: RESPONSE_BODY
+regex: '@rx (?i)(?:System\.Data\.OleDb\.OleDbException|\[Microsoft\]\[ODBC SQL Server Driver\]|\[Macromedia\]\[SQLServer JDBC Driver\]|\[SqlException|System\.Data\.SqlClient\.SqlException|Unclosed quotation mark after the character string|''80040e14''|mssql_query\(\)|Microsoft OLE DB Provider for ODBC Drivers|Microsoft OLE DB Provider for SQL Server|Incorrect syntax near|Sintaxis incorrecta cerca de|Syntax error in string in query expression|Procedure or function ''.{1,128}'' expects parameter|Unclosed quotation mark before the character string|Syntax error .* in query expression|Data type mismatch in criteria expression\.|ADODB\.Field \(0x800A0BCD\)|the used select statements have different number of columns|OLE DB.*SQL Server|Warning.*mssql_.*|Driver.*SQL[ _-]*Server|Exception.*\WSystem\.Data\.SqlClient\.|Conversion failed when converting the varchar value .*? to data type int\.)'
+phase: 4
+severity: '''CRITICAL'''
+block: true
+
+id: "951230"
+name: mysql SQL Information Leakage
+variable: RESPONSE_BODY
+regex: '@rx (?i)(?:supplied argument is not a valid |SQL syntax.*)MySQL|Column count doesn''t match(?: value count at row)?|mysql_fetch_array\(\)|on MySQL result index|You have an error in your SQL syntax(?:;| near)|MyS(?:QL server version for the right syntax to use|qlClient\.)|\[MySQL\]\[ODBC|(?:Table ''[^'']+'' doesn''t exis|valid MySQL resul)t|Warning.{1,10}mysql_(?:[\(\)_a-z]{1,26})?|(?:ERROR [0-9]{4} \([0-9a-z]{5}\)|XPATH syntax error):'
+phase: 4
+severity: '''CRITICAL'''
+block: true
+
+id: "951240"
+name: postgres SQL Information Leakage
+variable: RESPONSE_BODY
+regex: '@rx (?i)P(?:ostgreSQL(?: query failed:|.{1,20}ERROR)|G::[a-z]*Error)|(?:pg_(?:query|exec)\(\) \[|org\.postgresql\.util\.PSQLException):|Warning.{1,20}\bpg_.*|valid PostgreSQL result|Npgsql\.|Supplied argument is not a valid PostgreSQL .*? resource|(?:Unable to connect to PostgreSQL serv|invalid input syntax for integ)er'
+phase: 4
+severity: '''CRITICAL'''
+block: true
+
+id: "951250"
+name: sqlite SQL Information Leakage
+variable: RESPONSE_BODY
+regex: '@rx (?i)(?:Warning.*sqlite_|Warning.*SQLite3::|SQLite/JDBCDriver|SQLite\.Exception|System\.Data\.SQLite\.SQLiteException)'
+phase: 4
+severity: '''CRITICAL'''
+block: true
+
+id: "951260"
+name: Sybase SQL Information Leakage
+variable: RESPONSE_BODY
+regex: '@rx (?i)(?:Sybase message:|Warning.{2,20}sybase|Sybase.*Server message)'
+phase: 4
+severity: '''CRITICAL'''
+block: true
+
+id: "952010"
+name: ""
+variable: RESPONSE_HEADERS:Content-Encoding
+regex: '@pm gzip compress deflate br zstd'
+phase: 4
+severity: ""
+block: false
+
+id: "953010"
+name: ""
+variable: RESPONSE_HEADERS:Content-Encoding
+regex: '@pm gzip compress deflate br zstd'
+phase: 4
+severity: ""
+block: false
+
+id: "953100"
+name: PHP Information Leakage
+variable: RESPONSE_BODY
+regex: '@pmFromFile php-errors.data'
+phase: 4
+severity: '''ERROR'''
+block: true
+
+id: "953101"
+name: PHP Information Leakage
+variable: RESPONSE_BODY
+regex: '@pmFromFile php-errors-pl2.data'
+phase: 4
+severity: '''ERROR'''
+block: true
+
+id: "953110"
+name: PHP source code leakage
+variable: RESPONSE_BODY
+regex: '@rx (?:\b(?:f(?:tp_(?:nb_)?f?(?:ge|pu)t|get(?:s?s|c)|scanf|write|open|read)|gz(?:(?:encod|writ)e|compress|open|read)|s(?:ession_start|candir)|read(?:(?:gz)?file|dir)|move_uploaded_file|(?:proc_|bz)open|call_user_func)|\$_(?:(?:pos|ge)t|session))\b'
+phase: 4
+severity: '''ERROR'''
+block: true
+
+id: "953120"
+name: PHP source code leakage
+variable: RESPONSE_BODY
+regex: '@rx (?i)<\?(?:=|php)?\s+'
+phase: 4
+severity: '''ERROR'''
+block: true
+
+id: "954010"
+name: ""
+variable: RESPONSE_HEADERS:Content-Encoding
+regex: '@pm gzip compress deflate br zstd'
+phase: 4
+severity: ""
+block: false
+
+id: "954100"
+name: Disclosure of IIS install location
+variable: RESPONSE_BODY
+regex: '@rx (?i)[a-z]:[\x5c/]inetpub\b'
+phase: 4
+severity: '''ERROR'''
+block: true
+
+id: "954110"
+name: Application Availability Error
+variable: RESPONSE_BODY
+regex: '@rx (?:Microsoft OLE DB Provider for SQL Server(?:</font>.{1,20}?error ''800(?:04005|40e31)''.{1,40}?Timeout expired| \(0x80040e31\)<br>Timeout expired<br>)|<h1>internal server error</h1>.*?<h2>part of the server has crashed or it has a configuration error\.</h2>|cannot connect to the server: timed out)'
+phase: 4
+severity: '''ERROR'''
+block: true
+
+id: "954120"
+name: IIS Information Leakage
+variable: RESPONSE_BODY
+regex: '@pmFromFile iis-errors.data'
+phase: 4
+severity: '''ERROR'''
+block: true
+
+id: "954130"
+name: IIS Information Leakage
+variable: RESPONSE_STATUS
+regex: '!@rx ^404$'
+phase: 4
+severity: '''ERROR'''
+block: true
+
+id: "955010"
+name: ""
+variable: RESPONSE_HEADERS:Content-Encoding
+regex: '@pm gzip compress deflate br zstd'
+phase: 4
+severity: ""
+block: false
+
+id: "955100"
+name: PHP Web shell detected
+variable: RESPONSE_BODY
+regex: '@pmFromFile web-shells-php.data'
+phase: 4
+severity: '''CRITICAL'''
+block: true
+
+id: "955110"
+name: r57 web shell
+variable: RESPONSE_BODY
+regex: '@rx <title>r57 Shell Version [0-9.]+</title>|<title>r57 shell</title>'
+phase: 4
+severity: '''CRITICAL'''
+block: true
+
+id: "955120"
+name: WSO web shell
+variable: RESPONSE_BODY
+regex: '@rx ^<html><head><meta http-equiv=''Content-Type'' content=''text/html; charset=(?:Windows-1251|UTF-8)?''><title>.*?(?: -)? W[Ss][Oo] [0-9.]+</title>'
+phase: 4
+severity: '''CRITICAL'''
+block: true
+
+id: "955130"
+name: b4tm4n web shell
+variable: RESPONSE_BODY
+regex: '@rx B4TM4N SH3LL</title>[^<]*<meta name=''author'' content=''k4mpr3t''/>'
+phase: 4
+severity: '''CRITICAL'''
+block: true
+
+id: "955140"
+name: Mini Shell web shell
+variable: RESPONSE_BODY
+regex: '@rx <title>Mini Shell</title>[^D]*Developed By LameHacker'
+phase: 4
+severity: '''CRITICAL'''
+block: true
+
+id: "955150"
+name: Ashiyane web shell
+variable: RESPONSE_BODY
+regex: '@rx <title>\.:: [^~]*~ Ashiyane V [0-9.]+ ::\.</title>'
+phase: 4
+severity: '''CRITICAL'''
+block: true
+
+id: "955160"
+name: Symlink_Sa web shell
+variable: RESPONSE_BODY
+regex: '@rx <title>Symlink_Sa [0-9.]+</title>'
+phase: 4
+severity: '''CRITICAL'''
+block: true
+
+id: "955170"
+name: CasuS web shell
+variable: RESPONSE_BODY
+regex: '@rx <title>CasuS [0-9.]+ by MafiABoY</title>'
+phase: 4
+severity: '''CRITICAL'''
+block: true
+
+id: "955180"
+name: GRP WebShell
+variable: RESPONSE_BODY
+regex: '@rx ^<html>\r\n<head>\r\n<title>GRP WebShell [0-9.]+ '
+phase: 4
+severity: '''CRITICAL'''
+block: true
+
+id: "955190"
+name: NGHshell web shell
+variable: RESPONSE_BODY
+regex: '@rx <small>NGHshell [0-9.]+ by Cr4sh</body></html>\n$'
+phase: 4
+severity: '''CRITICAL'''
+block: true
+
+id: "955200"
+name: SimAttacker web shell
+variable: RESPONSE_BODY
+regex: '@rx <title>SimAttacker - (?:Version|Vrsion) : [0-9.]+ - '
+phase: 4
+severity: '''CRITICAL'''
+block: true
+
+id: "955210"
+name: Unknown web shell
+variable: RESPONSE_BODY
+regex: '@rx ^<!DOCTYPE html>\n<html>\n<!-- By Artyum [^<]*<title>Web Shell</title>'
+phase: 4
+severity: '''CRITICAL'''
+block: true
+
+id: "955220"
+name: lama\'s\'hell web shell
+variable: RESPONSE_BODY
+regex: '@rx <title>lama''s''hell v. [0-9.]+</title>'
+phase: 4
+severity: '''CRITICAL'''
+block: true
+
+id: "955230"
+name: lostDC web shell
+variable: RESPONSE_BODY
+regex: '@rx ^ *<html>\n[ ]+<head>\n[ ]+<title>lostDC - '
+phase: 4
+severity: '''CRITICAL'''
+block: true
+
+id: "955240"
+name: Unknown web shell
+variable: RESPONSE_BODY
+regex: '@rx ^<title>PHP Web Shell</title>\r\n<html>\r\n<body>\r\n    <!-- Replaces command with Base64-encoded Data -->'
+phase: 4
+severity: '''CRITICAL'''
+block: true
+
+id: "955260"
+name: Ru24PostWebShell web shell
+variable: RESPONSE_BODY
+regex: '@rx ^<html>\n<head>\n<title>Ru24PostWebShell '
+phase: 4
+severity: '''CRITICAL'''
+block: true
+
+id: "955270"
+name: s72 Shell web shell
+variable: RESPONSE_BODY
+regex: '@rx <title>s72 Shell v[0-9.]+ Codinf by Cr@zy_King</title>'
+phase: 4
+severity: '''CRITICAL'''
+block: true
+
+id: "955290"
+name: g00nshell web shell
+variable: RESPONSE_BODY
+regex: '@rx ^ <html>\n\n<head>\n\n<title>g00nshell v[0-9.]+ '
+phase: 4
+severity: '''CRITICAL'''
+block: true
+
+id: "955300"
+name: PuNkHoLic shell web shell
+variable: RESPONSE_BODY
+regex: '@contains <title>punkholicshell</title>'
+phase: 4
+severity: '''CRITICAL'''
+block: true
+
+id: "955310"
+name: azrail web shell
+variable: RESPONSE_BODY
+regex: '@rx ^<html>\n      <head>\n             <title>azrail [0-9.]+ by C-W-M</title>'
+phase: 4
+severity: '''CRITICAL'''
+block: true
+
+id: "955320"
+name: SmEvK_PaThAn Shell web shell
+variable: RESPONSE_BODY
+regex: '@rx >SmEvK_PaThAn Shell v[0-9]+ coded by <a href='
+phase: 4
+severity: '''CRITICAL'''
+block: true
+
+id: "955330"
+name: Shell I web shell
+variable: RESPONSE_BODY
+regex: '@rx ^<html>\n<title>[^~]*~ Shell I</title>\n<head>\n<style>'
+phase: 4
+severity: '''CRITICAL'''
+block: true
+
+id: "955340"
+name: b374k m1n1 web shell
+variable: RESPONSE_BODY
+regex: '@rx ^ <html><head><title>:: b374k m1n1 [0-9.]+ ::</title>'
+phase: 4
+severity: '''CRITICAL'''
+block: true
+
+id: "955400"
+name: ASP Web shell detected
+variable: RESPONSE_BODY
+regex: '@pmFromFile web-shells-asp.data'
+phase: 4
+severity: '''CRITICAL'''
+block: true
+
+id: "956010"
+name: ""
+variable: RESPONSE_HEADERS:Content-Encoding
+regex: '@pm gzip compress deflate br zstd'
+phase: 4
+severity: ""
+block: false
+
+id: "956100"
+name: RUBY Information Leakage
+variable: RESPONSE_BODY
+regex: '@pmFromFile ruby-errors.data'
+phase: 4
+severity: '''ERROR'''
+block: true
+
+id: "956110"
+name: Ruby source code leakage
+variable: RESPONSE_BODY
+regex: '@rx (?i)(?:<%=?\s+|#\{[^}]*\})'
+phase: 4
+severity: '''ERROR'''
+block: true
