@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"errors"
 	"io"
+	"log"
 	"strings"
 )
 
@@ -66,6 +67,7 @@ func PreprocessJSONReader(r io.Reader) (map[string]string, map[string]interface{
 
 	// Extract body fields as generic map if present
 	bodyRaw, _ := data["body"].(map[string]interface{})
+	log.Printf("Normalized Headers: %+v", normalizedHeaders)
 
 	return normalizedHeaders, bodyRaw, nil
 }
