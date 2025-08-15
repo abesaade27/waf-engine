@@ -69,3 +69,179 @@ package main
 // 		}
 // 	}
 // }
+
+// HANDLER ANALYZING BOTH RAW AND JSON FORMAT REQUESTS
+//func wafHandler(w http.ResponseWriter, r *http.Request) {
+// 	tx := &rules.Transaction{}
+// 	realHeaders := utils.NormalizeHeaders(r.Header)
+
+// 	finalHeaders := make(map[string]string)
+// 	for k, v := range realHeaders {
+// 		finalHeaders[k] = v
+// 	}
+
+// 	bodyBytes, err := io.ReadAll(io.LimitReader(r.Body, utils.MaxJSONSize))
+// 	if err != nil {
+// 		sendJSONVerdict(w, http.StatusInternalServerError, "error", 0, false, "Failed to read request body: "+err.Error())
+// 		return
+// 	}
+// 	r.Body = io.NopCloser(bytes.NewReader(bodyBytes))
+
+// 	ct := r.Header.Get("Content-Type")
+// 	if strings.Contains(ct, "application/json") && len(bodyBytes) > 0 {
+// 		normHeadersJSON, extractedBody, err := utils.PreprocessJSONReader(bytes.NewReader(bodyBytes))
+// 		if err != nil {
+// 			log.Printf("PreprocessJSONReader error: %v", err)
+// 		} else {
+// 			for k, v := range normHeadersJSON {
+// 				finalHeaders[k] = v
+// 			}
+// 			for name, val := range finalHeaders {
+// 				checkAgainstRules(tx, "HEADERS:"+name, val, r)
+// 				if tx.Block {
+// 					break
+// 				}
+// 			}
+// 			if !tx.Block {
+// 				for key, val := range extractedBody {
+// 					if strVal, ok := val.(string); ok {
+// 						checkAgainstRules(tx, "BODY:"+key, strVal, r)
+// 						if tx.Block {
+// 							break
+// 						}
+// 					}
+// 				}
+// 			}
+// 		}
+// 	}
+
+// 	if !tx.Block && !(strings.Contains(ct, "application/json") && len(bodyBytes) > 0) {
+// 		for name, val := range finalHeaders {
+// 			checkAgainstRules(tx, "HEADERS:"+name, val, r)
+// 			if tx.Block {
+// 				break
+// 			}
+// 		}
+// 		if !tx.Block && len(bodyBytes) > 0 {
+// 			checkAgainstRules(tx, "BODY", string(bodyBytes), r)
+// 		}
+// 	}
+
+// 	if !tx.Block {
+// 		for name, vals := range r.URL.Query() {
+// 			for _, val := range vals {
+// 				checkAgainstRules(tx, "ARGS:"+name, val, r)
+// 				if tx.Block {
+// 					break
+// 				}
+// 			}
+// 			if tx.Block {
+// 				break
+// 			}
+// 		}
+// 	}
+
+// 	if tx.Block {
+// 		sendJSONVerdict(w, http.StatusForbidden, "blocked", tx.InboundAnomalyScorePL1, true, "Malicious Request Blocked")
+// 		return
+// 	}
+
+// 	const threshold = 5
+// 	tx.CalculateCriticalScore()
+// 	if tx.CriticalAnomalyScore >= threshold {
+// 		sendJSONVerdict(w, http.StatusForbidden, "blocked", tx.InboundAnomalyScorePL1, true, "Score too high")
+// 		return
+// 	}
+
+// 	sendJSONVerdict(w, http.StatusOK, "allowed", tx.InboundAnomalyScorePL1, false, "Safe Request")
+// }
+
+////////////////////////////////////////////////////////////////////
+
+// func wafHandler(w http.ResponseWriter, r *http.Request) {
+// 	tx := &rules.Transaction{}
+// 	var matches []string
+
+// 	// ---- Phase 1: Headers ----
+// 	for name, values := range r.Header {
+// 		for _, v := range values {
+// 			checkAgainstRules(tx, "REQUEST_HEADERS:"+strings.ToLower(name), v, r)
+// 			if MatchRule("REQUEST_HEADERS:"+strings.ToLower(name), v, 1) {
+// 				matches = append(matches, fmt.Sprintf("Header match: %s=%s", name, v))
+// 			}
+// 			if tx.Block {
+// 				break
+// 			}
+// 		}
+// 	}
+
+// 	// ---- URI Check ----
+// 	checkAgainstRules(tx, "URI", r.RequestURI, r)
+// 	if MatchRule("URI", r.RequestURI, 1) {
+// 		matches = append(matches, "URI match: "+r.RequestURI)
+// 	}
+
+// 	// ---- Phase 2: JSON body ----
+// 	if strings.Contains(r.Header.Get("Content-Type"), "application/json") {
+// 		bodyBytes, err := io.ReadAll(io.LimitReader(r.Body, utils.MaxJSONSize))
+// 		if err != nil {
+// 			sendJSONVerdict(w, http.StatusInternalServerError, "error", 0, false,
+// 				"Failed to read request body: "+err.Error())
+// 			return
+// 		}
+// 		r.Body = io.NopCloser(bytes.NewReader(bodyBytes)) // Restore for reverse proxy if needed
+
+// 		if len(bodyBytes) > 0 {
+// 			// Normalize headers & extract body
+// 			normHeadersJSON, extractedBody, err := utils.PreprocessJSONReader(bytes.NewReader(bodyBytes))
+// 			if err != nil {
+// 				sendJSONVerdict(w, http.StatusBadRequest, "error", 0, false, "Invalid JSON format")
+// 				return
+// 			}
+
+// 			// Check JSON headers
+// 			for name, val := range normHeadersJSON {
+// 				checkAgainstRules(tx, "REQUEST_HEADERS:"+strings.ToLower(name), val, r)
+// 				if MatchRule("REQUEST_HEADERS:"+strings.ToLower(name), val, 1) {
+// 					matches = append(matches, fmt.Sprintf("Header match: %s=%s", name, val))
+// 				}
+// 				if tx.Block {
+// 					break
+// 				}
+// 			}
+
+// 			// Check flattened JSON body
+// 			if !tx.Block {
+// 				for key, val := range extractedBody {
+// 					if strVal, ok := val.(string); ok {
+// 						checkAgainstRules(tx, "REQUEST_BODY:"+key, strVal, r)
+// 						if MatchRule("REQUEST_BODY:"+key, strVal, 2) {
+// 							matches = append(matches, fmt.Sprintf("Body match: %s=%s", key, strVal))
+// 						}
+// 						if tx.Block {
+// 							break
+// 						}
+// 					}
+// 				}
+// 			}
+// 		}
+// 	}
+
+// 	// ---- Final verdict ----
+// 	block := tx.Block
+// 	if !block {
+// 		const threshold = 5
+// 		tx.CalculateCriticalScore()
+// 		if tx.CriticalAnomalyScore >= threshold {
+// 			block = true
+// 		}
+// 	}
+
+// 	if block || len(matches) > 0 {
+// 		sendJSONVerdict(w, http.StatusForbidden, "blocked", tx.InboundAnomalyScorePL1, true,
+// 			"Malicious Request: "+strings.Join(matches, "; "))
+// 		return
+// 	}
+
+// 	sendJSONVerdict(w, http.StatusOK, "allowed", tx.InboundAnomalyScorePL1, false, "Safe Request")
+//}
