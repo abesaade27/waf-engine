@@ -1,3 +1,39 @@
+/*
+Core Rule Set (CRS) Parser for WAF
+
+This program parses ModSecurity CRS `.conf` files and converts them
+into YAML files compatible with the custom Go WAF.
+
+Key components:
+
+1. Rule struct:
+  - Represents a single CRS rule after parsing.
+  - Fields: ID, Name, Variable (target), Regex pattern, Phase, Severity, Block flag.
+
+2. Main parsing logic:
+  - Walks through all `.conf` files in `coreruleset/rules`.
+  - Detects category based on filename (e.g., XSS, SQLi, RCE, LFI, RFI, Protocol).
+  - Merges multi-line rules ending with backslashes.
+  - Ignores comments and meta/control rules (TX variables, numeric operators like @lt/@gt/@eq).
+
+3. parseActions():
+  - Extracts the ID, message, phase, severity, and block/deny actions from the rule actions string.
+
+4. flattenJSON() is not in this file but used in WAF inspection for JSON body processing.
+
+5. saveYAML() and saveYAMLWithSpacing():
+  - Convert parsed rules into YAML files.
+  - `saveYAMLWithSpacing` writes the rules for a category to a file with indentation.
+  - `ruleset_config.yaml` contains a list of all generated rule files for loading.
+
+6. Output:
+  - Generates YAML files in `parsed_rules` directory.
+  - Allows the Go WAF to load CRS rules in a structured YAML format instead of parsing raw `.conf` at runtime.
+
+Usage:
+- Run this parser once after downloading CRS.
+- The WAF then loads the generated YAML files for rule matching.
+*/
 package main
 
 import (
