@@ -98,7 +98,11 @@ func wafHandler(w http.ResponseWriter, r *http.Request) {
 	sendJSONVerdict(w, http.StatusOK, "allowed", tx.InboundAnomalyScorePL1, false, "Safe Request")
 }
 
-var LogAllMatches = false
+var LogAllMatches = true
+
+//var LogAllMatches =false
+
+// do we need to block on first match or log all matches?
 
 func checkAgainstRules(tx *rules.Transaction, variable, value string, r *http.Request) {
 	if value == "" {
