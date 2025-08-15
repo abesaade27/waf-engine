@@ -1,4 +1,27 @@
-// verdict.go
+/*
+WAF Verdict Response
+
+This file defines the structure and helper function to send
+JSON verdicts from the WAF to the reverse proxy or client.
+
+1. WAFVerdict struct:
+   - Represents the JSON response sent after inspecting a request.
+   - Fields:
+     - Verdict: "allowed", "blocked", or "error"
+     - Score: WAF anomaly score (integer)
+     - Blocked: true if the request is blocked
+     - Reason: optional string explaining why the request was blocked
+     - StatusCode: HTTP response code
+
+2. sendJSONVerdict():
+   - Helper function to write a WAFVerdict as JSON to the ResponseWriter.
+   - Sets Content-Type header and HTTP status code.
+   - Used by WAF handlers after processing requests.
+
+Usage:
+- Call sendJSONVerdict() after applying rules to return the verdict to the client or reverse proxy.
+*/
+
 package main
 
 import (

@@ -1,3 +1,36 @@
+/*
+WAF Request Inspector and Rule Matcher
+
+This file provides the core logic to inspect incoming HTTP requests
+against custom YAML-based WAF rules. Key components:
+
+1. Rule struct:
+  - Represents a single WAF rule after parsing from YAML.
+  - Includes Target(s), Operator (regex or phrase match), Pattern, Phase, and Transformations.
+
+2. applyTransformations():
+  - Applies basic transformations (e.g., lowercase, URL decode, trim)
+    to request values before matching, similar to CRS behavior.
+
+3. MatchRule():
+  - Checks a single request element (header, URI, or body field)
+    against all loaded rules for a given phase.
+  - Supports regex (@rx) and phrase matching (@pm).
+
+4. flattenJSON():
+  - Converts nested JSON request bodies into a flat key=value map
+    using dot notation (e.g., user.name, items[0]).
+
+5. inspectRequest():
+  - Main inspection function.
+  - Phase 1: Inspects request headers and URI.
+  - Phase 2: Inspects JSON body fields after flattening.
+  - Returns a list of matched rules/messages for logging or blocking.
+
+Usage:
+- Populate `LoadedRules` with rules parsed from YAML.
+- Call `inspectRequest(r)` inside your WAF handler to detect anomalies.
+*/
 package main
 
 import (

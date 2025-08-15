@@ -1,3 +1,30 @@
+/*
+WAF Utilities for Logging
+
+This package provides helper functions for logging and other WAF utilities.
+
+Key components:
+
+1. WAFLogger (*log.Logger)
+  - Global logger instance used by the WAF.
+  - Writes logs to both console (stdout) and file (waf.log).
+
+2. InitWAFLogger()
+  - Initializes the WAFLogger.
+  - Opens or creates `waf.log` in append mode.
+  - Uses io.MultiWriter to log simultaneously to file and console.
+  - Ensures clean log output without Go default prefixes (file:line).
+
+3. LogEvent(eventType, clientIP, method, uri, msg string)
+  - Formats a WAF log entry with timestamp, event type, client IP, HTTP method, URI, and custom message.
+  - Example log:
+    [2025-08-15 00:00:00] [ALERT] ClientIP=127.0.0.1 Method=POST URI=/login Details=[Matched Rule 942440] SQL Injection Detected
+  - Used for recording alerts, anomalies, and informational messages.
+
+Usage:
+- Call InitWAFLogger() at WAF startup to initialize logging.
+- Use LogEvent(...) throughout WAF code to log detections and events consistently.
+*/
 package utils
 
 import (

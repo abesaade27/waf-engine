@@ -1,3 +1,35 @@
+/*
+WAF Utility Functions
+
+This package provides helper utilities for preprocessing HTTP requests, normalizing headers,
+and handling JSON bodies for the WAF. These utilities simplify inspection and rule matching.
+
+Key Components:
+
+1. MaxJSONSize
+  - Limits the maximum allowed JSON body size to prevent huge payloads from overwhelming the WAF.
+  - Currently set to 1 MB (1 << 20 bytes).
+
+2. NormalizeHeaders(headers map[string][]string) map[string]string
+  - Converts all header keys to lowercase for consistent rule matching.
+  - Trims whitespace from each header value.
+  - Joins multiple values of the same header with a comma.
+  - Returns a normalized map[string]string ready for inspection.
+
+3. PreprocessJSONReader(r io.Reader) (map[string]string, map[string]interface{}, error)
+  - Reads from an io.Reader (like http.Request.Body) with a size limit of MaxJSONSize.
+  - Parses JSON using json.Decoder (streaming-safe).
+  - Normalizes headers found under the "headers" key in the JSON.
+  - Extracts the "body" object as a generic map[string]interface{}.
+  - Returns normalized headers, extracted body, and any parsing error.
+  - Logs normalized headers for debugging.
+
+Usage:
+  - Call NormalizeHeaders(...) when inspecting request headers to ensure uniform key/value formatting.
+  - Call PreprocessJSONReader(...) when reading JSON payloads to safely parse, normalize, and extract headers/body
+    for rule inspection.
+  - Supports safe inspection of potentially large JSON bodies without reading unlimited data into memory.
+*/
 package utils
 
 import (

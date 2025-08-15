@@ -1,3 +1,31 @@
+/*
+Rules Loader for WAF
+
+This package handles loading parsed YAML rules into memory for the WAF.
+
+Key components:
+
+1. Rule struct:
+  - Represents a single rule loaded from YAML.
+  - Fields: ID, Name, Variable (target), Regex pattern, Phase, Severity, Block flag.
+
+2. AllRules slice:
+  - Holds all loaded rules in memory.
+  - Exported so other WAF packages (like waf.go) can iterate and apply rules.
+
+3. LoadAllRules(dir string):
+  - Clears the regex cache in utils to avoid stale compiled patterns.
+  - Clears the in-memory AllRules slice.
+  - Reads all `.yaml` files in the given directory.
+  - Parses YAML contents into Rule structs.
+  - Appends all rules to AllRules for WAF inspection.
+  - Logs warnings if files cannot be read or parsed.
+  - Logs the total number of rules loaded.
+
+Usage:
+- Call LoadAllRules("parsed_rules") during WAF startup or for hot-reloading rules.
+- Ensures the WAF always uses the latest rules without restarting the server.
+*/
 package rules
 
 import (
