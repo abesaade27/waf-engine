@@ -1,24 +1,16 @@
 package utils
 
 import (
-	"io"
 	"log"
 	"os"
 )
 
-var WAFLogger *log.Logger
+var Logger *log.Logger
 
-// InitWAFLogger sets up logging to both file and console
-func InitWAFLogger() {
-	// Create or open waf.log
-	file, err := os.OpenFile("waf.log", os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666)
+func InitLogger() {
+	file, err := os.OpenFile("waf.log", os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
 	if err != nil {
-		log.Fatalf("❌ Failed to open log file: %v", err)
+		log.Fatal("Failed to open waf.log:", err)
 	}
-
-	// MultiWriter → writes to both file and console
-	multiWriter := io.MultiWriter(file, os.Stdout)
-
-	// Create logger
-	WAFLogger = log.New(multiWriter, "WAF: ", log.Ldate|log.Ltime|log.Lshortfile)
+	Logger = log.New(file, "[WAF] ", log.LstdFlags)
 }
