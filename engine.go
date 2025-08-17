@@ -94,6 +94,9 @@ func (e *Evaluator) InspectPhases(req *Request) Decision {
 // ==========================
 // HTTPHandler (flatten and normalize correctly)
 // ==========================
+// ==========================
+// HTTPHandler (flatten and normalize correctly)
+// ==========================
 func HTTPHandler(eval *Evaluator) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		method, _, _, _, _ := utils.NormalizeHTTP(r)
@@ -164,6 +167,44 @@ func HTTPHandler(eval *Evaluator) http.Handler {
 		// Inspect request
 		dec := eval.InspectPhases(req)
 
+		// =====================
+		// Structured Logging
+		// =====================
+		matchedRules := []utils.MatchedRuleLog{}
+		for _, line := range strings.Split(dec.Message, "\n") {
+			if line == "" {
+				continue
+			}
+			parts := strings.SplitN(line, ":", 3)
+			ruleID := ""
+			ruleName := ""
+			variable := ""
+			if len(parts) >= 2 {
+				ruleID = strings.TrimSpace(strings.Fields(parts[0])[len(strings.Fields(parts[0]))-1])
+				ruleName = strings.TrimSpace(parts[1])
+				if len(parts) > 2 {
+					variable = strings.TrimSpace(parts[2])
+				}
+			}
+			matchedRules = append(matchedRules, utils.MatchedRuleLog{
+				RuleID:      ruleID,
+				RuleName:    ruleName,
+				Variable:    variable,
+				Block:       dec.Block,
+				Description: line,
+			})
+		}
+
+		utils.LogRequest(
+			r.RemoteAddr,
+			req.Method,
+			req.Path,
+			matchedRules,
+			dec.Score,
+			dec.Block,
+		)
+
+		// Respond to client
 		if dec.Block {
 			http.Error(w, dec.Message, http.StatusForbidden)
 			return
