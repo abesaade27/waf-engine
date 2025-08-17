@@ -1,231 +1,35 @@
-- id: "932120"
-  name: 'Remote Command Execution: Windows PowerShell Command Found'
-  variable: REQUEST_COOKIES|REQUEST_COOKIES_NAMES|ARGS_NAMES|ARGS|XML:/*
-  regex: '@pmFromFile windows-powershell-commands.data'
-  phase: 2
-  severity: '''CRITICAL'''
-  block: true
-- id: "932130"
-  name: 'Remote Command Execution: Unix Shell Expression Found'
-  variable: REQUEST_COOKIES|REQUEST_COOKIES_NAMES|ARGS_NAMES|ARGS|XML:/*
-  regex: '@rx \$(?:\((?:.*|\(.*\))\)|\{.*\}|\[.*\])|[<>]\(.*\)|/[0-9A-Z_a-z]*\[!?.+\]'
-  phase: 2
-  severity: '''CRITICAL'''
-  block: true
-- id: "932140"
-  name: 'Remote Command Execution: Windows FOR/IF Command Found'
-  variable: REQUEST_COOKIES|REQUEST_COOKIES_NAMES|ARGS_NAMES|ARGS|XML:/*
-  regex: '@rx \b(?:for(?:/[dflr].*)? %+[^ ]+ in\(.*\)[\s\x0b]?do|if(?:/i)?(?: not)?(?: (?:e(?:xist|rrorlevel)|defined|cmdextversion)\b|[ \(].*(?:\b(?:g(?:eq|tr)|equ|neq|l(?:eq|ss))\b|==)))'
-  phase: 2
-  severity: '''CRITICAL'''
-  block: true
-- id: "932270"
-  name: 'Remote Command Execution: Unix Shell Expression Found'
-  variable: REQUEST_COOKIES|REQUEST_COOKIES_NAMES|ARGS_NAMES|ARGS|XML:/*
-  regex: '@rx ~[\+\-](?:$|[0-9]+)'
-  phase: 2
-  severity: '''CRITICAL'''
-  block: true
-- id: "932280"
-  name: 'Remote Command Execution: Brace Expansion Found'
-  variable: REQUEST_COOKIES|REQUEST_COOKIES_NAMES|ARGS_NAMES|ARGS|XML:/*
-  regex: '@rx \{[0-9A-Z_a-z]*,[,\-0-9A-Z_a-z]*\}'
-  phase: 2
-  severity: '''CRITICAL'''
-  block: true
-- id: "932330"
-  name: 'Remote Command Execution: Unix shell history invocation'
-  variable: REQUEST_COOKIES|REQUEST_COOKIES_NAMES|ARGS_NAMES|ARGS|XML:/*
-  regex: '@rx !-\d'
-  phase: 2
-  severity: '''CRITICAL'''
-  block: true
-- id: "932160"
-  name: 'Remote Command Execution: Unix Shell Code Found'
-  variable: REQUEST_COOKIES|REQUEST_COOKIES_NAMES|ARGS_NAMES|ARGS|XML:/*
-  regex: '@pmFromFile unix-shell.data'
-  phase: 2
-  severity: '''CRITICAL'''
-  block: true
-- id: "932170"
-  name: 'Remote Command Execution: Shellshock (CVE-2014-6271)'
-  variable: REQUEST_HEADERS|REQUEST_LINE
-  regex: '@rx ^\(\s*\)\s+{'
-  phase: 1
-  severity: '''CRITICAL'''
-  block: true
-- id: "932171"
-  name: 'Remote Command Execution: Shellshock (CVE-2014-6271)'
-  variable: ARGS_NAMES|ARGS|FILES_NAMES
-  regex: '@rx ^\(\s*\)\s+{'
-  phase: 2
-  severity: '''CRITICAL'''
-  block: true
-- id: "932180"
-  name: Restricted File Upload Attempt
-  variable: FILES|REQUEST_HEADERS:X-Filename|REQUEST_HEADERS:X_Filename|REQUEST_HEADERS:X-File-Name
-  regex: '@pmFromFile restricted-upload.data'
-  phase: 2
-  severity: '''CRITICAL'''
-  block: true
-- id: "932131"
-  name: 'Remote Command Execution: Unix Shell Expression Found'
-  variable: REQUEST_HEADERS:User-Agent|REQUEST_HEADERS:Referer
-  regex: '@rx \$(?:\((?:.*|\(.*\))\)|\{.*\}|\[.*\])|[<>]\(.*\)|/[0-9A-Z_a-z]*\[!?.+\]'
-  phase: 1
-  severity: '''CRITICAL'''
-  block: true
-- id: "932200"
-  name: RCE Bypass Technique
-  variable: REQUEST_COOKIES|REQUEST_COOKIES_NAMES|ARGS_NAMES|ARGS|XML:/*
-  regex: '@rx [''\*\?\x5c`][^\n/]+/|/[^/]+?[''\*\?\x5c`]|\$[!#\$\(\*\-0-9\?-\[_a-\{]'
-  phase: 2
-  severity: '''CRITICAL'''
-  block: true
-- id: ""
-  name: ""
-  variable: MATCHED_VARS
-  regex: '@rx /'
-  phase: 0
-  severity: ""
-  block: false
-- id: ""
-  name: ""
-  variable: MATCHED_VARS
-  regex: '@rx \s'
-  phase: 0
-  severity: ""
-  block: false
-- id: "932205"
-  name: RCE Bypass Technique
-  variable: REQUEST_HEADERS:Referer
-  regex: '@rx ^[^#]+'
-  phase: 1
-  severity: '''CRITICAL'''
-  block: true
-- id: "932206"
-  name: RCE Bypass Technique
-  variable: REQUEST_HEADERS:Referer
-  regex: '@rx ^[^\.]*?(?:[''\*\?\x5c`][^\n/]+/|/[^/]+?[''\*\?\x5c`]|\$[!#\$\(\*\-0-9\?-\[_a-\{])'
-  phase: 1
-  severity: '''CRITICAL'''
-  block: true
-- id: ""
-  name: ""
-  variable: MATCHED_VARS
-  regex: '@rx /'
-  phase: 0
-  severity: ""
-  block: false
-- id: ""
-  name: ""
-  variable: MATCHED_VARS
-  regex: '@rx \s'
-  phase: 0
-  severity: ""
-  block: false
-- id: "932207"
-  name: RCE Bypass Technique
-  variable: REQUEST_HEADERS:Referer
-  regex: '@rx #.*'
-  phase: 1
-  severity: '''CRITICAL'''
-  block: true
-- id: ""
-  name: ""
-  variable: MATCHED_VAR
-  regex: '@rx /'
-  phase: 0
-  severity: ""
-  block: false
-- id: ""
-  name: ""
-  variable: MATCHED_VAR
-  regex: '@rx \s'
-  phase: 0
-  severity: ""
-  block: false
-- id: ""
-  name: ""
-  variable: MATCHED_VAR
-  regex: '!@beginsWith #:~:text='
-  phase: 0
-  severity: ""
-  block: false
-- id: ""
-  name: ""
-  variable: MATCHED_VARS
-  regex: '!@rx [0-9]\s*\''\s*[0-9]'
-  phase: 0
-  severity: ""
-  block: false
-- id: "932281"
-  name: 'Remote Command Execution: Brace Expansion Found'
-  variable: REQUEST_COOKIES|REQUEST_COOKIES_NAMES|ARGS_NAMES|ARGS|XML:/*
-  regex: '@rx \{[^\s\x0b,:]*,[^\s\x0b]*\}'
-  phase: 2
-  severity: '''CRITICAL'''
-  block: true
-- id: "932271"
-  name: 'Remote Command Execution: Unix Shell Expression Found'
-  variable: REQUEST_COOKIES|REQUEST_COOKIES_NAMES|ARGS_NAMES|ARGS|XML:/*
-  regex: '@rx ~[0-9]+'
-  phase: 2
-  severity: '''CRITICAL'''
-  block: true
-- id: "932300"
-  name: 'Remote Command Execution: SMTP Command Execution'
-  variable: REQUEST_COOKIES|REQUEST_COOKIES_NAMES|ARGS_NAMES|ARGS|XML:/*
-  regex: '@rx (?i)\r\n.*?\b(?:E(?:HLO[\s\x0b][\-\.a-z]{1,255}|XPN[\s\x0b].{1,64})|HELO[\s\x0b][\-\.a-z]{1,255}|MAIL[\s\x0b]FROM:<.{1,64}@.{1,255}>|R(?:CPT[\s\x0b]TO:(?:<.{1,64}@.{1,255}>| )?<.{1,64}>|SET\b)|VRFY[\s\x0b].{1,64}(?:[\s\x0b]<.{1,64}@.{1,255}>|@.{1,255})|AUTH[\s\x0b][\-0-9_a-z]{1,20}[\s\x0b](?:(?:[\+/-9A-Z_a-z]{4})*(?:[\+/-9A-Z_a-z]{2}=|[\+/-9A-Z_a-z]{3}))?=|STARTTLS\b|NOOP\b(?:[\s\x0b].{1,255})?)'
-  phase: 2
-  severity: '''CRITICAL'''
-  block: true
-- id: "932320"
-  name: 'Remote Command Execution: POP3 Command Execution'
-  variable: REQUEST_COOKIES|REQUEST_COOKIES_NAMES|ARGS_NAMES|ARGS|XML:/*
-  regex: '@rx (?is)\r\n.*?\b(?:(?:LIST|TOP [0-9]+)(?: [0-9]+)?|U(?:SER .+?|IDL(?: [0-9]+)?)|PASS .+?|(?:RETR|DELE) [0-9]+?|A(?:POP [0-9A-Z_a-z]+ [0-9a-f]{32}|UTH [\-0-9_a-z]{1,20} (?:(?:[\+/-9A-Z_a-z]{4})*(?:[\+/-9A-Z_a-z]{2}=|[\+/-9A-Z_a-z]{3}))?=))'
-  phase: 2
-  severity: '''CRITICAL'''
-  block: true
-- id: "932161"
-  name: 'Remote Command Execution: Unix Shell Code Found in REQUEST_HEADERS'
-  variable: REQUEST_HEADERS:User-Agent|REQUEST_HEADERS:Referer
-  regex: '@pmFromFile unix-shell.data'
-  phase: 1
-  severity: '''CRITICAL'''
-  block: true
-- id: "932237"
-  name: 'Remote Command Execution: Unix Shell Code Found in REQUEST_HEADERS'
-  variable: REQUEST_HEADERS:User-Agent|REQUEST_HEADERS:Referer
-  regex: '@rx (?i)\b(?:7z(?:[\s\x0b&\),<>\|]|$|[arx](?:[\s\x0b&\),<>\|]|$))|a(?:(?:b|w[ks]|l(?:ias|pine)|xel)(?:[\s\x0b&\),<>\|]|$)|pt(?:[\s\x0b&\),<>\|]|$|-get|itude(?:[\s\x0b&\),<>\|]|$))|r(?:[\s\x0b&\),<>\|]|$|j(?:[\s\x0b&\),<>\|]|$|-register|disp)|(?:p|ch)(?:[\s\x0b&\),<>\|]|$)|ia2c)|s(?:[\s\x0b&\),<>\|]|$|h(?:[\s\x0b&\),<>\|]|$)|cii(?:-xfr|85)|pell)|t(?:[\s\x0b&\),<>\|]|$|obm(?:[\s\x0b&\),<>\|]|$))|dd(?:group|user)|getty|nsible)|b(?:z(?:(?:z|c(?:at|mp))(?:[\s\x0b&\),<>\|]|$)|diff|e(?:grep|xe(?:[\s\x0b&\),<>\|]|$))|f?grep|ip2(?:[\s\x0b&\),<>\|]|$|recover)|less|more)|a(?:s(?:e(?:32|64|n(?:ame(?:[\s\x0b&\),<>\|]|$)|c))|h(?:[\s\x0b&\),<>\|]|$))|tch(?:[\s\x0b&\),<>\|]|$))|lkid(?:[\s\x0b&\),<>\|]|$)|pftrace|r(?:eaksw|idge(?:[\s\x0b&\),<>\|]|$))|sd(?:cat|iff|tar)|u(?:iltin|n(?:dler(?:[\s\x0b&\),<>\|]|$)|zip2)|s(?:ctl|ybox))|y(?:ebug|obu(?:[\s\x0b&\),<>\|]|$)))|c(?:[89]9(?:[\s\x0b&\),<>\|]|$|-gcc)|(?:a(?:t|ncel|psh)|c|mp)(?:[\s\x0b&\),<>\|]|$)|p(?:[\s\x0b&\),<>\|]|$|io(?:[\s\x0b&\),<>\|]|$)|ulimit)|s(?:(?:h|cli)(?:[\s\x0b&\),<>\|]|$)|plit|vtool)|u(?:t(?:[\s\x0b&\),<>\|]|$)|psfilter)|ertbot|h(?:(?:(?:att|di)r|mod|o(?:om|wn)|root|sh)(?:[\s\x0b&\),<>\|]|$)|e(?:ck_(?:by_ssh|cups|log|memory|raid|s(?:sl_cert|tatusfile))|f(?:[\s\x0b&\),\-<>\|]|$))|(?:flag|pas)s|g(?:passwd|rp(?:[\s\x0b&\),<>\|]|$)))|lang(?:[\s\x0b&\),<>\|]|$|\+\+)|o(?:bc(?:[\s\x0b&\),<>\|]|$|run)|lumn(?:[\s\x0b&\),<>\|]|$)|m(?:m(?:[\s\x0b&\),<>\|]|$|and(?:[\s\x0b&\),<>\|]|$))|p(?:oser|ress)(?:[\s\x0b&\),<>\|]|$))|proc|w(?:say|think))|r(?:ash(?:[\s\x0b&\),<>\|]|$)|on(?:[\s\x0b&\),<>\|]|$|tab)))|d(?:(?:[dfu]|i(?:(?:alo)?g|r|ff)|a(?:sh|te)|vips)(?:[\s\x0b&\),<>\|]|$)|nf(?:[\s\x0b&\),<>\|]|$)?|hclient|m(?:esg(?:[\s\x0b&\),<>\|]|$)|idecode|setup)|o(?:(?:as|ne)(?:[\s\x0b&\),<>\|]|$)|cker(?:[\s\x0b&\),\-<>\|]|$)|sbox)|pkg(?:[\s\x0b&\),\-<>\|]|$))|e(?:(?:[bd]|qn|cho|fax|grep|macs|val)(?:[\s\x0b&\),<>\|]|$)|n(?:v(?:[\s\x0b&\),<>\|]|$|-update)|d(?:if|sw)(?:[\s\x0b&\),<>\|]|$))|s(?:[\s\x0b&\),<>\|]|$|(?:h|ac)(?:[\s\x0b&\),<>\|]|$))|x(?:[\s\x0b&\),<>\|]|$|(?:ec|p(?:and|(?:ec|or)t|r))(?:[\s\x0b&\),<>\|]|$)|iftool)|2fsck|asy_install)|f(?:(?:c|mt|etch|lock|unction)(?:[\s\x0b&\),<>\|]|$)|d(?:[\s\x0b&\),<>\|]|$|(?:find|isk)(?:[\s\x0b&\),<>\|]|$)|u?mount)|g(?:[\s\x0b&\),<>\|]|$|rep(?:[\s\x0b&\),<>\|]|$))|i(?:[\s\x0b&\),<>\|]|$|le(?:[\s\x0b&\),<>\|]|$|test)|(?:n(?:d|ger)|sh)(?:[\s\x0b&\),<>\|]|$))|tp(?:[\s\x0b&\),<>\|]|$|stats|who)|acter|o(?:ld(?:[\s\x0b&\),<>\|]|$)|reach)|ping(?:[\s\x0b&\),6<>\|]|$))|g(?:c(?:c[^\s\x0b]{1,10}\b|ore(?:[\s\x0b&\),<>\|]|$))|(?:db|i(?:t|mp|nsh)|o|pg|awk|z(?:cat|exe|ip))(?:[\s\x0b&\),<>\|]|$)|e(?:(?:m|tfacl)(?:[\s\x0b&\),<>\|]|$)|ni(?:e(?:[\s\x0b&\),<>\|]|$)|soimage))|hc(?:[\s\x0b&\),<>\|]|$|-(?:[\s\x0b&\),<>\|]|$)|i(?:[\s\x0b&\),\-<>\|]|$))|r(?:c(?:[\s\x0b&\),<>\|]|$|at(?:[\s\x0b&\),<>\|]|$))|ep(?:[\s\x0b&\),<>\|]|$)|oup(?:[\s\x0b&\),<>\|]|$|mod))|tester|unzip)|(?:(?:GE|POS)T|y(?:e(?:s|lp)|um|arn)|HEAD)(?:[\s\x0b&\),<>\|]|$)|h(?:(?:d|up|ash|i(?:ghlight|story))(?:[\s\x0b&\),<>\|]|$)|e(?:ad(?:[\s\x0b&\),<>\|]|$)|xdump)|ost(?:id|name)|ping3|t(?:digest|op(?:[\s\x0b&\),<>\|]|$)|passwd))|i(?:(?:d|rb|conv|nstall)(?:[\s\x0b&\),<>\|]|$)|p(?:[\s\x0b&\),<>\|]|$|6?tables|config|p(?:eveprinter|find|tool))|f(?:config|top(?:[\s\x0b&\),<>\|]|$))|onice|spell)|j(?:(?:js|q|ava|exec)(?:[\s\x0b&\),<>\|]|$)|o(?:(?:bs|in)(?:[\s\x0b&\),<>\|]|$)|urnalctl)|runscript)|k(?:s(?:h(?:[\s\x0b&\),<>\|]|$)|shell)|ill(?:[\s\x0b&\),<>\|]|$|all)|nife(?:[\s\x0b&\),<>\|]|$))|l(?:d(?:[\s\x0b&\),<>\|]|$|d(?:[\s\x0b&\),<>\|]|$)|config)|(?:[np]|ynx)(?:[\s\x0b&\),<>\|]|$)|s(?:[\s\x0b&\),<>\|]|$|(?:-F|cpu|hw|mod|of|pci|usb)(?:[\s\x0b&\),<>\|]|$)|b_release)|ua(?:[\s\x0b&\),<>\|]|$|(?:la)?tex)|z(?:[\s\x0b&\),<>\|]|$|4(?:[\s\x0b&\),<>\|]|$|c(?:[\s\x0b&\),<>\|]|$|at))|c(?:at|mp)(?:[\s\x0b&\),<>\|]|$)|diff|[ef]?grep|less|m(?:a(?:[\s\x0b&\),<>\|]|$|dec|info)|ore))|a(?:st(?:[\s\x0b&\),<>\|]|$|comm(?:[\s\x0b&\),<>\|]|$)|log(?:in)?)|tex(?:[\s\x0b&\),<>\|]|$))|ess(?:[\s\x0b&\),<>\|]|$|echo|(?:fil|pip)e)|ftp(?:[\s\x0b&\),<>\|]|$|get)|o(?:(?:ca(?:l|te)|ok)(?:[\s\x0b&\),<>\|]|$)|g(?:inctl|(?:nam|sav)e)|setup)|trace|wp-(?:d(?:ownload|ump)|mirror|request))|m(?:a(?:(?:n|ke|wk)(?:[\s\x0b&\),<>\|]|$)|il(?:[\s\x0b&\),<>\|]|$|[qx](?:[\s\x0b&\),<>\|]|$))|ster\.passwd)|(?:tr|v|utt)(?:[\s\x0b&\),<>\|]|$)|k(?:(?:dir|nod)(?:[\s\x0b&\),<>\|]|$)|fifo|temp)|locate|o(?:(?:re|unt)(?:[\s\x0b&\),<>\|]|$)|squitto)|sg(?:attrib|c(?:at|onv)|filter|merge|uniq)|ysql(?:[\s\x0b&\),<>\|]|$|admin|dump(?:slow)?|hotcopy|show))|n(?:c(?:[\s\x0b&\),<>\|]|$|\.(?:openbsd|traditional)|at(?:[\s\x0b&\),<>\|]|$))|e(?:t(?:[\s\x0b&\),<>\|]|$|(?:c|st)at|kit-ftp|plan)|ofetch)|(?:(?:ul)?l|p(?:m|ing)|a(?:no|sm|wk)|ice|o(?:de|hup)|roff)(?:[\s\x0b&\),<>\|]|$)|m(?:[\s\x0b&\),<>\|]|$|ap(?:[\s\x0b&\),<>\|]|$))|s(?:enter|lookup|tat(?:[\s\x0b&\),<>\|]|$)))|o(?:(?:d|ctave)(?:[\s\x0b&\),<>\|]|$)|nintr|p(?:en(?:ssl|v(?:pn|t))|kg(?:[\s\x0b&\),<>\|]|$)))|p(?:a(?:(?:x|cman|rted|tch)(?:[\s\x0b&\),<>\|]|$)|s(?:swd|te(?:[\s\x0b&\),<>\|]|$)))|d(?:b(?:[\s\x0b&\),<>\|]|$|2mb|3(?:[\s\x0b&\),\.<>\|]|$))|f(?:la)?tex|ksh(?:[\s\x0b&\),<>\|]|$))|f(?:[\s\x0b&\),<>\|]|$|tp(?:[\s\x0b&\),<>\|]|$))|g(?:[\s\x0b&\),<>\|]|$|rep(?:[\s\x0b&\),<>\|]|$))|hp(?:[\s\x0b&\),<>\|]|$|-cgi|[57](?:[\s\x0b&\),<>\|]|$))|i(?:c(?:[\s\x0b&\),<>\|]|$|o(?:[\s\x0b&\),<>\|]|$))|p[^\s\x0b]{1,10}\b|dstat|(?:gz|ng)(?:[\s\x0b&\),<>\|]|$))|k(?:g(?:[\s\x0b&\),<>\|]|$|_?info)|exec|ill(?:[\s\x0b&\),<>\|]|$))|r(?:[\s\x0b&\),<>\|]|$|y(?:[\s\x0b&\),<>\|]|$)|int(?:env|f(?:[\s\x0b&\),<>\|]|$)))|s(?:[\s\x0b&\),<>\|]|$|(?:ed|ql)(?:[\s\x0b&\),<>\|]|$)|ftp)|t(?:x(?:[\s\x0b&\),<>\|]|$)|ar(?:[\s\x0b&\),<>\|]|$|diff|grep))|wd(?:[\s\x0b&\),<>\|]|$|\.db)|(?:xz|opd|u(?:ppet|shd))(?:[\s\x0b&\),<>\|]|$)|er(?:(?:f|ms)(?:[\s\x0b&\),<>\|]|$)|l(?:5?(?:[\s\x0b&\),<>\|]|$)|sh))|y(?:3?versions|thon[23]))|r(?:(?:a(?:r|k[eu])|bash|nano|oute|vi(?:ew|m))(?:[\s\x0b&\),<>\|]|$)|c(?:[\s\x0b&\),<>\|]|$|p(?:[\s\x0b&\),<>\|]|$))|e(?:d(?:[\s\x0b&\),<>\|]|$|carpet(?:[\s\x0b&\),<>\|]|$))|(?:v|boot|name|p(?:eat|lace))(?:[\s\x0b&\),<>\|]|$)|a(?:delf|lpath)|stic)|m(?:[\s\x0b&\),<>\|]|$|dir(?:[\s\x0b&\),<>\|]|$)|user)|pm(?:[\s\x0b&\),<>\|]|$|db(?:[\s\x0b&\),<>\|]|$)|(?:quer|verif)y)|l(?:ogin|wrap)|sync(?:-ssl|[\s\x0b&\),<>\|]|$)|u(?:by[^\s\x0b]{1,10}\b|n-(?:mailcap|parts)))|s(?:(?:c(?:p|hed|r(?:een|ipt))|g|ash|diff|ftp|l(?:eep|sh))(?:[\s\x0b&\),<>\|]|$)|e(?:(?:d|ndmail|rvice)(?:[\s\x0b&\),<>\|]|$)|t(?:[\s\x0b&\),<>\|]|$|arch|env|facl(?:[\s\x0b&\),<>\|]|$)|sid))|h(?:[\s\x0b&\),<>\|]|$|\.distrib|(?:adow|ells|u(?:f|tdown))(?:[\s\x0b&\),<>\|]|$))|s(?:[\s\x0b&\),<>\|]|$|h(?:[\s\x0b&\),<>\|]|$|-key(?:ge|sca)n|pass))|u(?:[\s\x0b&\),<>\|]|$|do(?:-rs|[\s\x0b&\),<>_\|]|$|edit|replay))|vn(?:[\s\x0b&\),<>\|]|$|a(?:dmin|uthz)|bench|dumpfilter|fsfs|look|mucc|rdump|s(?:erve|ync)|version)|mbclient|o(?:(?:(?:ca|r)t|urce)(?:[\s\x0b&\),<>\|]|$)|elim)|p(?:lit(?:[\s\x0b&\),<>\|]|$)|wd\.db)|qlite3|t(?:art-stop-daemon|d(?:buf|err|in(?:[\s\x0b&\),<>\|]|$)|out)|r(?:ace|ings(?:[\s\x0b&\),<>\|]|$)))|ys(?:ctl|tem(?:ctl|d-resolve)))|t(?:a(?:[cr](?:[\s\x0b&\),<>\|]|$)|il(?:[\s\x0b&\),<>\|]|$|f(?:[\s\x0b&\),<>\|]|$))|sk(?:[\s\x0b&\),<>\|]|$|set))|(?:bl|o(?:p|uch)|ftp|mux)(?:[\s\x0b&\),<>\|]|$)|c(?:p(?:[\s\x0b&\),<>\|]|$|dump|ing|traceroute)|l?sh(?:[\s\x0b&\),<>\|]|$))|e(?:[ex](?:[\s\x0b&\),<>\|]|$)|lnet)|i(?:c(?:[\s\x0b&\),<>\|]|$)|me(?:[\s\x0b&\),<>\|]|$|datectl|out(?:[\s\x0b&\),<>\|]|$)))|r(?:aceroute6?|off(?:[\s\x0b&\),<>\|]|$))|shark)|u(?:dp(?:[\s\x0b&\),<>\|]|$)|l(?:[\s\x0b&\),<>\|]|$|imit(?:[\s\x0b&\),<>\|]|$))|n(?:(?:ame|compress|iq|rar|s(?:et|hare)|xz)(?:[\s\x0b&\),<>\|]|$)|expand|l(?:ink(?:[\s\x0b&\),<>\|]|$)|z(?:4(?:[\s\x0b&\),<>\|]|$)|ma))|pigz|z(?:ip(?:[\s\x0b&\),<>\|]|$)|std))|p(?:2date(?:[\s\x0b&\),<>\|]|$)|date-alternatives)|ser(?:(?:ad|mo)d|del)|u(?:de|en)code)|v(?:i(?:[\s\x0b&\),<>\|]|$|m(?:[\s\x0b&\),<>\|]|$|diff)|(?:[ep]w|gr|rsh)(?:[\s\x0b&\),<>\|]|$)|sudo(?:-rs)?)|algrind|olatility(?:[\s\x0b&\),<>\|]|$))|w(?:[\s\x0b&\),<>\|]|$|(?:c|a(?:ll|tch))(?:[\s\x0b&\),<>\|]|$)|h(?:o(?:[\s\x0b&\),<>\|]|$|ami|is(?:[\s\x0b&\),<>\|]|$))?|iptail(?:[\s\x0b&\),<>\|]|$))|i(?:reshark|sh(?:[\s\x0b&\),<>\|]|$)))|x(?:(?:(?:x|pa)d|args|term)(?:[\s\x0b&\),<>\|]|$)|z(?:[\s\x0b&\),<>\|]|$|c(?:at|mp)(?:[\s\x0b&\),<>\|]|$)|d(?:ec(?:[\s\x0b&\),<>\|]|$)|iff)|[ef]?grep|less|more)|e(?:latex|tex(?:[\s\x0b&\),<>\|]|$))|mo(?:dmap|re(?:[\s\x0b&\),<>\|]|$)))|z(?:ip(?:[\s\x0b&\),<>\|]|$|c(?:loak|mp)|details|grep|info|(?:merg|not)e|split|tool)|s(?:h(?:[\s\x0b&\),<>\|]|$)|oelim|td(?:[\s\x0b&\),<>\|]|$|(?:ca|m)t|grep|less))|athura|(?:c(?:at|mp)|diff|grep|less|run)(?:[\s\x0b&\),<>\|]|$)|e(?:grep|ro(?:[\s\x0b&\),<>\|]|$))|fgrep|mo(?:dload|re(?:[\s\x0b&\),<>\|]|$))|ypper))(?:\b|[^0-9A-Z_a-z])'
-  phase: 1
-  severity: '''CRITICAL'''
-  block: true
-- id: "932190"
-  name: 'Remote Command Execution: Wildcard bypass technique attempt'
+- id: "931100"
+  name: 'Possible Remote File Inclusion (RFI) Attack: URL Parameter using IP Address'
   variable: ARGS
-  regex: '@rx /(?:[?*]+[a-z/]+|[a-z/]+[?*]+)'
+  regex: ^(?i:file|ftps?|https?)://(?:\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})
   phase: 2
   severity: '''CRITICAL'''
   block: true
-- id: "932301"
-  name: 'Remote Command Execution: SMTP Command Execution'
-  variable: REQUEST_COOKIES|REQUEST_COOKIES_NAMES|ARGS_NAMES|ARGS|XML:/*
-  regex: '@rx \r\n.*?\b(?:DATA|QUIT|HELP(?: .{1,255})?)'
+- id: "931110"
+  name: 'Possible Remote File Inclusion (RFI) Attack: Common RFI Vulnerable Parameter Name used w/URL Payload'
+  variable: QUERY_STRING|REQUEST_BODY
+  regex: (?i)(?:\binclude\s*\([^)]*|mosConfig_absolute_path|_CONF\[path\]|_SERVER\[DOCUMENT_ROOT\]|GALLERY_BASEDIR|path\[docroot\]|appserv_root|config\[root_dir\])=(?:file|ftps?|https?)://
   phase: 2
   severity: '''CRITICAL'''
   block: true
-- id: "932321"
-  name: 'Remote Command Execution: POP3 Command Execution'
-  variable: REQUEST_COOKIES|REQUEST_COOKIES_NAMES|ARGS_NAMES|ARGS|XML:/*
-  regex: '@rx \r\n.*?\b(?:(?:QUI|STA|RSE)T|NOOP|CAPA)'
+- id: "931120"
+  name: 'Possible Remote File Inclusion (RFI) Attack: URL Payload Used w/Trailing Question Mark Character (?)'
+  variable: ARGS
+  regex: ^(?i:file|ftps?|https?).*?\?+$
   phase: 2
   severity: '''CRITICAL'''
   block: true
-- id: "932331"
-  name: 'Remote Command Execution: Unix shell history invocation'
-  variable: REQUEST_COOKIES|REQUEST_COOKIES_NAMES|ARGS_NAMES|ARGS|XML:/*
-  regex: '@rx !(?:\d|!)'
+- id: "931130"
+  name: 'Possible Remote File Inclusion (RFI) Attack: Off-Domain Reference/Link'
+  variable: ARGS
+  regex: (?i)(?:(?:url|jar):)?(?:a(?:cap|f[ps]|ttachment)|b(?:eshare|itcoin|lob)|c(?:a(?:llto|p)|id|vs|ompress.(?:zlib|bzip2))|d(?:a(?:v|ta)|ict|n(?:s|tp))|e(?:d2k|xpect)|f(?:(?:ee)?d|i(?:le|nger|sh)|tps?)|g(?:it|o(?:pher)?|lob)|h(?:323|ttps?)|i(?:ax|cap|(?:ma|p)ps?|rc[6s]?)|ja(?:bbe)?r|l(?:dap[is]?|ocal_file)|m(?:a(?:ilto|ven)|ms|umble)|n(?:e(?:tdoc|ws)|fs|ntps?)|ogg|p(?:aparazzi|h(?:ar|p)|op(?:2|3s?)|r(?:es|oxy)|syc)|r(?:mi|sync|tm(?:f?p)?|ar)|s(?:3|ftp|ips?|m(?:[bs]|tps?)|n(?:ews|mp)|sh(?:2(?:.(?:s(?:hell|(?:ft|c)p)|exec|tunnel))?)?|vn(?:\+ssh)?)|t(?:e(?:amspeak|lnet)|ftp|urns?)|u(?:dp|nreal|t2004)|v(?:entrilo|iew-source|nc)|w(?:ebcal|ss?)|x(?:mpp|ri)|zip)://?(?:[^@]+@)?([^/]*)
   phase: 2
   severity: '''CRITICAL'''
   block: true
+- id: "931131"
+  name: 'Possible Remote File Inclusion (RFI) Attack: Off-Domain Reference/Link'
+  variable: REQUEST_FILENAME
+  regex: (?i)(?:(?:url|jar):)?(?:a(?:cap|f[ps]|ttachment)|b(?:eshare|itcoin|lob)|c(?:a(?:llto|p)|id|vs|ompress.(?:zlib|bzip2))|d(?:a(?:v|ta)|ict|n(?:s|tp))|e(?:d2k|xpect)|f(?:(?:ee)?d|i(?:le|nger|sh)|tps?)|g(?:it|o(?:pher)?|lob)|h(?:323|ttps?)|i(?:ax|cap|(?:ma|p)ps?|rc[6s]?)|ja(?:bbe)?r|l(?:dap[is]?|ocal_file)|m(?:a(?:ilto|ven)|ms|umble)|n(?:e(?:tdoc|ws)|fs|ntps?)|ogg|p(?:aparazzi|h(?:ar|p)|op(?:2|3s?)|r(?:es|oxy)|syc)|r(?:mi|sync|tm(?:f?p)?|ar)|s(?:3|ftp|ips?|m(?:[bs]|tps?)|n(?:ews|mp)|sh(?:2(?:.(?:s(?:hell|(?:ft|c)p)|exec|tunnel))?)?|vn(?:\+ssh)?)|t(?:e(?:amspeak|lnet)|ftp|urns?)|u(?:dp|nreal|t2004)|v(?:entrilo|iew-source|nc)|w(?:ebcal|ss?)|x(?:mpp|ri)|zip)://(?:[^@]+@)?([^/]*)
+  phase: 1
+  severity: '''CRITICAL'''
+  block: false
