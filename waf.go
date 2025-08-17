@@ -13,21 +13,21 @@ import (
 func main() {
 	utils.InitLogger()
 
-	// Load parsed rules directly
+	// 1️⃣ Load parsed rules directly
 	err := rules.LoadRules("parsed_rules")
 	if err != nil {
 		log.Fatalf("❌ Failed to load rules: %v", err)
 	}
 	log.Printf("✅ Loaded %d rules", len(rules.AllRules))
 
-	// Build engine with global rules
+	// 2️⃣ Build engine with global rules and precompiled regex
 	enf := NewEvaluator(rules.AllRules)
 
-	// Setup HTTP mux with WAF handler
+	// 3️⃣ Setup HTTP mux with WAF handler
 	mux := http.NewServeMux()
 	mux.Handle("/", HTTPHandler(enf))
 
-	// Start server
+	// 4️⃣ Start server
 	srv := &http.Server{
 		Addr:              ":8080",
 		Handler:           mux,
