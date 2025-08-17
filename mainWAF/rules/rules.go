@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"regexp"
 
 	"gopkg.in/yaml.v3"
 )
@@ -17,6 +18,7 @@ type Rule struct {
 	Phase    int    `yaml:"phase"`
 	Severity string `yaml:"severity"`
 	Block    bool   `yaml:"block"`
+	Compiled *regexp.Regexp
 }
 
 // AllRules holds every rule loaded from YAML
@@ -40,6 +42,13 @@ func LoadRules(dir string) error {
 		if err := dec.Decode(&rules); err != nil {
 			// skip files that aren’t lists of rules (like ruleset_config.yaml)
 			return nil
+		}
+
+		// ✅ Compile regex immediately for each rule
+		for i := range rules {
+			if rules[i].Regex != "" {
+				rules[i].Compiled, _ = regexp.Compile(rules[i].Regex)
+			}
 		}
 
 		AllRules = append(AllRules, rules...)
