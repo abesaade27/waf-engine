@@ -1,0 +1,21 @@
+- id: "901340"
+  name: Enabling body inspection
+  variable: REQBODY_PROCESSOR
+  regex: '!@rx (?:URLENCODED|MULTIPART|XML|JSON)'
+  phase: 1
+  severity: ""
+  block: false
+- id: ""
+  name: ""
+  variable: REQBODY_PROCESSOR
+  regex: '!@rx (?:URLENCODED|MULTIPART|XML|JSON)'
+  phase: 0
+  severity: ""
+  block: false
+- id: "901410"
+  name: ""
+  variable: UNIQUE_ID
+  regex: ^[a-f]*([0-9])[a-f]*([0-9])
+  phase: 1
+  severity: ""
+  block: false

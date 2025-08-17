@@ -1,0 +1,28 @@
+- id: "922100"
+  name: Multipart content type global _charset_ definition is not allowed by policy
+  variable: '&MULTIPART_PART_HEADERS:_charset_'
+  regex: '!@eq 0'
+  phase: 2
+  severity: '''CRITICAL'''
+  block: true
+- id: "922110"
+  name: 'Illegal MIME Multipart Header content-type: charset parameter'
+  variable: MULTIPART_PART_HEADERS
+  regex: ^content-type\s*:\s*(.*)$
+  phase: 2
+  severity: '''CRITICAL'''
+  block: true
+- id: "922120"
+  name: Content-Transfer-Encoding was deprecated by rfc7578 in 2015 and should not be used
+  variable: MULTIPART_PART_HEADERS
+  regex: content-transfer-encoding:(.*)
+  phase: 2
+  severity: '''CRITICAL'''
+  block: true
+- id: "922130"
+  name: Multipart header contains characters outside of valid range
+  variable: MULTIPART_PART_HEADERS
+  regex: '[^\x21-\x7E][\x21-\x39\x3B-\x7E]*:'
+  phase: 2
+  severity: '''CRITICAL'''
+  block: true

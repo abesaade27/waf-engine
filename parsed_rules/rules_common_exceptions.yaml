@@ -1,0 +1,35 @@
+- id: "905100"
+  name: ""
+  variable: REQUEST_LINE
+  regex: ^GET /$
+  phase: 1
+  severity: ""
+  block: false
+- id: ""
+  name: ""
+  variable: REMOTE_ADDR
+  regex: '@ipMatch 127.0.0.1,::1'
+  phase: 0
+  severity: ""
+  block: false
+- id: "905110"
+  name: ""
+  variable: REMOTE_ADDR
+  regex: '@ipMatch 127.0.0.1,::1'
+  phase: 1
+  severity: ""
+  block: false
+- id: ""
+  name: ""
+  variable: REQUEST_HEADERS:User-Agent
+  regex: '@endsWith (internal dummy connection)'
+  phase: 0
+  severity: ""
+  block: false
+- id: ""
+  name: ""
+  variable: REQUEST_LINE
+  regex: ^(?:GET /|OPTIONS \*) HTTP/[12]\.[01]$
+  phase: 0
+  severity: ""
+  block: false

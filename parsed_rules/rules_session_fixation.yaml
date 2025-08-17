@@ -1,0 +1,28 @@
+- id: "943100"
+  name: 'Possible Session Fixation Attack: Setting Cookie Values in HTML'
+  variable: REQUEST_COOKIES|REQUEST_COOKIES_NAMES|ARGS_NAMES|ARGS|XML:/*
+  regex: (?i:\.cookie\b.*?;\W*?(?:expires|domain)\W*?=|\bhttp-equiv\W+set-cookie\b)
+  phase: 2
+  severity: '''CRITICAL'''
+  block: true
+- id: "943110"
+  name: 'Possible Session Fixation Attack: SessionID Parameter Name with Off-Domain Referer'
+  variable: ARGS_NAMES
+  regex: ^(?:jsessionid|aspsessionid|asp\.net_sessionid|phpsession|phpsessid|weblogicsession|session_id|session-id|sessionid|cfid|cftoken|cfsid|jservsession|jwsession|_flask_session|_session_id|connect\.sid|laravel_session)$
+  phase: 2
+  severity: '''CRITICAL'''
+  block: true
+- id: ""
+  name: ""
+  variable: REQUEST_HEADERS:Referer
+  regex: ^(?:ht|f)tps?://(.*?)/
+  phase: 0
+  severity: ""
+  block: false
+- id: "943120"
+  name: 'Possible Session Fixation Attack: SessionID Parameter Name with No Referer'
+  variable: ARGS_NAMES
+  regex: ^(?:jsessionid|aspsessionid|asp\.net_sessionid|phpsession|phpsessid|weblogicsession|session_id|session-id|sessionid|cfid|cftoken|cfsid|jservsession|jwsession|_flask_session|_session_id|connect\.sid|laravel_session)$
+  phase: 2
+  severity: '''CRITICAL'''
+  block: true

@@ -1,0 +1,7 @@
+- id: "911100"
+  name: Method is not allowed by policy
+  variable: REQUEST_METHOD
+  regex: '!@within %{tx.allowed_methods}'
+  phase: 1
+  severity: '''CRITICAL'''
+  block: true
