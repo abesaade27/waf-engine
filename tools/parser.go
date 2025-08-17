@@ -22,139 +22,172 @@ type Rule struct {
 }
 
 func main() {
-	crsPath := "crs/rules" // adjust if needed
-	outputDir := "parsed_rules"
+	crsPath := "coreruleset/rules"
+	outDir := "parsed_rules"
+	_ = os.MkdirAll(outDir, 0o755)
 
-	os.MkdirAll(outputDir, os.ModePerm)
-
-	categoryRules := make(map[string][]Rule)
-	secRuleRegex := regexp.MustCompile(`(?i)^SecRule\s+(\S+)\s+"([^"]+)"\s+"([^"]+)"`)
+	catRules := make(map[string][]Rule)
+	secRule := regexp.MustCompile(`(?i)^SecRule\s+(\S+)\s+"([^"]+)"\s+"([^"]+)"`)
 
 	filepath.Walk(crsPath, func(path string, info os.FileInfo, err error) error {
-		if err != nil || info.IsDir() {
+		if err != nil || info.IsDir() || !strings.HasSuffix(info.Name(), ".conf") {
 			return nil
 		}
-		if !strings.HasSuffix(info.Name(), ".conf") {
-			return nil
-		}
-
 		category := detectCategory(info.Name())
 
-		file, _ := os.Open(path)
-		defer file.Close()
-		scanner := bufio.NewScanner(file)
-
-		var buffer string
-		for scanner.Scan() {
-			line := strings.TrimSpace(scanner.Text())
-
-			// Merge lines ending with backslash
+		f, _ := os.Open(path)
+		defer f.Close()
+		sc := bufio.NewScanner(f)
+		var buf string
+		for sc.Scan() {
+			line := strings.TrimSpace(sc.Text())
 			if strings.HasSuffix(line, "\\") {
-				buffer += strings.TrimSuffix(line, "\\") + " "
+				buf += strings.TrimSuffix(line, "\\") + " "
 				continue
 			}
-			if buffer != "" {
-				line = buffer + line
-				buffer = ""
+			if buf != "" {
+				line = buf + line
+				buf = ""
 			}
-
-			// Skip comments
-			if strings.HasPrefix(line, "#") || !strings.HasPrefix(strings.ToUpper(line), "SECRULE") {
+			if line == "" || strings.HasPrefix(line, "#") || !strings.HasPrefix(strings.ToUpper(line), "SECRULE") {
 				continue
 			}
-
-			matches := secRuleRegex.FindStringSubmatch(line)
-			if len(matches) < 4 {
+			m := secRule.FindStringSubmatch(line)
+			if len(m) < 4 {
 				continue
 			}
+			variable := m[1]
+			pattern := m[2]
+			actions := m[3]
 
-			variable := matches[1]
-			pattern := matches[2]
-			actions := matches[3]
-
-			// Filter out meta/control rules
-			if strings.HasPrefix(variable, "TX:") {
+			// Filter meta/control rules
+			if strings.HasPrefix(strings.ToUpper(variable), "TX:") {
 				continue
 			}
 			if strings.HasPrefix(pattern, "@lt") || strings.HasPrefix(pattern, "@eq") || strings.HasPrefix(pattern, "@gt") {
 				continue
 			}
 
-			rule := parseActions(variable, pattern, actions)
-			categoryRules[category] = append(categoryRules[category], rule)
+			r := parseActions(variable, normalizeOperator(pattern), actions)
+			// Skip unsupported libinjection operators
+			if strings.HasPrefix(r.Regex, "UNSUPPORTED_") || r.Regex == "" {
+				continue
+			}
+			catRules[category] = append(catRules[category], r)
 		}
 		return nil
 	})
 
-	var config struct {
+	var cfg struct {
 		LoadRules []string `yaml:"load_rules"`
 	}
-
-	for category, rules := range categoryRules {
-		if len(rules) == 0 {
+	for cat, list := range catRules {
+		if len(list) == 0 {
 			continue
 		}
-		filename := fmt.Sprintf("rules_%s.yaml", category)
-		filePath := filepath.Join(outputDir, filename)
-
-		saveYAML(filePath, rules)
-		config.LoadRules = append(config.LoadRules, filename)
+		fn := fmt.Sprintf("rules_%s.yaml", cat)
+		fp := filepath.Join(outDir, fn)
+		saveYAML(fp, list)
+		cfg.LoadRules = append(cfg.LoadRules, fn)
 	}
+	saveYAML(filepath.Join(outDir, "ruleset_config.yaml"), cfg)
+	fmt.Println("Parsing complete! Rules saved to", outDir)
+}
 
-	saveYAML(filepath.Join(outputDir, "ruleset_config.yaml"), config)
-
-	fmt.Println("Parsing complete! Rules saved to", outputDir)
+func normalizeOperator(pattern string) string {
+	switch {
+	case strings.HasPrefix(pattern, "@rx "):
+		return strings.TrimPrefix(pattern, "@rx ")
+	case strings.HasPrefix(pattern, "@pm "):
+		words := strings.Fields(strings.TrimPrefix(pattern, "@pm "))
+		if len(words) == 0 {
+			return ""
+		}
+		return "(?i)(" + strings.Join(words, "|") + ")"
+	case strings.HasPrefix(pattern, "@streq "):
+		val := strings.TrimPrefix(pattern, "@streq ")
+		return "^" + regexp.QuoteMeta(strings.TrimSpace(val)) + "$"
+	case strings.HasPrefix(pattern, "@detectSQLi"):
+		return "UNSUPPORTED_DETECTSQLI"
+	case strings.HasPrefix(pattern, "@detectXSS"):
+		return "UNSUPPORTED_DETECTXSS"
+	default:
+		// Some CRS rules put plain regex without @rx
+		return pattern
+	}
 }
 
 func detectCategory(filename string) string {
 	switch {
+	case strings.Contains(filename, "901"):
+		return "initialization"
+	case strings.Contains(filename, "905"):
+		return "common_exceptions"
+	case strings.Contains(filename, "911"):
+		return "method_inforcement"
+	case strings.Contains(filename, "913"):
+		return "scanner_detection"
+	case strings.Contains(filename, "920"):
+		return "protocol_inforcement"
+	case strings.Contains(filename, "921"):
+		return "protocol_attack"
+	case strings.Contains(filename, "922"):
+		return "multipart_attack"
+	case strings.Contains(filename, "930"):
+		return "rfi"
+	case strings.Contains(filename, "931"):
+		return "lfi"
+	case strings.Contains(filename, "932"):
+		return "rce"
+	case strings.Contains(filename, "933"):
+		return "php"
+	case strings.Contains(filename, "934"):
+		return "generic_attack"
 	case strings.Contains(filename, "941"):
 		return "xss"
 	case strings.Contains(filename, "942"):
 		return "sqli"
-	case strings.Contains(filename, "930"):
-		return "protocol"
-	case strings.Contains(filename, "933"):
-		return "rce"
-	case strings.Contains(filename, "932"):
-		return "lfi"
-	case strings.Contains(filename, "934"):
-		return "rfi"
+	case strings.Contains(filename, "943"):
+		return "session_fixation"
+	case strings.Contains(filename, "944"):
+		return "java"
+	case strings.Contains(filename, "959"):
+		return "blocking_evaluation"
+	case strings.Contains(filename, "980"):
+		return "correlation"
 	default:
 		return "misc"
 	}
 }
 
 func parseActions(variable, pattern, actions string) Rule {
-	rule := Rule{
+	r := Rule{
 		Variable: variable,
 		Regex:    pattern,
 		Block:    strings.Contains(actions, "block") || strings.Contains(actions, "deny"),
 	}
-
 	for _, part := range strings.Split(actions, ",") {
 		part = strings.TrimSpace(part)
 		if strings.HasPrefix(part, "id:") {
-			rule.ID = strings.TrimPrefix(part, "id:")
+			r.ID = strings.TrimPrefix(part, "id:")
 		}
 		if strings.HasPrefix(part, "msg:") {
-			rule.Name = strings.Trim(strings.TrimPrefix(part, "msg:"), "'\"")
+			r.Name = strings.Trim(strings.TrimPrefix(part, "msg:"), "'\"")
 		}
 		if strings.HasPrefix(part, "phase:") {
-			fmt.Sscanf(strings.TrimPrefix(part, "phase:"), "%d", &rule.Phase)
+			fmt.Sscanf(strings.TrimPrefix(part, "phase:"), "%d", &r.Phase)
 		}
 		if strings.HasPrefix(strings.ToLower(part), "severity:") {
-			rule.Severity = strings.TrimPrefix(part, "severity:")
+			r.Severity = strings.TrimPrefix(part, "severity:")
 		}
 	}
-
-	return rule
+	return r
 }
 
-func saveYAML(path string, data interface{}) {
-	file, _ := os.Create(path)
-	defer file.Close()
-	enc := yaml.NewEncoder(file)
+func saveYAML(path string, data any) {
+	f, _ := os.Create(path)
+	defer f.Close()
+	enc := yaml.NewEncoder(f)
 	enc.SetIndent(2)
-	enc.Encode(data)
+	_ = enc.Encode(data)
 }
