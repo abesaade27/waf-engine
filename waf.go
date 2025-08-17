@@ -7,9 +7,12 @@ import (
 	"time"
 
 	"waf-engine/mainWAF/rules"
+	"waf-engine/mainWAF/utils"
 )
 
 func main() {
+	utils.InitLogger()
+
 	// Load parsed rules directly
 	err := rules.LoadRules("parsed_rules")
 	if err != nil {
