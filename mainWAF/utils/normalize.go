@@ -192,6 +192,17 @@ func NormalizeIngest(i *Ingest) (method, path string, query map[string][]string,
 	// Copy body map
 	body = i.Body
 
+	// --- FIX: detect malformed ARGS (like single "a") and treat as raw ---
+	if len(body) == 1 {
+		for k, v := range body {
+			// If key has no '=' and value is empty slice, treat as raw
+			if vSlice, ok := v.([]any); ok && len(vSlice) == 0 {
+				body = map[string]any{"raw": k}
+				break
+			}
+		}
+	}
+
 	// Flatten body for regex matching
 	flatBody = FlattenJSON(body)
 
