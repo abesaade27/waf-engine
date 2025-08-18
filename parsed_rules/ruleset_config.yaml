@@ -1,18 +1,18 @@
 load_rules:
-  - rules_protocol_inforcement.yaml
-  - rules_protocol_attack.yaml
-  - rules_multipart_attack.yaml
-  - rules_java.yaml
-  - rules_misc.yaml
-  - rules_scanner_detection.yaml
-  - rules_rfi.yaml
-  - rules_lfi.yaml
-  - rules_php.yaml
-  - rules_generic_attack.yaml
   - rules_common_exceptions.yaml
-  - rules_method_inforcement.yaml
+  - rules_protocol_attack.yaml
+  - rules_xss.yaml
   - rules_session_fixation.yaml
   - rules_sqli.yaml
   - rules_initialization.yaml
+  - rules_scanner_detection.yaml
+  - rules_protocol_inforcement.yaml
+  - rules_lfi.yaml
   - rules_rce.yaml
-  - rules_xss.yaml
+  - rules_php.yaml
+  - rules_misc.yaml
+  - rules_multipart_attack.yaml
+  - rules_generic_attack.yaml
+  - rules_method_inforcement.yaml
+  - rules_rfi.yaml
+  - rules_java.yaml
