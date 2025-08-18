@@ -5,20 +5,59 @@
   phase: 2
   severity: '''CRITICAL'''
   block: true
-- id: "922110"
-  name: 'Illegal MIME Multipart Header content-type: charset parameter'
-  variable: MULTIPART_PART_HEADERS
-  regex: ^content-type\s*:\s*(.*)$
-  phase: 2
-  severity: '''CRITICAL'''
-  block: true
-- id: "922120"
-  name: Content-Transfer-Encoding was deprecated by rfc7578 in 2015 and should not be used
-  variable: MULTIPART_PART_HEADERS
-  regex: content-transfer-encoding:(.*)
-  phase: 2
-  severity: '''CRITICAL'''
-  block: true
+  transforms:
+    - none
+  tags:
+    - application-multi
+    - language-multi
+    - platform-multi
+    - attack-multipart-header
+    - paranoia-level/1
+    - OWASP_CRS
+    - OWASP_CRS/MULTIPART-ATTACK
+    - capec/1000/255/153
+  chain:
+    - id: "922110"
+      name: 'Illegal MIME Multipart Header content-type: charset parameter'
+      variable: MULTIPART_PART_HEADERS
+      regex: ^content-type\s*:\s*(.*)$
+      phase: 2
+      severity: '''CRITICAL'''
+      block: true
+      transforms:
+        - none
+        - lowercase
+      tags:
+        - application-multi
+        - language-multi
+        - platform-multi
+        - attack-multipart-header
+        - attack-protocol
+        - paranoia-level/1
+        - OWASP_CRS
+        - OWASP_CRS/MULTIPART-ATTACK
+        - capec/272/220
+      chain:
+        - id: "922120"
+          name: Content-Transfer-Encoding was deprecated by rfc7578 in 2015 and should not be used
+          variable: MULTIPART_PART_HEADERS
+          regex: content-transfer-encoding:(.*)
+          phase: 2
+          severity: '''CRITICAL'''
+          block: true
+          transforms:
+            - none
+            - lowercase
+          tags:
+            - application-multi
+            - language-multi
+            - platform-multi
+            - attack-multipart-header
+            - attack-deprecated-header
+            - paranoia-level/1
+            - OWASP_CRS
+            - OWASP_CRS/MULTIPART-ATTACK
+            - capec/272/220
 - id: "922130"
   name: Multipart header contains characters outside of valid range
   variable: MULTIPART_PART_HEADERS
@@ -26,3 +65,15 @@
   phase: 2
   severity: '''CRITICAL'''
   block: true
+  transforms:
+    - none
+    - lowercase
+  tags:
+    - application-multi
+    - language-multi
+    - platform-multi
+    - attack-multipart-header
+    - paranoia-level/1
+    - OWASP_CRS
+    - OWASP_CRS/MULTIPART-ATTACK
+    - capec/272/220

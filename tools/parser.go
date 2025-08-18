@@ -6,23 +6,29 @@ import (
 	"os"
 	"path/filepath"
 	"regexp"
+	"strconv"
 	"strings"
 
 	"gopkg.in/yaml.v3"
 )
 
 type Rule struct {
-	ID       string `yaml:"id"`
-	Name     string `yaml:"name"`
-	Variable string `yaml:"variable"`
-	Regex    string `yaml:"regex"`
-	Phase    int    `yaml:"phase"`
-	Severity string `yaml:"severity"`
-	Block    bool   `yaml:"block"`
+	ID         string   `yaml:"id"`
+	Name       string   `yaml:"name"`
+	Variable   string   `yaml:"variable"`
+	Regex      string   `yaml:"regex"`
+	Phase      int      `yaml:"phase"`
+	Severity   string   `yaml:"severity"`
+	Block      bool     `yaml:"block"`
+	Transforms []string `yaml:"transforms,omitempty"`
+	Tags       []string `yaml:"tags,omitempty"`
+	Paranoia   int      `yaml:"paranoia_level,omitempty"`
+	Controls   []string `yaml:"controls,omitempty"`
+	Chain      []Rule   `yaml:"chain,omitempty"`
 }
 
 func main() {
-	crsPath := "coreruleset/rules"
+	crsPath := "crs/rules"
 	outDir := "parsed_rules"
 	_ = os.MkdirAll(outDir, 0o755)
 
@@ -39,6 +45,8 @@ func main() {
 		defer f.Close()
 		sc := bufio.NewScanner(f)
 		var buf string
+		var lastRule *Rule
+
 		for sc.Scan() {
 			line := strings.TrimSpace(sc.Text())
 			if strings.HasSuffix(line, "\\") {
@@ -52,6 +60,7 @@ func main() {
 			if line == "" || strings.HasPrefix(line, "#") || !strings.HasPrefix(strings.ToUpper(line), "SECRULE") {
 				continue
 			}
+
 			m := secRule.FindStringSubmatch(line)
 			if len(m) < 4 {
 				continue
@@ -69,15 +78,34 @@ func main() {
 			}
 
 			r := parseActions(variable, normalizeOperator(pattern), actions)
-			// Skip unsupported libinjection operators
-			if strings.HasPrefix(r.Regex, "UNSUPPORTED_") || r.Regex == "" {
+			if r.Regex == "" {
 				continue
 			}
-			catRules[category] = append(catRules[category], r)
+
+			// Handle chain
+			if strings.Contains(actions, "chain") {
+				if lastRule == nil {
+					// Start of new chain
+					catRules[category] = append(catRules[category], r)
+					lastRule = &catRules[category][len(catRules[category])-1]
+				} else {
+					// Continuation of existing chain
+					lastRule.Chain = append(lastRule.Chain, r)
+					lastRule = &lastRule.Chain[len(lastRule.Chain)-1]
+				}
+			} else if lastRule != nil {
+				// Final chain link
+				lastRule.Chain = append(lastRule.Chain, r)
+				lastRule = nil
+			} else {
+				// Normal rule
+				catRules[category] = append(catRules[category], r)
+			}
 		}
 		return nil
 	})
 
+	// Save per-category rules
 	var cfg struct {
 		LoadRules []string `yaml:"load_rules"`
 	}
@@ -94,6 +122,8 @@ func main() {
 	fmt.Println("Parsing complete! Rules saved to", outDir)
 }
 
+// --- Helpers ---
+
 func normalizeOperator(pattern string) string {
 	switch {
 	case strings.HasPrefix(pattern, "@rx "):
@@ -108,9 +138,10 @@ func normalizeOperator(pattern string) string {
 		val := strings.TrimPrefix(pattern, "@streq ")
 		return "^" + regexp.QuoteMeta(strings.TrimSpace(val)) + "$"
 	case strings.HasPrefix(pattern, "@detectSQLi"):
-		return "UNSUPPORTED_DETECTSQLI"
+		// basic libinjection regex approximation
+		return `(?i)(union(\s+all)?\s+select|select.+from|insert\s+into|drop\s+table|update.+set|or\s+1=1)`
 	case strings.HasPrefix(pattern, "@detectXSS"):
-		return "UNSUPPORTED_DETECTXSS"
+		return `(?i)(<script|onerror\s*=|onload\s*=|javascript:|alert\s*\()`
 	default:
 		// Some CRS rules put plain regex without @rx
 		return pattern
@@ -168,17 +199,26 @@ func parseActions(variable, pattern, actions string) Rule {
 	}
 	for _, part := range strings.Split(actions, ",") {
 		part = strings.TrimSpace(part)
-		if strings.HasPrefix(part, "id:") {
+		switch {
+		case strings.HasPrefix(part, "id:"):
 			r.ID = strings.TrimPrefix(part, "id:")
-		}
-		if strings.HasPrefix(part, "msg:") {
+		case strings.HasPrefix(part, "msg:"):
 			r.Name = strings.Trim(strings.TrimPrefix(part, "msg:"), "'\"")
-		}
-		if strings.HasPrefix(part, "phase:") {
+		case strings.HasPrefix(part, "phase:"):
 			fmt.Sscanf(strings.TrimPrefix(part, "phase:"), "%d", &r.Phase)
-		}
-		if strings.HasPrefix(strings.ToLower(part), "severity:") {
+		case strings.HasPrefix(strings.ToLower(part), "severity:"):
 			r.Severity = strings.TrimPrefix(part, "severity:")
+		case strings.HasPrefix(part, "t:"):
+			r.Transforms = append(r.Transforms, strings.TrimPrefix(part, "t:"))
+		case strings.HasPrefix(part, "tag:"):
+			tag := strings.Trim(strings.TrimPrefix(part, "tag:"), "'\"")
+			r.Tags = append(r.Tags, tag)
+		case strings.HasPrefix(part, "paranoia-level:"):
+			if lvl, err := strconv.Atoi(strings.TrimPrefix(part, "paranoia-level:")); err == nil {
+				r.Paranoia = lvl
+			}
+		case strings.HasPrefix(part, "ctl:"):
+			r.Controls = append(r.Controls, strings.TrimPrefix(part, "ctl:"))
 		}
 	}
 	return r

@@ -1,3 +1,24 @@
+- id: "942100"
+  name: SQL Injection Attack Detected via libinjection
+  variable: REQUEST_COOKIES|REQUEST_COOKIES_NAMES|REQUEST_HEADERS:User-Agent|REQUEST_HEADERS:Referer|ARGS_NAMES|ARGS|XML:/*
+  regex: (?i)(union(\s+all)?\s+select|select.+from|insert\s+into|drop\s+table|update.+set|or\s+1=1)
+  phase: 2
+  severity: '''CRITICAL'''
+  block: true
+  transforms:
+    - none
+    - utf8toUnicode
+    - urlDecodeUni
+    - removeNulls
+  tags:
+    - application-multi
+    - language-multi
+    - platform-multi
+    - attack-sqli
+    - paranoia-level/1
+    - OWASP_CRS
+    - OWASP_CRS/ATTACK-SQLI
+    - capec/1000/152/248/66
 - id: "942140"
   name: 'SQL Injection Attack: Common DB Names Detected'
   variable: REQUEST_COOKIES|REQUEST_COOKIES_NAMES|ARGS_NAMES|ARGS|XML:/*
@@ -5,6 +26,18 @@
   phase: 2
   severity: '''CRITICAL'''
   block: true
+  transforms:
+    - none
+    - urlDecodeUni
+  tags:
+    - application-multi
+    - language-multi
+    - platform-multi
+    - attack-sqli
+    - paranoia-level/1
+    - OWASP_CRS
+    - OWASP_CRS/ATTACK-SQLI
+    - capec/1000/152/248/66
 - id: "942151"
   name: 'SQL Injection Attack: SQL function name detected'
   variable: REQUEST_COOKIES|REQUEST_COOKIES_NAMES|ARGS_NAMES|ARGS|XML:/*
@@ -12,6 +45,18 @@
   phase: 2
   severity: '''CRITICAL'''
   block: true
+  transforms:
+    - none
+    - urlDecodeUni
+  tags:
+    - application-multi
+    - language-multi
+    - platform-multi
+    - attack-sqli
+    - paranoia-level/1
+    - OWASP_CRS
+    - OWASP_CRS/ATTACK-SQLI
+    - capec/1000/152/248/66
 - id: "942160"
   name: Detects blind sqli tests using sleep() or benchmark()
   variable: REQUEST_FILENAME|REQUEST_COOKIES|REQUEST_COOKIES_NAMES|ARGS_NAMES|ARGS|XML:/*
@@ -19,6 +64,19 @@
   phase: 2
   severity: '''CRITICAL'''
   block: true
+  transforms:
+    - none
+    - urlDecodeUni
+    - replaceComments
+  tags:
+    - application-multi
+    - language-multi
+    - platform-multi
+    - attack-sqli
+    - paranoia-level/1
+    - OWASP_CRS
+    - OWASP_CRS/ATTACK-SQLI
+    - capec/1000/152/248/66
 - id: "942170"
   name: Detects SQL benchmark and sleep injection attempts including conditional queries
   variable: REQUEST_COOKIES|REQUEST_COOKIES_NAMES|ARGS_NAMES|ARGS|XML:/*
@@ -26,6 +84,18 @@
   phase: 2
   severity: '''CRITICAL'''
   block: true
+  transforms:
+    - none
+    - urlDecodeUni
+  tags:
+    - application-multi
+    - language-multi
+    - platform-multi
+    - attack-sqli
+    - paranoia-level/1
+    - OWASP_CRS
+    - OWASP_CRS/ATTACK-SQLI
+    - capec/1000/152/248/66
 - id: "942220"
   name: Looking for integer overflow attacks
   variable: REQUEST_COOKIES|REQUEST_COOKIES_NAMES|ARGS_NAMES|ARGS|XML:/*
@@ -33,6 +103,9 @@
   phase: 2
   severity: ""
   block: true
+  transforms:
+    - none
+    - urlDecodeUni
 - id: "942230"
   name: Detects conditional SQL injection attempts
   variable: REQUEST_COOKIES|REQUEST_COOKIES_NAMES|ARGS_NAMES|ARGS|XML:/*
@@ -40,6 +113,18 @@
   phase: 2
   severity: '''CRITICAL'''
   block: true
+  transforms:
+    - none
+    - urlDecodeUni
+  tags:
+    - application-multi
+    - language-multi
+    - platform-multi
+    - attack-sqli
+    - paranoia-level/1
+    - OWASP_CRS
+    - OWASP_CRS/ATTACK-SQLI
+    - capec/1000/152/248/66
 - id: "942270"
   name: Looking for basic sql injection. Common attack string for mysql
   variable: REQUEST_COOKIES|REQUEST_COOKIES_NAMES|ARGS_NAMES|ARGS|XML:/*
@@ -47,6 +132,18 @@
   phase: 2
   severity: '''CRITICAL'''
   block: true
+  transforms:
+    - none
+    - urlDecodeUni
+  tags:
+    - application-multi
+    - language-multi
+    - platform-multi
+    - attack-sqli
+    - paranoia-level/1
+    - OWASP_CRS
+    - OWASP_CRS/ATTACK-SQLI
+    - capec/1000/152/248/66
 - id: "942290"
   name: Finds basic MongoDB SQL injection attempts
   variable: REQUEST_COOKIES|REQUEST_COOKIES_NAMES|ARGS_NAMES|ARGS|XML:/*
@@ -54,6 +151,18 @@
   phase: 2
   severity: '''CRITICAL'''
   block: true
+  transforms:
+    - none
+    - urlDecodeUni
+  tags:
+    - application-multi
+    - language-multi
+    - platform-multi
+    - attack-sqli
+    - paranoia-level/1
+    - OWASP_CRS
+    - OWASP_CRS/ATTACK-SQLI
+    - capec/1000/152/248/66
 - id: "942320"
   name: Detects MySQL and PostgreSQL stored procedure/function injections
   variable: REQUEST_COOKIES|REQUEST_COOKIES_NAMES|ARGS_NAMES|ARGS|XML:/*
@@ -61,6 +170,18 @@
   phase: 2
   severity: '''CRITICAL'''
   block: true
+  transforms:
+    - none
+    - urlDecodeUni
+  tags:
+    - application-multi
+    - language-multi
+    - platform-multi
+    - attack-sqli
+    - paranoia-level/1
+    - OWASP_CRS
+    - OWASP_CRS/ATTACK-SQLI
+    - capec/1000/152/248/66
 - id: "942350"
   name: Detects MySQL UDF injection and other data/structure manipulation attempts
   variable: REQUEST_COOKIES|REQUEST_COOKIES_NAMES|ARGS_NAMES|ARGS|XML:/*
@@ -68,6 +189,18 @@
   phase: 2
   severity: '''CRITICAL'''
   block: true
+  transforms:
+    - none
+    - urlDecodeUni
+  tags:
+    - application-multi
+    - language-multi
+    - platform-multi
+    - attack-sqli
+    - paranoia-level/1
+    - OWASP_CRS
+    - OWASP_CRS/ATTACK-SQLI
+    - capec/1000/152/248/66
 - id: "942500"
   name: MySQL in-line comment detected
   variable: REQUEST_COOKIES|REQUEST_COOKIES_NAMES|ARGS_NAMES|ARGS|XML:/*
@@ -75,6 +208,18 @@
   phase: 2
   severity: '''CRITICAL'''
   block: true
+  transforms:
+    - none
+    - urlDecodeUni
+  tags:
+    - application-multi
+    - language-multi
+    - platform-multi
+    - attack-sqli
+    - paranoia-level/1
+    - OWASP_CRS
+    - OWASP_CRS/ATTACK-SQLI
+    - capec/1000/152/248/66
 - id: "942560"
   name: MySQL Scientific Notation payload detected
   variable: REQUEST_COOKIES|REQUEST_COOKIES_NAMES|ARGS_NAMES|ARGS|XML:/*
@@ -82,6 +227,19 @@
   phase: 2
   severity: '''CRITICAL'''
   block: true
+  transforms:
+    - none
+    - urlDecodeUni
+    - replaceComments
+  tags:
+    - application-multi
+    - language-multi
+    - platform-multi
+    - attack-sqli
+    - paranoia-level/1
+    - OWASP_CRS
+    - OWASP_CRS/ATTACK-SQLI
+    - capec/1000/152/248/66
 - id: "942150"
   name: 'SQL Injection Attack: SQL function name detected'
   variable: REQUEST_COOKIES|REQUEST_COOKIES_NAMES|ARGS_NAMES|ARGS|XML:/*
@@ -89,6 +247,18 @@
   phase: 2
   severity: '''CRITICAL'''
   block: true
+  transforms:
+    - none
+    - urlDecodeUni
+  tags:
+    - application-multi
+    - language-multi
+    - platform-multi
+    - attack-sqli
+    - paranoia-level/2
+    - OWASP_CRS
+    - OWASP_CRS/ATTACK-SQLI
+    - capec/1000/152/248/66
 - id: "942361"
   name: Detects basic SQL injection based on keyword alter or union
   variable: REQUEST_COOKIES|REQUEST_COOKIES_NAMES|ARGS_NAMES|ARGS|XML:/*
@@ -96,6 +266,18 @@
   phase: 2
   severity: '''CRITICAL'''
   block: true
+  transforms:
+    - none
+    - urlDecodeUni
+  tags:
+    - application-multi
+    - language-multi
+    - platform-multi
+    - attack-sqli
+    - paranoia-level/2
+    - OWASP_CRS
+    - OWASP_CRS/ATTACK-SQLI
+    - capec/1000/152/248/66
 - id: "942410"
   name: SQL Injection Attack
   variable: REQUEST_COOKIES|!REQUEST_COOKIES:/_pk_ref/|REQUEST_COOKIES_NAMES|ARGS_NAMES|ARGS|XML:/*
@@ -103,6 +285,18 @@
   phase: 2
   severity: '''CRITICAL'''
   block: true
+  transforms:
+    - none
+    - urlDecodeUni
+  tags:
+    - application-multi
+    - language-multi
+    - platform-multi
+    - attack-sqli
+    - paranoia-level/2
+    - OWASP_CRS
+    - OWASP_CRS/ATTACK-SQLI
+    - capec/1000/152/248/66
 - id: "942470"
   name: SQL Injection Attack
   variable: REQUEST_COOKIES|!REQUEST_COOKIES:/_pk_ref/|REQUEST_COOKIES_NAMES|ARGS_NAMES|ARGS|XML:/*
@@ -110,6 +304,18 @@
   phase: 2
   severity: '''CRITICAL'''
   block: true
+  transforms:
+    - none
+    - urlDecodeUni
+  tags:
+    - application-multi
+    - language-multi
+    - platform-multi
+    - attack-sqli
+    - paranoia-level/2
+    - OWASP_CRS
+    - OWASP_CRS/ATTACK-SQLI
+    - capec/1000/152/248/66
 - id: "942480"
   name: SQL Injection Attack
   variable: REQUEST_COOKIES|!REQUEST_COOKIES:/_pk_ref/|REQUEST_COOKIES_NAMES|REQUEST_HEADERS|ARGS_NAMES|ARGS|XML:/*
@@ -117,6 +323,18 @@
   phase: 2
   severity: '''CRITICAL'''
   block: true
+  transforms:
+    - none
+    - urlDecodeUni
+  tags:
+    - application-multi
+    - language-multi
+    - platform-multi
+    - attack-sqli
+    - paranoia-level/2
+    - OWASP_CRS
+    - OWASP_CRS/ATTACK-SQLI
+    - capec/1000/152/248/66
 - id: "942441"
   name: ""
   variable: ARGS_GET:fbclid
@@ -124,6 +342,13 @@
   phase: 2
   severity: ""
   block: false
+  transforms:
+    - none
+  tags:
+    - OWASP_CRS
+    - OWASP_CRS/ATTACK-SQLI
+  controls:
+    - ruleRemoveTargetById=942440;ARGS:fbclid
 - id: "942442"
   name: ""
   variable: ARGS_GET:gclid
@@ -131,20 +356,42 @@
   phase: 2
   severity: ""
   block: false
+  transforms:
+    - none
+  tags:
+    - OWASP_CRS
+    - OWASP_CRS/ATTACK-SQLI
+  controls:
+    - ruleRemoveTargetById=942440;ARGS:gclid
 - id: "942440"
   name: SQL Comment Sequence Detected
   variable: REQUEST_COOKIES|!REQUEST_COOKIES:/_pk_ref/|REQUEST_COOKIES_NAMES|ARGS_NAMES|ARGS|XML:/*
   regex: /\*!?|\*/|[';]--|--(?:[\s\x0b]|[^\-]*?-)|[^&\-]#.*?[\s\x0b]|;?\x00
   phase: 2
   severity: '''CRITICAL'''
-  block: false
-- id: ""
-  name: ""
-  variable: MATCHED_VARS
-  regex: '!@rx ^ey[\-0-9A-Z_a-z]+\.ey[\-0-9A-Z_a-z]+\.[\-0-9A-Z_a-z]+$'
-  phase: 0
-  severity: ""
-  block: false
+  block: true
+  transforms:
+    - none
+    - urlDecodeUni
+  tags:
+    - application-multi
+    - language-multi
+    - platform-multi
+    - attack-sqli
+    - paranoia-level/2
+    - OWASP_CRS
+    - OWASP_CRS/ATTACK-SQLI
+    - capec/1000/152/248/66
+  chain:
+    - id: ""
+      name: ""
+      variable: MATCHED_VARS
+      regex: '!@rx ^ey[\-0-9A-Z_a-z]+\.ey[\-0-9A-Z_a-z]+\.[\-0-9A-Z_a-z]+$'
+      phase: 0
+      severity: ""
+      block: false
+      transforms:
+        - none
 - id: "942450"
   name: SQL Hex Encoding Identified
   variable: REQUEST_COOKIES|!REQUEST_COOKIES:/_pk_ref/|REQUEST_COOKIES_NAMES|ARGS_NAMES|ARGS|XML:/*
@@ -152,6 +399,18 @@
   phase: 2
   severity: '''CRITICAL'''
   block: true
+  transforms:
+    - none
+    - urlDecodeUni
+  tags:
+    - application-multi
+    - language-multi
+    - platform-multi
+    - attack-sqli
+    - paranoia-level/2
+    - OWASP_CRS
+    - OWASP_CRS/ATTACK-SQLI
+    - capec/1000/152/248/66
 - id: "942510"
   name: SQLi bypass attempt by ticks or backticks detected
   variable: REQUEST_COOKIES|REQUEST_COOKIES_NAMES|ARGS_NAMES|ARGS|XML:/*
@@ -159,6 +418,39 @@
   phase: 2
   severity: '''CRITICAL'''
   block: true
+  transforms:
+    - none
+    - urlDecodeUni
+  tags:
+    - application-multi
+    - language-multi
+    - platform-multi
+    - attack-sqli
+    - paranoia-level/2
+    - OWASP_CRS
+    - OWASP_CRS/ATTACK-SQLI
+    - capec/1000/152/248/66
+- id: "942101"
+  name: SQL Injection Attack Detected via libinjection
+  variable: REQUEST_BASENAME|REQUEST_FILENAME
+  regex: (?i)(union(\s+all)?\s+select|select.+from|insert\s+into|drop\s+table|update.+set|or\s+1=1)
+  phase: 1
+  severity: '''CRITICAL'''
+  block: true
+  transforms:
+    - none
+    - utf8toUnicode
+    - urlDecodeUni
+    - removeNulls
+  tags:
+    - application-multi
+    - language-multi
+    - platform-multi
+    - attack-sqli
+    - paranoia-level/2
+    - OWASP_CRS
+    - OWASP_CRS/ATTACK-SQLI
+    - capec/1000/152/248/66
 - id: "942152"
   name: 'SQL Injection Attack: SQL function name detected'
   variable: REQUEST_HEADERS:Referer|REQUEST_HEADERS:User-Agent
@@ -166,6 +458,18 @@
   phase: 1
   severity: '''CRITICAL'''
   block: true
+  transforms:
+    - none
+    - urlDecodeUni
+  tags:
+    - application-multi
+    - language-multi
+    - platform-multi
+    - attack-sqli
+    - paranoia-level/2
+    - OWASP_CRS
+    - OWASP_CRS/ATTACK-SQLI
+    - capec/1000/152/248/66
 - id: "942321"
   name: Detects MySQL and PostgreSQL stored procedure/function injections
   variable: REQUEST_HEADERS:Referer|REQUEST_HEADERS:User-Agent
@@ -173,6 +477,18 @@
   phase: 1
   severity: '''CRITICAL'''
   block: true
+  transforms:
+    - none
+    - urlDecodeUni
+  tags:
+    - application-multi
+    - language-multi
+    - platform-multi
+    - attack-sqli
+    - paranoia-level/2
+    - OWASP_CRS
+    - OWASP_CRS/ATTACK-SQLI
+    - capec/1000/152/248/66
 - id: "942251"
   name: Detects HAVING injections
   variable: REQUEST_COOKIES|REQUEST_COOKIES_NAMES|ARGS_NAMES|ARGS|XML:/*
@@ -180,6 +496,18 @@
   phase: 2
   severity: '''CRITICAL'''
   block: true
+  transforms:
+    - none
+    - urlDecodeUni
+  tags:
+    - application-multi
+    - language-multi
+    - platform-multi
+    - attack-sqli
+    - paranoia-level/3
+    - OWASP_CRS
+    - OWASP_CRS/ATTACK-SQLI
+    - capec/1000/152/248/66
 - id: "942460"
   name: Meta-Character Anomaly Detection Alert - Repetitive Non-Word Characters
   variable: ARGS
@@ -187,6 +515,17 @@
   phase: 2
   severity: '''WARNING'''
   block: true
+  transforms:
+    - none
+  tags:
+    - application-multi
+    - language-multi
+    - platform-multi
+    - attack-sqli
+    - paranoia-level/3
+    - OWASP_CRS
+    - OWASP_CRS/ATTACK-SQLI
+    - capec/1000/152/248/66
 - id: "942511"
   name: SQLi bypass attempt by ticks detected
   variable: REQUEST_COOKIES|REQUEST_COOKIES_NAMES|ARGS_NAMES|ARGS|XML:/*
@@ -194,6 +533,18 @@
   phase: 2
   severity: '''CRITICAL'''
   block: true
+  transforms:
+    - none
+    - urlDecodeUni
+  tags:
+    - application-multi
+    - language-multi
+    - platform-multi
+    - attack-sqli
+    - paranoia-level/3
+    - OWASP_CRS
+    - OWASP_CRS/ATTACK-SQLI
+    - capec/1000/152/248/66
 - id: "942530"
   name: SQLi query termination detected
   variable: REQUEST_COOKIES|REQUEST_COOKIES_NAMES|ARGS_NAMES|ARGS|XML:/*
@@ -201,3 +552,15 @@
   phase: 2
   severity: '''CRITICAL'''
   block: true
+  transforms:
+    - none
+    - urlDecodeUni
+  tags:
+    - application-multi
+    - language-multi
+    - platform-multi
+    - attack-sqli
+    - paranoia-level/3
+    - OWASP_CRS
+    - OWASP_CRS/ATTACK-SQLI
+    - capec/1000/152/248/66

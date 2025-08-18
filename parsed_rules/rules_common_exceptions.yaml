@@ -5,13 +5,27 @@
   phase: 1
   severity: ""
   block: false
-- id: ""
-  name: ""
-  variable: REMOTE_ADDR
-  regex: '@ipMatch 127.0.0.1,::1'
-  phase: 0
-  severity: ""
-  block: false
+  transforms:
+    - none
+  tags:
+    - application-multi
+    - language-multi
+    - platform-apache
+    - attack-generic
+    - OWASP_CRS
+  chain:
+    - id: ""
+      name: ""
+      variable: REMOTE_ADDR
+      regex: '@ipMatch 127.0.0.1,::1'
+      phase: 0
+      severity: ""
+      block: false
+      transforms:
+        - none
+      controls:
+        - ruleRemoveByTag=OWASP_CRS
+        - auditEngine=Off
 - id: "905110"
   name: ""
   variable: REMOTE_ADDR
@@ -19,17 +33,34 @@
   phase: 1
   severity: ""
   block: false
-- id: ""
-  name: ""
-  variable: REQUEST_HEADERS:User-Agent
-  regex: '@endsWith (internal dummy connection)'
-  phase: 0
-  severity: ""
-  block: false
-- id: ""
-  name: ""
-  variable: REQUEST_LINE
-  regex: ^(?:GET /|OPTIONS \*) HTTP/[12]\.[01]$
-  phase: 0
-  severity: ""
-  block: false
+  transforms:
+    - none
+  tags:
+    - application-multi
+    - language-multi
+    - platform-apache
+    - attack-generic
+    - OWASP_CRS
+  chain:
+    - id: ""
+      name: ""
+      variable: REQUEST_HEADERS:User-Agent
+      regex: '@endsWith (internal dummy connection)'
+      phase: 0
+      severity: ""
+      block: false
+      transforms:
+        - none
+      chain:
+        - id: ""
+          name: ""
+          variable: REQUEST_LINE
+          regex: ^(?:GET /|OPTIONS \*) HTTP/[12]\.[01]$
+          phase: 0
+          severity: ""
+          block: false
+          transforms:
+            - none
+          controls:
+            - ruleRemoveByTag=OWASP_CRS
+            - auditEngine=Off

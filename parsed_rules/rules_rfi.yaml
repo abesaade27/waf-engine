@@ -5,6 +5,17 @@
   phase: 2
   severity: '''CRITICAL'''
   block: true
+  transforms:
+    - none
+  tags:
+    - application-multi
+    - language-multi
+    - platform-multi
+    - attack-lfi
+    - paranoia-level/1
+    - OWASP_CRS
+    - OWASP_CRS/ATTACK-LFI
+    - capec/1000/255/153/126
 - id: "930110"
   name: Path Traversal Attack (/../) or (/.../)
   variable: REQUEST_URI_RAW|ARGS|REQUEST_HEADERS|!REQUEST_HEADERS:Referer|FILES|XML:/*
@@ -12,6 +23,21 @@
   phase: 2
   severity: '''CRITICAL'''
   block: true
+  transforms:
+    - none
+    - utf8toUnicode
+    - urlDecodeUni
+    - removeNulls
+    - cmdLine
+  tags:
+    - application-multi
+    - language-multi
+    - platform-multi
+    - attack-lfi
+    - paranoia-level/1
+    - OWASP_CRS
+    - OWASP_CRS/ATTACK-LFI
+    - capec/1000/255/153/126
 - id: "930120"
   name: OS File Access Attempt
   variable: REQUEST_COOKIES|REQUEST_COOKIES_NAMES|ARGS_NAMES|ARGS|XML:/*
@@ -19,6 +45,20 @@
   phase: 2
   severity: '''CRITICAL'''
   block: true
+  transforms:
+    - none
+    - utf8toUnicode
+    - urlDecodeUni
+    - normalizePathWin
+  tags:
+    - application-multi
+    - language-multi
+    - platform-multi
+    - attack-lfi
+    - paranoia-level/1
+    - OWASP_CRS
+    - OWASP_CRS/ATTACK-LFI
+    - capec/1000/255/153/126
 - id: "930130"
   name: Restricted File Access Attempt
   variable: REQUEST_FILENAME
@@ -26,6 +66,20 @@
   phase: 1
   severity: '''CRITICAL'''
   block: true
+  transforms:
+    - none
+    - utf8toUnicode
+    - urlDecodeUni
+    - normalizePathWin
+  tags:
+    - application-multi
+    - language-multi
+    - platform-multi
+    - attack-lfi
+    - paranoia-level/1
+    - OWASP_CRS
+    - OWASP_CRS/ATTACK-LFI
+    - capec/1000/255/153/126
 - id: "930121"
   name: OS File Access Attempt in REQUEST_HEADERS
   variable: REQUEST_HEADERS:Referer|REQUEST_HEADERS:User-Agent
@@ -33,3 +87,17 @@
   phase: 1
   severity: '''CRITICAL'''
   block: true
+  transforms:
+    - none
+    - utf8toUnicode
+    - urlDecodeUni
+    - normalizePathWin
+  tags:
+    - application-multi
+    - language-multi
+    - platform-multi
+    - attack-lfi
+    - paranoia-level/2
+    - OWASP_CRS
+    - OWASP_CRS/ATTACK-LFI
+    - capec/1000/255/153/126

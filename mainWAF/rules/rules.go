@@ -12,14 +12,19 @@ import (
 
 // Rule defines a single WAF rule structure
 type Rule struct {
-	ID       string         `yaml:"id"`
-	Name     string         `yaml:"name"`
-	Variable string         `yaml:"variable"`
-	Regex    string         `yaml:"regex"`
-	Phase    int            `yaml:"phase"`
-	Severity string         `yaml:"severity"`
-	Block    bool           `yaml:"block"`
-	Compiled *regexp.Regexp `yaml:"-"` // not in YAML, compiled at load time
+	ID         string         `yaml:"id"`
+	Name       string         `yaml:"name"`
+	Variable   string         `yaml:"variable"`
+	Regex      string         `yaml:"regex"`
+	Phase      int            `yaml:"phase"`
+	Severity   string         `yaml:"severity"`
+	Block      bool           `yaml:"block"`
+	Transforms []string       `yaml:"transforms,omitempty"`
+	Tags       []string       `yaml:"tags,omitempty"`
+	Paranoia   int            `yaml:"paranoia_level,omitempty"`
+	Controls   []string       `yaml:"controls,omitempty"`
+	Chain      []Rule         `yaml:"chain,omitempty"`
+	Compiled   *regexp.Regexp `yaml:"-"`
 }
 
 // AllRules holds every rule loaded from YAML

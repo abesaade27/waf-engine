@@ -5,6 +5,18 @@
   phase: 2
   severity: '''CRITICAL'''
   block: true
+  transforms:
+    - none
+    - lowercase
+  tags:
+    - application-multi
+    - language-java
+    - platform-multi
+    - attack-rce
+    - paranoia-level/1
+    - OWASP_CRS
+    - OWASP_CRS/ATTACK-JAVA
+    - capec/1000/152/137/6
 - id: "944110"
   name: 'Remote Command Execution: Java process spawn (CVE-2017-9805)'
   variable: ARGS|ARGS_NAMES|REQUEST_COOKIES|REQUEST_COOKIES_NAMES|REQUEST_BODY|REQUEST_HEADERS|XML:/*|XML://@*
@@ -12,13 +24,26 @@
   phase: 2
   severity: '''CRITICAL'''
   block: true
-- id: ""
-  name: ""
-  variable: MATCHED_VARS|XML:/*|XML://@*
-  regex: (?i)(?:unmarshaller|base64data|java\.)
-  phase: 0
-  severity: ""
-  block: false
+  transforms:
+    - none
+    - lowercase
+  tags:
+    - application-multi
+    - language-java
+    - platform-multi
+    - attack-rce
+    - paranoia-level/1
+    - OWASP_CRS
+    - OWASP_CRS/ATTACK-JAVA
+    - capec/1000/152/248
+  chain:
+    - id: ""
+      name: ""
+      variable: MATCHED_VARS|XML:/*|XML://@*
+      regex: (?i)(?:unmarshaller|base64data|java\.)
+      phase: 0
+      severity: ""
+      block: false
 - id: "944120"
   name: 'Remote Command Execution: Java serialization (CVE-2015-4852)'
   variable: ARGS|ARGS_NAMES|REQUEST_COOKIES|REQUEST_COOKIES_NAMES|REQUEST_BODY|REQUEST_HEADERS|XML:/*|XML://@*
@@ -26,13 +51,26 @@
   phase: 2
   severity: '''CRITICAL'''
   block: true
-- id: ""
-  name: ""
-  variable: MATCHED_VARS
-  regex: (?:runtime|processbuilder)
-  phase: 0
-  severity: ""
-  block: false
+  transforms:
+    - none
+    - lowercase
+  tags:
+    - application-multi
+    - language-java
+    - platform-multi
+    - attack-rce
+    - paranoia-level/1
+    - OWASP_CRS
+    - OWASP_CRS/ATTACK-JAVA
+    - capec/1000/152/248
+  chain:
+    - id: ""
+      name: ""
+      variable: MATCHED_VARS
+      regex: (?:runtime|processbuilder)
+      phase: 0
+      severity: ""
+      block: false
 - id: "944130"
   name: Suspicious Java class detected
   variable: ARGS|ARGS_NAMES|REQUEST_COOKIES|REQUEST_COOKIES_NAMES|REQUEST_BODY|REQUEST_FILENAME|REQUEST_HEADERS|XML:/*|XML://@*
@@ -40,6 +78,17 @@
   phase: 2
   severity: '''CRITICAL'''
   block: true
+  transforms:
+    - none
+  tags:
+    - application-multi
+    - language-java
+    - platform-multi
+    - attack-rce
+    - paranoia-level/1
+    - OWASP_CRS
+    - OWASP_CRS/ATTACK-JAVA
+    - capec/1000/152/248
 - id: "944140"
   name: 'Java Injection Attack: Java Script File Upload Found'
   variable: FILES|REQUEST_HEADERS:X-Filename|REQUEST_HEADERS:X_Filename|REQUEST_HEADERS:X.Filename|REQUEST_HEADERS:X-File-Name
@@ -47,6 +96,18 @@
   phase: 2
   severity: '''CRITICAL'''
   block: true
+  transforms:
+    - none
+    - lowercase
+  tags:
+    - application-multi
+    - language-java
+    - platform-multi
+    - attack-injection-java
+    - paranoia-level/1
+    - OWASP_CRS
+    - OWASP_CRS/ATTACK-JAVA
+    - capec/1000/152/242
 - id: "944150"
   name: 'Potential Remote Command Execution: Log4j / Log4shell'
   variable: REQUEST_LINE|ARGS|ARGS_NAMES|REQUEST_COOKIES|REQUEST_COOKIES_NAMES|REQUEST_HEADERS|XML:/*|XML://@*
@@ -54,6 +115,20 @@
   phase: 2
   severity: '''CRITICAL'''
   block: true
+  transforms:
+    - none
+    - urlDecodeUni
+    - jsDecode
+    - htmlEntityDecode
+  tags:
+    - application-multi
+    - language-java
+    - platform-multi
+    - attack-rce
+    - paranoia-level/1
+    - OWASP_CRS
+    - OWASP_CRS/ATTACK-JAVA
+    - capec/1000/152/137/6
 - id: "944151"
   name: 'Potential Remote Command Execution: Log4j / Log4shell'
   variable: REQUEST_LINE|ARGS|ARGS_NAMES|REQUEST_COOKIES|REQUEST_COOKIES_NAMES|REQUEST_HEADERS|XML:/*|XML://@*
@@ -61,6 +136,20 @@
   phase: 2
   severity: '''CRITICAL'''
   block: true
+  transforms:
+    - none
+    - urlDecodeUni
+    - jsDecode
+    - htmlEntityDecode
+  tags:
+    - application-multi
+    - language-java
+    - platform-multi
+    - attack-rce
+    - paranoia-level/2
+    - OWASP_CRS
+    - OWASP_CRS/ATTACK-JAVA
+    - capec/1000/152/137/6
 - id: "944200"
   name: Magic bytes Detected
   variable: ARGS|ARGS_NAMES|REQUEST_COOKIES|REQUEST_COOKIES_NAMES|REQUEST_BODY|REQUEST_HEADERS|XML:/*|XML://@*
@@ -68,6 +157,15 @@
   phase: 2
   severity: '''CRITICAL'''
   block: true
+  tags:
+    - application-multi
+    - language-java
+    - platform-multi
+    - attack-rce
+    - paranoia-level/2
+    - OWASP_CRS
+    - OWASP_CRS/ATTACK-JAVA
+    - capec/1000/152/248
 - id: "944210"
   name: Magic bytes Detected Base64 Encoded
   variable: ARGS|ARGS_NAMES|REQUEST_COOKIES|REQUEST_COOKIES_NAMES|REQUEST_BODY|REQUEST_HEADERS|XML:/*|XML://@*
@@ -75,6 +173,15 @@
   phase: 2
   severity: '''CRITICAL'''
   block: true
+  tags:
+    - application-multi
+    - language-java
+    - platform-multi
+    - attack-rce
+    - paranoia-level/2
+    - OWASP_CRS
+    - OWASP_CRS/ATTACK-JAVA
+    - capec/1000/152/248
 - id: "944240"
   name: 'Remote Command Execution: Java serialization (CVE-2015-4852)'
   variable: ARGS|ARGS_NAMES|REQUEST_COOKIES|REQUEST_COOKIES_NAMES|REQUEST_BODY|REQUEST_HEADERS|XML:/*|XML://@*
@@ -82,6 +189,18 @@
   phase: 2
   severity: '''CRITICAL'''
   block: true
+  transforms:
+    - none
+    - lowercase
+  tags:
+    - application-multi
+    - language-java
+    - platform-multi
+    - attack-rce
+    - paranoia-level/2
+    - OWASP_CRS
+    - OWASP_CRS/ATTACK-JAVA
+    - capec/1000/152/248
 - id: "944250"
   name: 'Remote Command Execution: Suspicious Java method detected'
   variable: ARGS|ARGS_NAMES|REQUEST_COOKIES|REQUEST_COOKIES_NAMES|REQUEST_BODY|REQUEST_HEADERS|XML:/*|XML://@*
@@ -89,6 +208,17 @@
   phase: 2
   severity: '''CRITICAL'''
   block: true
+  transforms:
+    - lowercase
+  tags:
+    - application-multi
+    - language-java
+    - platform-multi
+    - attack-rce
+    - paranoia-level/2
+    - OWASP_CRS
+    - OWASP_CRS/ATTACK-JAVA
+    - capec/1000/152/248
 - id: "944260"
   name: 'Remote Command Execution: Malicious class-loading payload'
   variable: ARGS|ARGS_NAMES|REQUEST_COOKIES|REQUEST_COOKIES_NAMES|REQUEST_BODY|REQUEST_HEADERS|XML:/*|XML://@*
@@ -96,6 +226,17 @@
   phase: 2
   severity: '''CRITICAL'''
   block: true
+  transforms:
+    - urlDecodeUni
+  tags:
+    - application-multi
+    - language-java
+    - platform-multi
+    - attack-rce
+    - paranoia-level/2
+    - OWASP_CRS
+    - OWASP_CRS/ATTACK-JAVA
+    - capec/1000/152/248
 - id: "944300"
   name: Base64 encoded string matched suspicious keyword
   variable: ARGS|ARGS_NAMES|REQUEST_COOKIES|REQUEST_COOKIES_NAMES|REQUEST_BODY|REQUEST_HEADERS|XML:/*|XML://@*
@@ -103,6 +244,17 @@
   phase: 2
   severity: '''CRITICAL'''
   block: true
+  transforms:
+    - none
+  tags:
+    - application-multi
+    - language-java
+    - platform-multi
+    - attack-rce
+    - paranoia-level/3
+    - OWASP_CRS
+    - OWASP_CRS/ATTACK-JAVA
+    - capec/1000/152/248
 - id: "944152"
   name: 'Potential Remote Command Execution: Log4j / Log4shell'
   variable: REQUEST_LINE|ARGS|ARGS_NAMES|REQUEST_COOKIES|REQUEST_COOKIES_NAMES|REQUEST_HEADERS|XML:/*|XML://@*
@@ -110,3 +262,17 @@
   phase: 2
   severity: '''CRITICAL'''
   block: true
+  transforms:
+    - none
+    - urlDecodeUni
+    - jsDecode
+    - htmlEntityDecode
+  tags:
+    - application-multi
+    - language-java
+    - platform-multi
+    - attack-rce
+    - paranoia-level/4
+    - OWASP_CRS
+    - OWASP_CRS/ATTACK-JAVA
+    - capec/1000/152/137/6

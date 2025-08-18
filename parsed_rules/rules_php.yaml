@@ -5,6 +5,17 @@
   phase: 2
   severity: '''CRITICAL'''
   block: true
+  transforms:
+    - none
+  tags:
+    - application-multi
+    - language-php
+    - platform-multi
+    - attack-injection-php
+    - paranoia-level/1
+    - OWASP_CRS
+    - OWASP_CRS/ATTACK-PHP
+    - capec/1000/152/242
 - id: "933110"
   name: 'PHP Injection Attack: PHP Script File Upload Found'
   variable: FILES|REQUEST_HEADERS:X-Filename|REQUEST_HEADERS:X_Filename|REQUEST_HEADERS:X.Filename|REQUEST_HEADERS:X-File-Name
@@ -12,6 +23,18 @@
   phase: 2
   severity: '''CRITICAL'''
   block: true
+  transforms:
+    - none
+    - lowercase
+  tags:
+    - application-multi
+    - language-php
+    - platform-multi
+    - attack-injection-php
+    - paranoia-level/1
+    - OWASP_CRS
+    - OWASP_CRS/ATTACK-PHP
+    - capec/1000/152/242
 - id: "933120"
   name: 'PHP Injection Attack: Configuration Directive Found'
   variable: REQUEST_COOKIES|REQUEST_COOKIES_NAMES|ARGS_NAMES|ARGS|XML:/*
@@ -19,6 +42,18 @@
   phase: 2
   severity: '''CRITICAL'''
   block: true
+  transforms:
+    - none
+    - normalisePath
+  tags:
+    - application-multi
+    - language-php
+    - platform-multi
+    - attack-injection-php
+    - paranoia-level/1
+    - OWASP_CRS
+    - OWASP_CRS/ATTACK-PHP
+    - capec/1000/152/242
 - id: "933130"
   name: 'PHP Injection Attack: Variables Found'
   variable: REQUEST_COOKIES|REQUEST_COOKIES_NAMES|ARGS_NAMES|ARGS|XML:/*
@@ -26,6 +61,19 @@
   phase: 2
   severity: '''CRITICAL'''
   block: true
+  transforms:
+    - none
+    - normalisePath
+    - urlDecodeUni
+  tags:
+    - application-multi
+    - language-php
+    - platform-multi
+    - attack-injection-php
+    - paranoia-level/1
+    - OWASP_CRS
+    - OWASP_CRS/ATTACK-PHP
+    - capec/1000/152/242
 - id: "933135"
   name: 'PHP Injection Attack: Variable Access Found'
   variable: REQUEST_COOKIES|REQUEST_COOKIES_NAMES|REQUEST_FILENAME|ARGS_NAMES|ARGS|XML:/*
@@ -33,6 +81,17 @@
   phase: 2
   severity: '''CRITICAL'''
   block: true
+  transforms:
+    - none
+  tags:
+    - application-multi
+    - language-php
+    - platform-multi
+    - attack-injection-php
+    - paranoia-level/1
+    - OWASP_CRS
+    - OWASP_CRS/ATTACK-PHP
+    - capec/1000/152/242
 - id: "933140"
   name: 'PHP Injection Attack: I/O Stream Found'
   variable: REQUEST_COOKIES|REQUEST_COOKIES_NAMES|ARGS_NAMES|ARGS|XML:/*
@@ -40,6 +99,17 @@
   phase: 2
   severity: '''CRITICAL'''
   block: true
+  transforms:
+    - none
+  tags:
+    - application-multi
+    - language-php
+    - platform-multi
+    - attack-injection-php
+    - paranoia-level/1
+    - OWASP_CRS
+    - OWASP_CRS/ATTACK-PHP
+    - capec/1000/152/242
 - id: "933200"
   name: 'PHP Injection Attack: Wrapper scheme detected'
   variable: REQUEST_COOKIES|REQUEST_COOKIES_NAMES|ARGS_NAMES|ARGS|XML:/*
@@ -47,6 +117,21 @@
   phase: 2
   severity: '''CRITICAL'''
   block: true
+  transforms:
+    - none
+    - utf8toUnicode
+    - urlDecodeUni
+    - removeNulls
+    - cmdLine
+  tags:
+    - application-multi
+    - language-php
+    - platform-multi
+    - attack-injection-php
+    - paranoia-level/1
+    - OWASP_CRS
+    - OWASP_CRS/ATTACK-PHP
+    - capec/1000/152/242
 - id: "933150"
   name: 'PHP Injection Attack: High-Risk PHP Function Name Found'
   variable: REQUEST_COOKIES|REQUEST_COOKIES_NAMES|REQUEST_FILENAME|ARGS_NAMES|ARGS|XML:/*
@@ -54,6 +139,17 @@
   phase: 2
   severity: '''CRITICAL'''
   block: true
+  transforms:
+    - none
+  tags:
+    - application-multi
+    - language-php
+    - platform-multi
+    - attack-injection-php
+    - paranoia-level/1
+    - OWASP_CRS
+    - OWASP_CRS/ATTACK-PHP
+    - capec/1000/152/242
 - id: "933180"
   name: 'PHP Injection Attack: Variable Function Call Found'
   variable: REQUEST_COOKIES|REQUEST_COOKIES_NAMES|REQUEST_FILENAME|ARGS_NAMES|ARGS|XML:/*
@@ -61,6 +157,17 @@
   phase: 2
   severity: '''CRITICAL'''
   block: true
+  transforms:
+    - none
+  tags:
+    - application-multi
+    - language-php
+    - platform-multi
+    - attack-injection-php
+    - paranoia-level/1
+    - OWASP_CRS
+    - OWASP_CRS/ATTACK-PHP
+    - capec/1000/152/242
 - id: "933151"
   name: 'PHP Injection Attack: Medium-Risk PHP Function Name Found'
   variable: REQUEST_COOKIES|REQUEST_COOKIES_NAMES|REQUEST_FILENAME|ARGS_NAMES|ARGS|XML:/*
@@ -68,6 +175,17 @@
   phase: 2
   severity: '''CRITICAL'''
   block: true
+  transforms:
+    - none
+  tags:
+    - application-multi
+    - language-php
+    - platform-multi
+    - attack-injection-php
+    - paranoia-level/2
+    - OWASP_CRS
+    - OWASP_CRS/ATTACK-PHP
+    - capec/1000/152/242
 - id: "933152"
   name: 'PHP Injection Attack: Medium-Risk PHP Function Name Found'
   variable: REQUEST_COOKIES|REQUEST_COOKIES_NAMES|REQUEST_FILENAME|ARGS_NAMES|ARGS|XML:/*
@@ -75,6 +193,17 @@
   phase: 2
   severity: '''CRITICAL'''
   block: true
+  transforms:
+    - none
+  tags:
+    - application-multi
+    - language-php
+    - platform-multi
+    - attack-injection-php
+    - paranoia-level/2
+    - OWASP_CRS
+    - OWASP_CRS/ATTACK-PHP
+    - capec/1000/152/242
 - id: "933153"
   name: 'PHP Injection Attack: Medium-Risk PHP Function Name Found'
   variable: REQUEST_COOKIES|REQUEST_COOKIES_NAMES|REQUEST_FILENAME|ARGS_NAMES|ARGS|XML:/*
@@ -82,6 +211,17 @@
   phase: 2
   severity: '''CRITICAL'''
   block: true
+  transforms:
+    - none
+  tags:
+    - application-multi
+    - language-php
+    - platform-multi
+    - attack-injection-php
+    - paranoia-level/2
+    - OWASP_CRS
+    - OWASP_CRS/ATTACK-PHP
+    - capec/1000/152/242
 - id: "933131"
   name: 'PHP Injection Attack: Variables Found'
   variable: REQUEST_COOKIES|REQUEST_COOKIES_NAMES|ARGS_NAMES|ARGS|XML:/*
@@ -89,6 +229,19 @@
   phase: 2
   severity: '''CRITICAL'''
   block: true
+  transforms:
+    - none
+    - normalisePath
+    - urlDecodeUni
+  tags:
+    - application-multi
+    - language-php
+    - platform-multi
+    - attack-injection-php
+    - paranoia-level/3
+    - OWASP_CRS
+    - OWASP_CRS/ATTACK-PHP
+    - capec/1000/152/242
 - id: "933161"
   name: 'PHP Injection Attack: Low-Value PHP Function Call Found'
   variable: REQUEST_COOKIES|REQUEST_COOKIES_NAMES|REQUEST_FILENAME|ARGS_NAMES|ARGS|XML:/*
@@ -96,6 +249,17 @@
   phase: 2
   severity: '''CRITICAL'''
   block: true
+  transforms:
+    - none
+  tags:
+    - application-multi
+    - language-php
+    - platform-multi
+    - attack-injection-php
+    - paranoia-level/3
+    - OWASP_CRS
+    - OWASP_CRS/ATTACK-PHP
+    - capec/1000/152/242
 - id: "933111"
   name: 'PHP Injection Attack: PHP Script File Upload Found'
   variable: FILES|REQUEST_HEADERS:X-Filename|REQUEST_HEADERS:X_Filename|REQUEST_HEADERS:X.Filename|REQUEST_HEADERS:X-File-Name
@@ -103,6 +267,18 @@
   phase: 2
   severity: '''CRITICAL'''
   block: true
+  transforms:
+    - none
+    - lowercase
+  tags:
+    - application-multi
+    - language-php
+    - platform-multi
+    - attack-injection-php
+    - paranoia-level/3
+    - OWASP_CRS
+    - OWASP_CRS/ATTACK-PHP
+    - capec/1000/152/242
 - id: "933190"
   name: 'PHP Injection Attack: PHP Closing Tag Found'
   variable: REQUEST_COOKIES|REQUEST_COOKIES_NAMES|ARGS_NAMES|ARGS|XML:/*
@@ -110,3 +286,15 @@
   phase: 2
   severity: '''CRITICAL'''
   block: true
+  transforms:
+    - none
+    - urlDecodeUni
+  tags:
+    - application-multi
+    - language-php
+    - platform-multi
+    - attack-injection-php
+    - paranoia-level/3
+    - OWASP_CRS
+    - OWASP_CRS/ATTACK-PHP
+    - capec/1000/152/242

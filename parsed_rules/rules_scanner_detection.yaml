@@ -5,3 +5,14 @@
   phase: 1
   severity: '''CRITICAL'''
   block: true
+  transforms:
+    - none
+  tags:
+    - application-multi
+    - language-multi
+    - platform-multi
+    - attack-reputation-scanner
+    - paranoia-level/1
+    - OWASP_CRS
+    - OWASP_CRS/SCANNER-DETECTION
+    - capec/1000/118/224/541/310

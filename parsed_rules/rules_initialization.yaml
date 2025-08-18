@@ -5,6 +5,10 @@
   phase: 1
   severity: ""
   block: false
+  tags:
+    - OWASP_CRS
+  controls:
+    - forceRequestBodyVariable=On
 - id: ""
   name: ""
   variable: REQBODY_PROCESSOR
@@ -12,10 +16,19 @@
   phase: 0
   severity: ""
   block: false
+  controls:
+    - requestBodyProcessor=URLENCODED
 - id: "901410"
-  name: ""
+  name: "Suspicious UNIQUE_ID format"
   variable: UNIQUE_ID
-  regex: ^[a-f]*([0-9])[a-f]*([0-9])
+  # Match only if it's NOT a valid 32 or 40 character hex string
+  regex: "^(?![a-f0-9]{32}$)(?![a-f0-9]{40}$).*$"
   phase: 1
-  severity: ""
+  severity: "LOW"
   block: false
+  transforms:
+    - lowerCase
+  tags:
+    - OWASP_CRS
+    - false-positive-reduction
+

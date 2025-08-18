@@ -4,7 +4,10 @@
   regex: (?i)(gzip|compress|deflate|br|zstd)
   phase: 4
   severity: ""
-  block: true
+  block: false
+  tags:
+    - OWASP_CRS
+    - OWASP_CRS/DATA-LEAKAGES
 - id: "950130"
   name: Directory Listing
   variable: RESPONSE_BODY
@@ -12,6 +15,17 @@
   phase: 4
   severity: '''ERROR'''
   block: true
+  transforms:
+    - none
+  tags:
+    - application-multi
+    - language-multi
+    - platform-multi
+    - attack-disclosure
+    - paranoia-level/1
+    - OWASP_CRS
+    - OWASP_CRS/DATA-LEAKAGES
+    - capec/1000/118/116/54/127
 - id: "950140"
   name: CGI source code leakage
   variable: RESPONSE_BODY
@@ -19,6 +33,17 @@
   phase: 4
   severity: '''ERROR'''
   block: true
+  transforms:
+    - none
+  tags:
+    - application-multi
+    - language-multi
+    - platform-multi
+    - attack-disclosure
+    - paranoia-level/1
+    - OWASP_CRS
+    - OWASP_CRS/DATA-LEAKAGES
+    - capec/1000/118/116
 - id: "950150"
   name: ASP.NET exception leakage
   variable: RESPONSE_BODY
@@ -26,6 +51,17 @@
   phase: 4
   severity: '''ERROR'''
   block: true
+  transforms:
+    - none
+  tags:
+    - application-multi
+    - language-aspnet
+    - platform-multi
+    - attack-disclosure
+    - paranoia-level/1
+    - OWASP_CRS
+    - OWASP_CRS/DATA-LEAKAGES
+    - capec/1000/118/116/54/127
 - id: "950100"
   name: The Application Returned a 500-Level Status Code
   variable: RESPONSE_STATUS
@@ -33,6 +69,17 @@
   phase: 3
   severity: '''ERROR'''
   block: true
+  transforms:
+    - none
+  tags:
+    - application-multi
+    - language-multi
+    - platform-multi
+    - attack-disclosure
+    - paranoia-level/2
+    - OWASP_CRS
+    - OWASP_CRS/DATA-LEAKAGES
+    - capec/1000/152
 - id: "951010"
   name: ""
   variable: RESPONSE_HEADERS:Content-Encoding
@@ -40,6 +87,9 @@
   phase: 4
   severity: ""
   block: false
+  tags:
+    - OWASP_CRS
+    - OWASP_CRS/DATA-LEAKAGES-SQL
 - id: "951100"
   name: ""
   variable: RESPONSE_BODY
@@ -47,6 +97,16 @@
   phase: 4
   severity: ""
   block: false
+  transforms:
+    - none
+  tags:
+    - application-multi
+    - language-multi
+    - platform-multi
+    - attack-disclosure
+    - OWASP_CRS
+    - OWASP_CRS/DATA-LEAKAGES-SQL
+    - capec/1000/118/116/54
 - id: "951110"
   name: Microsoft Access SQL Information Leakage
   variable: RESPONSE_BODY
@@ -54,6 +114,17 @@
   phase: 4
   severity: '''CRITICAL'''
   block: true
+  transforms:
+    - none
+  tags:
+    - application-multi
+    - language-multi
+    - platform-msaccess
+    - attack-disclosure
+    - paranoia-level/1
+    - OWASP_CRS
+    - OWASP_CRS/DATA-LEAKAGES-SQL
+    - capec/1000/118/116/54
 - id: "951120"
   name: Oracle SQL Information Leakage
   variable: RESPONSE_BODY
@@ -61,6 +132,17 @@
   phase: 4
   severity: '''CRITICAL'''
   block: true
+  transforms:
+    - none
+  tags:
+    - application-multi
+    - language-multi
+    - platform-oracle
+    - attack-disclosure
+    - paranoia-level/1
+    - OWASP_CRS
+    - OWASP_CRS/DATA-LEAKAGES-SQL
+    - capec/1000/118/116/54
 - id: "951130"
   name: DB2 SQL Information Leakage
   variable: RESPONSE_BODY
@@ -68,6 +150,17 @@
   phase: 4
   severity: '''CRITICAL'''
   block: true
+  transforms:
+    - none
+  tags:
+    - application-multi
+    - language-multi
+    - platform-db2
+    - attack-disclosure
+    - paranoia-level/1
+    - OWASP_CRS
+    - OWASP_CRS/DATA-LEAKAGES-SQL
+    - capec/1000/118/116/54
 - id: "951140"
   name: EMC SQL Information Leakage
   variable: RESPONSE_BODY
@@ -75,6 +168,17 @@
   phase: 4
   severity: '''CRITICAL'''
   block: true
+  transforms:
+    - none
+  tags:
+    - application-multi
+    - language-multi
+    - platform-emc
+    - attack-disclosure
+    - paranoia-level/1
+    - OWASP_CRS
+    - OWASP_CRS/DATA-LEAKAGES-SQL
+    - capec/1000/118/116/54
 - id: "951150"
   name: firebird SQL Information Leakage
   variable: RESPONSE_BODY
@@ -82,6 +186,17 @@
   phase: 4
   severity: '''CRITICAL'''
   block: true
+  transforms:
+    - none
+  tags:
+    - application-multi
+    - language-multi
+    - platform-firebird
+    - attack-disclosure
+    - paranoia-level/1
+    - OWASP_CRS
+    - OWASP_CRS/DATA-LEAKAGES-SQL
+    - capec/1000/118/116/54
 - id: "951160"
   name: Frontbase SQL Information Leakage
   variable: RESPONSE_BODY
@@ -89,6 +204,17 @@
   phase: 4
   severity: '''CRITICAL'''
   block: true
+  transforms:
+    - none
+  tags:
+    - application-multi
+    - language-multi
+    - platform-frontbase
+    - attack-disclosure
+    - paranoia-level/1
+    - OWASP_CRS
+    - OWASP_CRS/DATA-LEAKAGES-SQL
+    - capec/1000/118/116/54
 - id: "951170"
   name: hsqldb SQL Information Leakage
   variable: RESPONSE_BODY
@@ -96,6 +222,17 @@
   phase: 4
   severity: '''CRITICAL'''
   block: true
+  transforms:
+    - none
+  tags:
+    - application-multi
+    - language-multi
+    - platform-hsqldb
+    - attack-disclosure
+    - paranoia-level/1
+    - OWASP_CRS
+    - OWASP_CRS/DATA-LEAKAGES-SQL
+    - capec/1000/118/116/54
 - id: "951180"
   name: informix SQL Information Leakage
   variable: RESPONSE_BODY
@@ -103,6 +240,17 @@
   phase: 4
   severity: '''CRITICAL'''
   block: true
+  transforms:
+    - none
+  tags:
+    - application-multi
+    - language-multi
+    - platform-informix
+    - attack-disclosure
+    - paranoia-level/1
+    - OWASP_CRS
+    - OWASP_CRS/DATA-LEAKAGES-SQL
+    - capec/1000/118/116/54
 - id: "951190"
   name: ingres SQL Information Leakage
   variable: RESPONSE_BODY
@@ -110,6 +258,17 @@
   phase: 4
   severity: '''CRITICAL'''
   block: true
+  transforms:
+    - none
+  tags:
+    - application-multi
+    - language-multi
+    - platform-ingres
+    - attack-disclosure
+    - paranoia-level/1
+    - OWASP_CRS
+    - OWASP_CRS/DATA-LEAKAGES-SQL
+    - capec/1000/118/116/54
 - id: "951200"
   name: interbase SQL Information Leakage
   variable: RESPONSE_BODY
@@ -117,6 +276,17 @@
   phase: 4
   severity: '''CRITICAL'''
   block: true
+  transforms:
+    - none
+  tags:
+    - application-multi
+    - language-multi
+    - platform-interbase
+    - attack-disclosure
+    - paranoia-level/1
+    - OWASP_CRS
+    - OWASP_CRS/DATA-LEAKAGES-SQL
+    - capec/1000/118/116/54
 - id: "951210"
   name: maxDB SQL Information Leakage
   variable: RESPONSE_BODY
@@ -124,6 +294,17 @@
   phase: 4
   severity: '''CRITICAL'''
   block: true
+  transforms:
+    - none
+  tags:
+    - application-multi
+    - language-multi
+    - platform-maxdb
+    - attack-disclosure
+    - paranoia-level/1
+    - OWASP_CRS
+    - OWASP_CRS/DATA-LEAKAGES-SQL
+    - capec/1000/118/116/54
 - id: "951220"
   name: mssql SQL Information Leakage
   variable: RESPONSE_BODY
@@ -131,6 +312,17 @@
   phase: 4
   severity: '''CRITICAL'''
   block: true
+  transforms:
+    - none
+  tags:
+    - application-multi
+    - language-multi
+    - platform-mssql
+    - attack-disclosure
+    - paranoia-level/1
+    - OWASP_CRS
+    - OWASP_CRS/DATA-LEAKAGES-SQL
+    - capec/1000/118/116/54
 - id: "951230"
   name: mysql SQL Information Leakage
   variable: RESPONSE_BODY
@@ -138,6 +330,17 @@
   phase: 4
   severity: '''CRITICAL'''
   block: true
+  transforms:
+    - none
+  tags:
+    - application-multi
+    - language-multi
+    - platform-mysql
+    - attack-disclosure
+    - paranoia-level/1
+    - OWASP_CRS
+    - OWASP_CRS/DATA-LEAKAGES-SQL
+    - capec/1000/118/116/54
 - id: "951240"
   name: postgres SQL Information Leakage
   variable: RESPONSE_BODY
@@ -145,6 +348,17 @@
   phase: 4
   severity: '''CRITICAL'''
   block: true
+  transforms:
+    - none
+  tags:
+    - application-multi
+    - language-multi
+    - platform-pgsql
+    - attack-disclosure
+    - paranoia-level/1
+    - OWASP_CRS
+    - OWASP_CRS/DATA-LEAKAGES-SQL
+    - capec/1000/118/116/54
 - id: "951250"
   name: sqlite SQL Information Leakage
   variable: RESPONSE_BODY
@@ -152,6 +366,17 @@
   phase: 4
   severity: '''CRITICAL'''
   block: true
+  transforms:
+    - none
+  tags:
+    - application-multi
+    - language-multi
+    - platform-sqlite
+    - attack-disclosure
+    - paranoia-level/1
+    - OWASP_CRS
+    - OWASP_CRS/DATA-LEAKAGES-SQL
+    - capec/1000/118/116/54
 - id: "951260"
   name: Sybase SQL Information Leakage
   variable: RESPONSE_BODY
@@ -159,6 +384,17 @@
   phase: 4
   severity: '''CRITICAL'''
   block: true
+  transforms:
+    - none
+  tags:
+    - application-multi
+    - language-multi
+    - platform-sybase
+    - attack-disclosure
+    - paranoia-level/1
+    - OWASP_CRS
+    - OWASP_CRS/DATA-LEAKAGES-SQL
+    - capec/1000/118/116/54
 - id: "952010"
   name: ""
   variable: RESPONSE_HEADERS:Content-Encoding
@@ -166,6 +402,9 @@
   phase: 4
   severity: ""
   block: false
+  tags:
+    - OWASP_CRS
+    - OWASP_CRS/DATA-LEAKAGES-JAVA
 - id: "953010"
   name: ""
   variable: RESPONSE_HEADERS:Content-Encoding
@@ -173,6 +412,9 @@
   phase: 4
   severity: ""
   block: false
+  tags:
+    - OWASP_CRS
+    - OWASP_CRS/DATA-LEAKAGES-PHP
 - id: "953100"
   name: PHP Information Leakage
   variable: RESPONSE_BODY
@@ -180,6 +422,17 @@
   phase: 4
   severity: '''ERROR'''
   block: true
+  transforms:
+    - none
+  tags:
+    - application-multi
+    - language-php
+    - platform-multi
+    - attack-disclosure
+    - paranoia-level/1
+    - OWASP_CRS
+    - OWASP_CRS/DATA-LEAKAGES-PHP
+    - capec/1000/118/116
 - id: "953110"
   name: PHP source code leakage
   variable: RESPONSE_BODY
@@ -187,6 +440,17 @@
   phase: 4
   severity: '''ERROR'''
   block: true
+  transforms:
+    - none
+  tags:
+    - application-multi
+    - language-php
+    - platform-multi
+    - attack-disclosure
+    - paranoia-level/1
+    - OWASP_CRS
+    - OWASP_CRS/DATA-LEAKAGES-PHP
+    - capec/1000/118/116
 - id: "953120"
   name: PHP source code leakage
   variable: RESPONSE_BODY
@@ -194,6 +458,17 @@
   phase: 4
   severity: '''ERROR'''
   block: true
+  transforms:
+    - none
+  tags:
+    - application-multi
+    - language-php
+    - platform-multi
+    - attack-disclosure
+    - paranoia-level/1
+    - OWASP_CRS
+    - OWASP_CRS/DATA-LEAKAGES-PHP
+    - capec/1000/118/116
 - id: "953101"
   name: PHP Information Leakage
   variable: RESPONSE_BODY
@@ -201,6 +476,17 @@
   phase: 4
   severity: '''ERROR'''
   block: true
+  transforms:
+    - none
+  tags:
+    - application-multi
+    - language-php
+    - platform-multi
+    - attack-disclosure
+    - paranoia-level/2
+    - OWASP_CRS
+    - OWASP_CRS/DATA-LEAKAGES-PHP
+    - capec/1000/118/116
 - id: "954010"
   name: ""
   variable: RESPONSE_HEADERS:Content-Encoding
@@ -208,6 +494,9 @@
   phase: 4
   severity: ""
   block: false
+  tags:
+    - OWASP_CRS
+    - OWASP_CRS/DATA-LEAKAGES-IIS
 - id: "954100"
   name: Disclosure of IIS install location
   variable: RESPONSE_BODY
@@ -215,6 +504,18 @@
   phase: 4
   severity: '''ERROR'''
   block: true
+  transforms:
+    - none
+  tags:
+    - application-multi
+    - language-multi
+    - platform-iis
+    - platform-windows
+    - attack-disclosure
+    - paranoia-level/1
+    - OWASP_CRS
+    - OWASP_CRS/DATA-LEAKAGES-IIS
+    - capec/1000/118/116
 - id: "954110"
   name: Application Availability Error
   variable: RESPONSE_BODY
@@ -222,6 +523,18 @@
   phase: 4
   severity: '''ERROR'''
   block: true
+  transforms:
+    - none
+  tags:
+    - application-multi
+    - language-multi
+    - platform-iis
+    - platform-windows
+    - attack-disclosure
+    - paranoia-level/1
+    - OWASP_CRS
+    - OWASP_CRS/DATA-LEAKAGES-IIS
+    - capec/1000/118/116
 - id: "954120"
   name: IIS Information Leakage
   variable: RESPONSE_BODY
@@ -229,6 +542,18 @@
   phase: 4
   severity: '''ERROR'''
   block: true
+  transforms:
+    - none
+  tags:
+    - application-multi
+    - language-multi
+    - platform-iis
+    - platform-windows
+    - attack-disclosure
+    - paranoia-level/1
+    - OWASP_CRS
+    - OWASP_CRS/DATA-LEAKAGES-IIS
+    - capec/1000/118/116
 - id: "954130"
   name: IIS Information Leakage
   variable: RESPONSE_STATUS
@@ -236,13 +561,28 @@
   phase: 4
   severity: '''ERROR'''
   block: true
-- id: ""
-  name: ""
-  variable: RESPONSE_BODY
-  regex: \bServer Error in.{0,50}?\bApplication\b
-  phase: 0
-  severity: ""
-  block: false
+  transforms:
+    - none
+  tags:
+    - application-multi
+    - language-multi
+    - platform-iis
+    - platform-windows
+    - attack-disclosure
+    - paranoia-level/1
+    - OWASP_CRS
+    - OWASP_CRS/DATA-LEAKAGES-IIS
+    - capec/1000/118/116
+  chain:
+    - id: ""
+      name: ""
+      variable: RESPONSE_BODY
+      regex: \bServer Error in.{0,50}?\bApplication\b
+      phase: 0
+      severity: ""
+      block: false
+      transforms:
+        - none
 - id: "955010"
   name: ""
   variable: RESPONSE_HEADERS:Content-Encoding
@@ -250,6 +590,9 @@
   phase: 4
   severity: ""
   block: false
+  tags:
+    - OWASP_CRS
+    - OWASP_CRS/WEB-SHELLS
 - id: "955100"
   name: PHP Web shell detected
   variable: RESPONSE_BODY
@@ -257,6 +600,16 @@
   phase: 4
   severity: '''CRITICAL'''
   block: true
+  transforms:
+    - none
+  tags:
+    - language-php
+    - platform-multi
+    - attack-rce
+    - paranoia-level/1
+    - OWASP_CRS
+    - OWASP_CRS/WEB-SHELLS
+    - capec/1000/225/122/17/650
 - id: "955110"
   name: r57 web shell
   variable: RESPONSE_BODY
@@ -264,6 +617,16 @@
   phase: 4
   severity: '''CRITICAL'''
   block: true
+  transforms:
+    - none
+  tags:
+    - language-php
+    - platform-multi
+    - attack-rce
+    - paranoia-level/1
+    - OWASP_CRS
+    - OWASP_CRS/WEB-SHELLS
+    - capec/1000/225/122/17/650
 - id: "955120"
   name: WSO web shell
   variable: RESPONSE_BODY
@@ -271,6 +634,16 @@
   phase: 4
   severity: '''CRITICAL'''
   block: true
+  transforms:
+    - none
+  tags:
+    - language-php
+    - platform-multi
+    - attack-rce
+    - paranoia-level/1
+    - OWASP_CRS
+    - OWASP_CRS/WEB-SHELLS
+    - capec/1000/225/122/17/650
 - id: "955130"
   name: b4tm4n web shell
   variable: RESPONSE_BODY
@@ -278,6 +651,16 @@
   phase: 4
   severity: '''CRITICAL'''
   block: true
+  transforms:
+    - none
+  tags:
+    - language-php
+    - platform-multi
+    - attack-rce
+    - paranoia-level/1
+    - OWASP_CRS
+    - OWASP_CRS/WEB-SHELLS
+    - capec/1000/225/122/17/650
 - id: "955140"
   name: Mini Shell web shell
   variable: RESPONSE_BODY
@@ -285,6 +668,16 @@
   phase: 4
   severity: '''CRITICAL'''
   block: true
+  transforms:
+    - none
+  tags:
+    - language-php
+    - platform-multi
+    - attack-rce
+    - paranoia-level/1
+    - OWASP_CRS
+    - OWASP_CRS/WEB-SHELLS
+    - capec/1000/225/122/17/650
 - id: "955150"
   name: Ashiyane web shell
   variable: RESPONSE_BODY
@@ -292,6 +685,16 @@
   phase: 4
   severity: '''CRITICAL'''
   block: true
+  transforms:
+    - none
+  tags:
+    - language-php
+    - platform-multi
+    - attack-rce
+    - paranoia-level/1
+    - OWASP_CRS
+    - OWASP_CRS/WEB-SHELLS
+    - capec/1000/225/122/17/650
 - id: "955160"
   name: Symlink_Sa web shell
   variable: RESPONSE_BODY
@@ -299,6 +702,16 @@
   phase: 4
   severity: '''CRITICAL'''
   block: true
+  transforms:
+    - none
+  tags:
+    - language-php
+    - platform-multi
+    - attack-rce
+    - paranoia-level/1
+    - OWASP_CRS
+    - OWASP_CRS/WEB-SHELLS
+    - capec/1000/225/122/17/650
 - id: "955170"
   name: CasuS web shell
   variable: RESPONSE_BODY
@@ -306,6 +719,16 @@
   phase: 4
   severity: '''CRITICAL'''
   block: true
+  transforms:
+    - none
+  tags:
+    - language-php
+    - platform-multi
+    - attack-rce
+    - paranoia-level/1
+    - OWASP_CRS
+    - OWASP_CRS/WEB-SHELLS
+    - capec/1000/225/122/17/650
 - id: "955180"
   name: GRP WebShell
   variable: RESPONSE_BODY
@@ -313,6 +736,16 @@
   phase: 4
   severity: '''CRITICAL'''
   block: true
+  transforms:
+    - none
+  tags:
+    - language-php
+    - platform-multi
+    - attack-rce
+    - paranoia-level/1
+    - OWASP_CRS
+    - OWASP_CRS/WEB-SHELLS
+    - capec/1000/225/122/17/650
 - id: "955190"
   name: NGHshell web shell
   variable: RESPONSE_BODY
@@ -320,6 +753,16 @@
   phase: 4
   severity: '''CRITICAL'''
   block: true
+  transforms:
+    - none
+  tags:
+    - language-php
+    - platform-multi
+    - attack-rce
+    - paranoia-level/1
+    - OWASP_CRS
+    - OWASP_CRS/WEB-SHELLS
+    - capec/1000/225/122/17/650
 - id: "955200"
   name: SimAttacker web shell
   variable: RESPONSE_BODY
@@ -327,6 +770,16 @@
   phase: 4
   severity: '''CRITICAL'''
   block: true
+  transforms:
+    - none
+  tags:
+    - language-php
+    - platform-multi
+    - attack-rce
+    - paranoia-level/1
+    - OWASP_CRS
+    - OWASP_CRS/WEB-SHELLS
+    - capec/1000/225/122/17/650
 - id: "955210"
   name: Unknown web shell
   variable: RESPONSE_BODY
@@ -334,6 +787,16 @@
   phase: 4
   severity: '''CRITICAL'''
   block: true
+  transforms:
+    - none
+  tags:
+    - language-php
+    - platform-multi
+    - attack-rce
+    - paranoia-level/1
+    - OWASP_CRS
+    - OWASP_CRS/WEB-SHELLS
+    - capec/1000/225/122/17/650
 - id: "955220"
   name: lama\'s\'hell web shell
   variable: RESPONSE_BODY
@@ -341,6 +804,16 @@
   phase: 4
   severity: '''CRITICAL'''
   block: true
+  transforms:
+    - none
+  tags:
+    - language-php
+    - platform-multi
+    - attack-rce
+    - paranoia-level/1
+    - OWASP_CRS
+    - OWASP_CRS/WEB-SHELLS
+    - capec/1000/225/122/17/650
 - id: "955230"
   name: lostDC web shell
   variable: RESPONSE_BODY
@@ -348,6 +821,16 @@
   phase: 4
   severity: '''CRITICAL'''
   block: true
+  transforms:
+    - none
+  tags:
+    - language-php
+    - platform-multi
+    - attack-rce
+    - paranoia-level/1
+    - OWASP_CRS
+    - OWASP_CRS/WEB-SHELLS
+    - capec/1000/225/122/17/650
 - id: "955240"
   name: Unknown web shell
   variable: RESPONSE_BODY
@@ -355,6 +838,16 @@
   phase: 4
   severity: '''CRITICAL'''
   block: true
+  transforms:
+    - none
+  tags:
+    - language-php
+    - platform-multi
+    - attack-rce
+    - paranoia-level/1
+    - OWASP_CRS
+    - OWASP_CRS/WEB-SHELLS
+    - capec/1000/225/122/17/650
 - id: "955260"
   name: Ru24PostWebShell web shell
   variable: RESPONSE_BODY
@@ -362,6 +855,16 @@
   phase: 4
   severity: '''CRITICAL'''
   block: true
+  transforms:
+    - none
+  tags:
+    - language-php
+    - platform-multi
+    - attack-rce
+    - paranoia-level/1
+    - OWASP_CRS
+    - OWASP_CRS/WEB-SHELLS
+    - capec/1000/225/122/17/650
 - id: "955270"
   name: s72 Shell web shell
   variable: RESPONSE_BODY
@@ -369,6 +872,16 @@
   phase: 4
   severity: '''CRITICAL'''
   block: true
+  transforms:
+    - none
+  tags:
+    - language-php
+    - platform-multi
+    - attack-rce
+    - paranoia-level/1
+    - OWASP_CRS
+    - OWASP_CRS/WEB-SHELLS
+    - capec/1000/225/122/17/650
 - id: "955290"
   name: g00nshell web shell
   variable: RESPONSE_BODY
@@ -376,6 +889,16 @@
   phase: 4
   severity: '''CRITICAL'''
   block: true
+  transforms:
+    - none
+  tags:
+    - language-php
+    - platform-multi
+    - attack-rce
+    - paranoia-level/1
+    - OWASP_CRS
+    - OWASP_CRS/WEB-SHELLS
+    - capec/1000/225/122/17/650
 - id: "955300"
   name: PuNkHoLic shell web shell
   variable: RESPONSE_BODY
@@ -383,6 +906,18 @@
   phase: 4
   severity: '''CRITICAL'''
   block: true
+  transforms:
+    - none
+    - removeWhitespace
+    - lowercase
+  tags:
+    - language-php
+    - platform-multi
+    - attack-rce
+    - paranoia-level/1
+    - OWASP_CRS
+    - OWASP_CRS/WEB-SHELLS
+    - capec/1000/225/122/17/650
 - id: "955310"
   name: azrail web shell
   variable: RESPONSE_BODY
@@ -390,6 +925,16 @@
   phase: 4
   severity: '''CRITICAL'''
   block: true
+  transforms:
+    - none
+  tags:
+    - language-php
+    - platform-multi
+    - attack-rce
+    - paranoia-level/1
+    - OWASP_CRS
+    - OWASP_CRS/WEB-SHELLS
+    - capec/1000/225/122/17/650
 - id: "955320"
   name: SmEvK_PaThAn Shell web shell
   variable: RESPONSE_BODY
@@ -397,6 +942,16 @@
   phase: 4
   severity: '''CRITICAL'''
   block: true
+  transforms:
+    - none
+  tags:
+    - language-php
+    - platform-multi
+    - attack-rce
+    - paranoia-level/1
+    - OWASP_CRS
+    - OWASP_CRS/WEB-SHELLS
+    - capec/1000/225/122/17/650
 - id: "955330"
   name: Shell I web shell
   variable: RESPONSE_BODY
@@ -404,6 +959,16 @@
   phase: 4
   severity: '''CRITICAL'''
   block: true
+  transforms:
+    - none
+  tags:
+    - language-php
+    - platform-multi
+    - attack-rce
+    - paranoia-level/1
+    - OWASP_CRS
+    - OWASP_CRS/WEB-SHELLS
+    - capec/1000/225/122/17/650
 - id: "955340"
   name: b374k m1n1 web shell
   variable: RESPONSE_BODY
@@ -411,6 +976,16 @@
   phase: 4
   severity: '''CRITICAL'''
   block: true
+  transforms:
+    - none
+  tags:
+    - language-php
+    - platform-multi
+    - attack-rce
+    - paranoia-level/1
+    - OWASP_CRS
+    - OWASP_CRS/WEB-SHELLS
+    - capec/1000/225/122/17/650
 - id: "955400"
   name: ASP Web shell detected
   variable: RESPONSE_BODY
@@ -418,6 +993,16 @@
   phase: 4
   severity: '''CRITICAL'''
   block: true
+  transforms:
+    - none
+  tags:
+    - language-php
+    - platform-multi
+    - attack-rce
+    - paranoia-level/1
+    - OWASP_CRS
+    - OWASP_CRS/WEB-SHELLS
+    - capec/1000/225/122/17/650
 - id: "956010"
   name: ""
   variable: RESPONSE_HEADERS:Content-Encoding
@@ -425,6 +1010,9 @@
   phase: 4
   severity: ""
   block: false
+  tags:
+    - OWASP_CRS
+    - OWASP_CRS/DATA-LEAKAGES-RUBY
 - id: "956100"
   name: RUBY Information Leakage
   variable: RESPONSE_BODY
@@ -432,6 +1020,17 @@
   phase: 4
   severity: '''ERROR'''
   block: true
+  transforms:
+    - none
+  tags:
+    - application-multi
+    - language-ruby
+    - platform-multi
+    - attack-disclosure
+    - paranoia-level/1
+    - OWASP_CRS
+    - OWASP_CRS/DATA-LEAKAGES-RUBY
+    - capec/1000/118/116
 - id: "956110"
   name: Ruby source code leakage
   variable: RESPONSE_BODY
@@ -439,3 +1038,14 @@
   phase: 4
   severity: '''ERROR'''
   block: true
+  transforms:
+    - none
+  tags:
+    - application-multi
+    - language-ruby
+    - platform-multi
+    - attack-disclosure
+    - paranoia-level/1
+    - OWASP_CRS
+    - OWASP_CRS/DATA-LEAKAGES-RUBY
+    - capec/1000/118/116

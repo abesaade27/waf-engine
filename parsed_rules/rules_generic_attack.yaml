@@ -5,6 +5,17 @@
   phase: 2
   severity: '''CRITICAL'''
   block: true
+  transforms:
+    - none
+  tags:
+    - application-multi
+    - language-multi
+    - platform-multi
+    - attack-ssrf
+    - paranoia-level/1
+    - OWASP_CRS
+    - OWASP_CRS/ATTACK-GENERIC
+    - capec/1000/225/664
 - id: "934130"
   name: JavaScript Prototype Pollution
   variable: REQUEST_COOKIES|REQUEST_COOKIES_NAMES|ARGS_NAMES|ARGS|XML:/*
@@ -12,6 +23,20 @@
   phase: 2
   severity: '''CRITICAL'''
   block: true
+  transforms:
+    - none
+    - urlDecodeUni
+    - jsDecode
+  tags:
+    - application-multi
+    - language-javascript
+    - platform-multi
+    - attack-rce
+    - attack-injection-generic
+    - paranoia-level/1
+    - OWASP_CRS
+    - OWASP_CRS/ATTACK-GENERIC
+    - capec/1/180/77
 - id: "934150"
   name: Ruby Injection Attack
   variable: REQUEST_COOKIES|REQUEST_COOKIES_NAMES|ARGS_NAMES|ARGS|XML:/*
@@ -19,6 +44,18 @@
   phase: 2
   severity: '''CRITICAL'''
   block: true
+  transforms:
+    - none
+  tags:
+    - application-multi
+    - language-ruby
+    - platform-multi
+    - attack-rce
+    - attack-injection-generic
+    - paranoia-level/1
+    - OWASP_CRS
+    - OWASP_CRS/ATTACK-GENERIC
+    - capec/1000/152/242
 - id: "934101"
   name: Node.js Injection Attack 2/2
   variable: REQUEST_FILENAME|REQUEST_COOKIES|REQUEST_COOKIES_NAMES|ARGS_NAMES|ARGS|XML:/*
@@ -26,6 +63,23 @@
   phase: 2
   severity: '''CRITICAL'''
   block: true
+  transforms:
+    - none
+    - urlDecodeUni
+    - jsDecode
+    - base64Decode
+    - urlDecodeUni
+    - jsDecode
+  tags:
+    - application-multi
+    - language-javascript
+    - platform-nodejs
+    - attack-rce
+    - attack-injection-generic
+    - paranoia-level/2
+    - OWASP_CRS
+    - OWASP_CRS/ATTACK-GENERIC
+    - capec/1000/152/242
 - id: "934120"
   name: 'Possible Server Side Request Forgery (SSRF) Attack: URL Parameter using IP Address'
   variable: REQUEST_COOKIES|REQUEST_COOKIES_NAMES|REQUEST_FILENAME|ARGS_NAMES|ARGS|XML:/*
@@ -33,6 +87,17 @@
   phase: 2
   severity: '''CRITICAL'''
   block: true
+  transforms:
+    - none
+  tags:
+    - application-multi
+    - language-multi
+    - platform-multi
+    - attack-ssrf
+    - paranoia-level/2
+    - OWASP_CRS
+    - OWASP_CRS/ATTACK-GENERIC
+    - capec/1000/225/664
 - id: "934140"
   name: Perl Injection Attack
   variable: REQUEST_COOKIES|REQUEST_COOKIES_NAMES|ARGS_NAMES|ARGS|XML:/*
@@ -40,6 +105,18 @@
   phase: 2
   severity: '''CRITICAL'''
   block: true
+  transforms:
+    - none
+  tags:
+    - application-multi
+    - language-perl
+    - platform-multi
+    - attack-rce
+    - attack-injection-generic
+    - paranoia-level/2
+    - OWASP_CRS
+    - OWASP_CRS/ATTACK-GENERIC
+    - capec/1000/152/242
 - id: "934180"
   name: SSTI Attack
   variable: REQUEST_COOKIES|REQUEST_COOKIES_NAMES|ARGS_NAMES|ARGS|XML:/*
@@ -47,3 +124,14 @@
   phase: 2
   severity: '''CRITICAL'''
   block: true
+  transforms:
+    - none
+  tags:
+    - application-multi
+    - platform-multi
+    - attack-ssti
+    - attack-injection-generic
+    - paranoia-level/2
+    - OWASP_CRS
+    - OWASP_CRS/ATTACK-GENERIC
+    - capec/1000/152/242

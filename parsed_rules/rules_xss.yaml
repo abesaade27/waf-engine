@@ -5,6 +5,38 @@
   phase: 1
   severity: ""
   block: false
+  transforms:
+    - none
+  tags:
+    - OWASP_CRS
+    - OWASP_CRS/ATTACK-XSS
+  controls:
+    - ruleRemoveTargetByTag=xss-perf-disable;REQUEST_FILENAME
+- id: "941100"
+  name: XSS Attack Detected via libinjection
+  variable: REQUEST_COOKIES|REQUEST_COOKIES_NAMES|REQUEST_HEADERS:User-Agent|ARGS_NAMES|ARGS|XML:/*
+  regex: (?i)(<script|onerror\s*=|onload\s*=|javascript:|alert\s*\()
+  phase: 2
+  severity: '''CRITICAL'''
+  block: true
+  transforms:
+    - none
+    - utf8toUnicode
+    - urlDecodeUni
+    - htmlEntityDecode
+    - jsDecode
+    - cssDecode
+    - removeNulls
+  tags:
+    - application-multi
+    - language-multi
+    - platform-multi
+    - attack-xss
+    - xss-perf-disable
+    - paranoia-level/1
+    - OWASP_CRS
+    - OWASP_CRS/ATTACK-XSS
+    - capec/1000/152/242
 - id: "941110"
   name: 'XSS Filter - Category 1: Script Tag Vector'
   variable: REQUEST_COOKIES|REQUEST_COOKIES_NAMES|REQUEST_FILENAME|REQUEST_HEADERS:User-Agent|REQUEST_HEADERS:Referer|ARGS_NAMES|ARGS|XML:/*
@@ -12,6 +44,24 @@
   phase: 2
   severity: '''CRITICAL'''
   block: true
+  transforms:
+    - none
+    - utf8toUnicode
+    - urlDecodeUni
+    - htmlEntityDecode
+    - jsDecode
+    - cssDecode
+    - removeNulls
+  tags:
+    - application-multi
+    - language-multi
+    - platform-multi
+    - attack-xss
+    - xss-perf-disable
+    - paranoia-level/1
+    - OWASP_CRS
+    - OWASP_CRS/ATTACK-XSS
+    - capec/1000/152/242
 - id: "941130"
   name: 'XSS Filter - Category 3: Attribute Vector'
   variable: REQUEST_COOKIES|REQUEST_COOKIES_NAMES|REQUEST_HEADERS:User-Agent|ARGS_NAMES|ARGS|REQUEST_FILENAME|XML:/*
@@ -19,6 +69,24 @@
   phase: 2
   severity: '''CRITICAL'''
   block: true
+  transforms:
+    - none
+    - utf8toUnicode
+    - urlDecodeUni
+    - htmlEntityDecode
+    - jsDecode
+    - cssDecode
+    - removeNulls
+  tags:
+    - application-multi
+    - language-multi
+    - platform-multi
+    - attack-xss
+    - xss-perf-disable
+    - paranoia-level/1
+    - OWASP_CRS
+    - OWASP_CRS/ATTACK-XSS
+    - capec/1000/152/242
 - id: "941140"
   name: 'XSS Filter - Category 4: Javascript URI Vector'
   variable: REQUEST_COOKIES|REQUEST_COOKIES_NAMES|REQUEST_HEADERS:User-Agent|REQUEST_HEADERS:Referer|ARGS_NAMES|ARGS|REQUEST_FILENAME|XML:/*
@@ -26,6 +94,25 @@
   phase: 2
   severity: '''CRITICAL'''
   block: true
+  transforms:
+    - none
+    - utf8toUnicode
+    - urlDecodeUni
+    - htmlEntityDecode
+    - jsDecode
+    - cssDecode
+    - removeNulls
+    - removeWhitespace
+  tags:
+    - application-multi
+    - language-multi
+    - platform-multi
+    - attack-xss
+    - xss-perf-disable
+    - paranoia-level/1
+    - OWASP_CRS
+    - OWASP_CRS/ATTACK-XSS
+    - capec/1000/152/242
 - id: "941180"
   name: Node-Validator Deny List Keywords
   variable: REQUEST_COOKIES|REQUEST_COOKIES_NAMES|ARGS_NAMES|ARGS|REQUEST_FILENAME|XML:/*
@@ -33,6 +120,24 @@
   phase: 2
   severity: '''CRITICAL'''
   block: true
+  transforms:
+    - none
+    - utf8toUnicode
+    - urlDecodeUni
+    - htmlEntityDecode
+    - jsDecode
+    - cssDecode
+    - removeNulls
+  tags:
+    - application-multi
+    - language-multi
+    - platform-nodejs
+    - attack-xss
+    - xss-perf-disable
+    - paranoia-level/1
+    - OWASP_CRS
+    - OWASP_CRS/ATTACK-XSS
+    - capec/1000/152/242
 - id: "941190"
   name: IE XSS Filters - Attack Detected
   variable: REQUEST_COOKIES|REQUEST_COOKIES_NAMES|ARGS_NAMES|ARGS|REQUEST_FILENAME|XML:/*
@@ -40,6 +145,24 @@
   phase: 2
   severity: '''CRITICAL'''
   block: true
+  transforms:
+    - none
+    - utf8toUnicode
+    - urlDecodeUni
+    - htmlEntityDecode
+    - jsDecode
+    - cssDecode
+    - removeNulls
+  tags:
+    - application-multi
+    - language-multi
+    - platform-internet-explorer
+    - attack-xss
+    - xss-perf-disable
+    - paranoia-level/1
+    - OWASP_CRS
+    - OWASP_CRS/ATTACK-XSS
+    - capec/1000/152/242
 - id: "941200"
   name: IE XSS Filters - Attack Detected
   variable: REQUEST_COOKIES|REQUEST_COOKIES_NAMES|ARGS_NAMES|ARGS|REQUEST_FILENAME|XML:/*
@@ -47,6 +170,24 @@
   phase: 2
   severity: '''CRITICAL'''
   block: true
+  transforms:
+    - none
+    - utf8toUnicode
+    - urlDecodeUni
+    - htmlEntityDecode
+    - jsDecode
+    - cssDecode
+    - removeNulls
+  tags:
+    - application-multi
+    - language-multi
+    - platform-internet-explorer
+    - attack-xss
+    - xss-perf-disable
+    - paranoia-level/1
+    - OWASP_CRS
+    - OWASP_CRS/ATTACK-XSS
+    - capec/1000/152/242
 - id: "941210"
   name: Javascript Word Detected
   variable: REQUEST_COOKIES|REQUEST_COOKIES_NAMES|ARGS_NAMES|ARGS|REQUEST_FILENAME|XML:/*
@@ -54,6 +195,24 @@
   phase: 2
   severity: '''CRITICAL'''
   block: true
+  transforms:
+    - none
+    - utf8toUnicode
+    - urlDecodeUni
+    - htmlEntityDecode
+    - jsDecode
+    - cssDecode
+    - removeNulls
+  tags:
+    - application-multi
+    - language-multi
+    - platform-internet-explorer
+    - attack-xss
+    - xss-perf-disable
+    - paranoia-level/1
+    - OWASP_CRS
+    - OWASP_CRS/ATTACK-XSS
+    - capec/1000/152/242
 - id: "941220"
   name: IE XSS Filters - Attack Detected
   variable: REQUEST_COOKIES|REQUEST_COOKIES_NAMES|ARGS_NAMES|ARGS|REQUEST_FILENAME|XML:/*
@@ -61,6 +220,24 @@
   phase: 2
   severity: '''CRITICAL'''
   block: true
+  transforms:
+    - none
+    - utf8toUnicode
+    - urlDecodeUni
+    - htmlEntityDecode
+    - jsDecode
+    - cssDecode
+    - removeNulls
+  tags:
+    - application-multi
+    - language-multi
+    - platform-internet-explorer
+    - attack-xss
+    - xss-perf-disable
+    - paranoia-level/1
+    - OWASP_CRS
+    - OWASP_CRS/ATTACK-XSS
+    - capec/1000/152/242
 - id: "941230"
   name: IE XSS Filters - Attack Detected
   variable: REQUEST_COOKIES|REQUEST_COOKIES_NAMES|ARGS_NAMES|ARGS|REQUEST_FILENAME|XML:/*
@@ -68,6 +245,24 @@
   phase: 2
   severity: '''CRITICAL'''
   block: true
+  transforms:
+    - none
+    - utf8toUnicode
+    - urlDecodeUni
+    - htmlEntityDecode
+    - jsDecode
+    - cssDecode
+    - removeNulls
+  tags:
+    - application-multi
+    - language-multi
+    - platform-internet-explorer
+    - attack-xss
+    - xss-perf-disable
+    - paranoia-level/1
+    - OWASP_CRS
+    - OWASP_CRS/ATTACK-XSS
+    - capec/1000/152/242
 - id: "941240"
   name: IE XSS Filters - Attack Detected
   variable: REQUEST_COOKIES|REQUEST_COOKIES_NAMES|ARGS_NAMES|ARGS|REQUEST_FILENAME|XML:/*
@@ -75,6 +270,25 @@
   phase: 2
   severity: '''CRITICAL'''
   block: true
+  transforms:
+    - none
+    - utf8toUnicode
+    - urlDecodeUni
+    - htmlEntityDecode
+    - jsDecode
+    - cssDecode
+    - lowercase
+    - removeNulls
+  tags:
+    - application-multi
+    - language-multi
+    - platform-internet-explorer
+    - attack-xss
+    - xss-perf-disable
+    - paranoia-level/1
+    - OWASP_CRS
+    - OWASP_CRS/ATTACK-XSS
+    - capec/1000/152/242
 - id: "941260"
   name: IE XSS Filters - Attack Detected
   variable: REQUEST_COOKIES|REQUEST_COOKIES_NAMES|ARGS_NAMES|ARGS|REQUEST_FILENAME|XML:/*
@@ -82,6 +296,24 @@
   phase: 2
   severity: '''CRITICAL'''
   block: true
+  transforms:
+    - none
+    - utf8toUnicode
+    - urlDecodeUni
+    - htmlEntityDecode
+    - jsDecode
+    - cssDecode
+    - removeNulls
+  tags:
+    - application-multi
+    - language-multi
+    - platform-internet-explorer
+    - attack-xss
+    - xss-perf-disable
+    - paranoia-level/1
+    - OWASP_CRS
+    - OWASP_CRS/ATTACK-XSS
+    - capec/1000/152/242
 - id: "941270"
   name: IE XSS Filters - Attack Detected
   variable: REQUEST_COOKIES|REQUEST_COOKIES_NAMES|ARGS_NAMES|ARGS|REQUEST_FILENAME|XML:/*
@@ -89,6 +321,24 @@
   phase: 2
   severity: '''CRITICAL'''
   block: true
+  transforms:
+    - none
+    - utf8toUnicode
+    - urlDecodeUni
+    - htmlEntityDecode
+    - jsDecode
+    - cssDecode
+    - removeNulls
+  tags:
+    - application-multi
+    - language-multi
+    - platform-internet-explorer
+    - attack-xss
+    - xss-perf-disable
+    - paranoia-level/1
+    - OWASP_CRS
+    - OWASP_CRS/ATTACK-XSS
+    - capec/1000/152/242
 - id: "941280"
   name: IE XSS Filters - Attack Detected
   variable: REQUEST_COOKIES|REQUEST_COOKIES_NAMES|ARGS_NAMES|ARGS|REQUEST_FILENAME|XML:/*
@@ -96,6 +346,24 @@
   phase: 2
   severity: '''CRITICAL'''
   block: true
+  transforms:
+    - none
+    - utf8toUnicode
+    - urlDecodeUni
+    - htmlEntityDecode
+    - jsDecode
+    - cssDecode
+    - removeNulls
+  tags:
+    - application-multi
+    - language-multi
+    - platform-internet-explorer
+    - attack-xss
+    - xss-perf-disable
+    - paranoia-level/1
+    - OWASP_CRS
+    - OWASP_CRS/ATTACK-XSS
+    - capec/1000/152/242
 - id: "941290"
   name: IE XSS Filters - Attack Detected
   variable: REQUEST_COOKIES|REQUEST_COOKIES_NAMES|ARGS_NAMES|ARGS|REQUEST_FILENAME|XML:/*
@@ -103,6 +371,24 @@
   phase: 2
   severity: '''CRITICAL'''
   block: true
+  transforms:
+    - none
+    - utf8toUnicode
+    - urlDecodeUni
+    - htmlEntityDecode
+    - jsDecode
+    - cssDecode
+    - removeNulls
+  tags:
+    - application-multi
+    - language-multi
+    - platform-internet-explorer
+    - attack-xss
+    - xss-perf-disable
+    - paranoia-level/1
+    - OWASP_CRS
+    - OWASP_CRS/ATTACK-XSS
+    - capec/1000/152/242
 - id: "941300"
   name: IE XSS Filters - Attack Detected
   variable: REQUEST_COOKIES|REQUEST_COOKIES_NAMES|ARGS_NAMES|ARGS|REQUEST_FILENAME|XML:/*
@@ -110,6 +396,24 @@
   phase: 2
   severity: '''CRITICAL'''
   block: true
+  transforms:
+    - none
+    - utf8toUnicode
+    - urlDecodeUni
+    - htmlEntityDecode
+    - jsDecode
+    - cssDecode
+    - removeNulls
+  tags:
+    - application-multi
+    - language-multi
+    - platform-internet-explorer
+    - attack-xss
+    - xss-perf-disable
+    - paranoia-level/1
+    - OWASP_CRS
+    - OWASP_CRS/ATTACK-XSS
+    - capec/1000/152/242
 - id: "941310"
   name: US-ASCII Malformed Encoding XSS Filter - Attack Detected
   variable: REQUEST_COOKIES|REQUEST_COOKIES_NAMES|ARGS_NAMES|ARGS|REQUEST_FILENAME|XML:/*
@@ -117,13 +421,30 @@
   phase: 2
   severity: '''CRITICAL'''
   block: true
-- id: ""
-  name: ""
-  variable: MATCHED_VARS
-  regex: (?:\xbc\s*/\s*[^\xbe>]*[\xbe>])|(?:<\s*/\s*[^\xbe]*\xbe)
-  phase: 0
-  severity: ""
-  block: false
+  transforms:
+    - none
+    - lowercase
+    - urlDecodeUni
+    - htmlEntityDecode
+    - jsDecode
+  tags:
+    - application-multi
+    - language-multi
+    - platform-tomcat
+    - attack-xss
+    - xss-perf-disable
+    - paranoia-level/1
+    - OWASP_CRS
+    - OWASP_CRS/ATTACK-XSS
+    - capec/1000/152/242
+  chain:
+    - id: ""
+      name: ""
+      variable: MATCHED_VARS
+      regex: (?:\xbc\s*/\s*[^\xbe>]*[\xbe>])|(?:<\s*/\s*[^\xbe]*\xbe)
+      phase: 0
+      severity: ""
+      block: false
 - id: "941350"
   name: UTF-7 Encoding IE XSS - Attack Detected
   variable: REQUEST_COOKIES|REQUEST_COOKIES_NAMES|ARGS_NAMES|ARGS|REQUEST_FILENAME|XML:/*
@@ -131,6 +452,21 @@
   phase: 2
   severity: '''CRITICAL'''
   block: true
+  transforms:
+    - none
+    - urlDecodeUni
+    - htmlEntityDecode
+    - jsDecode
+  tags:
+    - application-multi
+    - language-multi
+    - platform-internet-explorer
+    - attack-xss
+    - xss-perf-disable
+    - paranoia-level/1
+    - OWASP_CRS
+    - OWASP_CRS/ATTACK-XSS
+    - capec/1000/152/242
 - id: "941360"
   name: JSFuck / Hieroglyphy obfuscation detected
   variable: REQUEST_COOKIES|REQUEST_COOKIES_NAMES|ARGS_NAMES|ARGS|REQUEST_FILENAME|XML:/*
@@ -138,6 +474,17 @@
   phase: 2
   severity: '''CRITICAL'''
   block: true
+  transforms:
+    - none
+  tags:
+    - application-multi
+    - language-multi
+    - attack-xss
+    - xss-perf-disable
+    - paranoia-level/1
+    - OWASP_CRS
+    - OWASP_CRS/ATTACK-XSS
+    - capec/1000/152/242/63
 - id: "941370"
   name: JavaScript global variable found
   variable: REQUEST_COOKIES|REQUEST_COOKIES_NAMES|ARGS|REQUEST_FILENAME|XML:/*
@@ -145,6 +492,19 @@
   phase: 2
   severity: '''CRITICAL'''
   block: true
+  transforms:
+    - none
+    - urlDecodeUni
+    - compressWhitespace
+  tags:
+    - application-multi
+    - language-multi
+    - attack-xss
+    - xss-perf-disable
+    - paranoia-level/1
+    - OWASP_CRS
+    - OWASP_CRS/ATTACK-XSS
+    - capec/1000/152/242/63
 - id: "941390"
   name: Javascript method detected
   variable: REQUEST_COOKIES|REQUEST_COOKIES_NAMES|ARGS_NAMES|ARGS|REQUEST_FILENAME|XML:/*
@@ -152,6 +512,20 @@
   phase: 2
   severity: '''CRITICAL'''
   block: true
+  transforms:
+    - none
+    - htmlEntityDecode
+    - jsDecode
+  tags:
+    - application-multi
+    - language-multi
+    - platform-nodejs
+    - attack-xss
+    - xss-perf-disable
+    - paranoia-level/1
+    - OWASP_CRS
+    - OWASP_CRS/ATTACK-XSS
+    - capec/1000/152/242
 - id: "941400"
   name: XSS JavaScript function without parentheses
   variable: REQUEST_COOKIES|REQUEST_COOKIES_NAMES|ARGS_NAMES|ARGS|REQUEST_FILENAME|XML:/*
@@ -159,6 +533,44 @@
   phase: 2
   severity: '''CRITICAL'''
   block: true
+  transforms:
+    - none
+    - urlDecodeUni
+    - compressWhitespace
+  tags:
+    - application-multi
+    - language-multi
+    - attack-xss
+    - xss-perf-disable
+    - paranoia-level/1
+    - OWASP_CRS
+    - OWASP_CRS/ATTACK-XSS
+    - capec/1000/152/242
+- id: "941101"
+  name: XSS Attack Detected via libinjection
+  variable: REQUEST_FILENAME|REQUEST_HEADERS:Referer
+  regex: (?i)(<script|onerror\s*=|onload\s*=|javascript:|alert\s*\()
+  phase: 1
+  severity: '''CRITICAL'''
+  block: true
+  transforms:
+    - none
+    - utf8toUnicode
+    - urlDecodeUni
+    - htmlEntityDecode
+    - jsDecode
+    - cssDecode
+    - removeNulls
+  tags:
+    - application-multi
+    - language-multi
+    - platform-multi
+    - attack-xss
+    - xss-perf-disable
+    - paranoia-level/2
+    - OWASP_CRS
+    - OWASP_CRS/ATTACK-XSS
+    - capec/1000/152/242
 - id: "941150"
   name: 'XSS Filter - Category 5: Disallowed HTML Attributes'
   variable: REQUEST_COOKIES|REQUEST_COOKIES_NAMES|REQUEST_HEADERS:User-Agent|ARGS_NAMES|ARGS|REQUEST_FILENAME|XML:/*
@@ -166,6 +578,24 @@
   phase: 2
   severity: '''CRITICAL'''
   block: true
+  transforms:
+    - none
+    - utf8toUnicode
+    - urlDecodeUni
+    - htmlEntityDecode
+    - jsDecode
+    - cssDecode
+    - removeNulls
+  tags:
+    - application-multi
+    - language-multi
+    - platform-multi
+    - attack-xss
+    - xss-perf-disable
+    - paranoia-level/2
+    - OWASP_CRS
+    - OWASP_CRS/ATTACK-XSS
+    - capec/1000/152/242
 - id: "941181"
   name: Node-Validator Deny List Keywords
   variable: REQUEST_COOKIES|REQUEST_COOKIES_NAMES|ARGS_NAMES|ARGS|REQUEST_FILENAME|XML:/*
@@ -173,6 +603,25 @@
   phase: 2
   severity: '''CRITICAL'''
   block: true
+  transforms:
+    - none
+    - utf8toUnicode
+    - urlDecodeUni
+    - htmlEntityDecode
+    - jsDecode
+    - cssDecode
+    - lowercase
+    - removeNulls
+  tags:
+    - application-multi
+    - language-multi
+    - platform-multi
+    - attack-xss
+    - xss-perf-disable
+    - paranoia-level/2
+    - OWASP_CRS
+    - OWASP_CRS/ATTACK-XSS
+    - capec/1000/152/242
 - id: "941320"
   name: Possible XSS Attack Detected - HTML Tag Handler
   variable: REQUEST_COOKIES|!REQUEST_COOKIES:/_pk_ref/|REQUEST_COOKIES_NAMES|ARGS_NAMES|ARGS|REQUEST_FILENAME|XML:/*
@@ -180,6 +629,20 @@
   phase: 2
   severity: '''CRITICAL'''
   block: true
+  transforms:
+    - none
+    - jsDecode
+    - lowercase
+  tags:
+    - application-multi
+    - language-multi
+    - platform-multi
+    - attack-xss
+    - xss-perf-disable
+    - paranoia-level/2
+    - OWASP_CRS
+    - OWASP_CRS/ATTACK-XSS
+    - capec/1000/152/242/63
 - id: "941380"
   name: AngularJS client side template injection detected
   variable: REQUEST_COOKIES|REQUEST_COOKIES_NAMES|ARGS_NAMES|ARGS|REQUEST_FILENAME|XML:/*
@@ -187,3 +650,14 @@
   phase: 2
   severity: '''CRITICAL'''
   block: true
+  transforms:
+    - none
+  tags:
+    - application-multi
+    - language-multi
+    - attack-xss
+    - xss-perf-disable
+    - paranoia-level/2
+    - OWASP_CRS
+    - OWASP_CRS/ATTACK-XSS
+    - capec/1000/152/242/63

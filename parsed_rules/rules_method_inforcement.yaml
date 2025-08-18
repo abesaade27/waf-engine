@@ -5,3 +5,12 @@
   phase: 1
   severity: '''CRITICAL'''
   block: true
+  tags:
+    - application-multi
+    - language-multi
+    - platform-multi
+    - attack-generic
+    - paranoia-level/1
+    - OWASP_CRS
+    - OWASP_CRS/METHOD-ENFORCEMENT
+    - capec/1000/210/272/220/274

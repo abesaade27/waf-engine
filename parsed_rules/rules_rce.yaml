@@ -5,6 +5,19 @@
   phase: 2
   severity: '''CRITICAL'''
   block: true
+  transforms:
+    - none
+    - cmdLine
+  tags:
+    - application-multi
+    - language-shell
+    - language-powershell
+    - platform-windows
+    - attack-rce
+    - paranoia-level/1
+    - OWASP_CRS
+    - OWASP_CRS/ATTACK-RCE
+    - capec/1000/152/248/88
 - id: "932130"
   name: 'Remote Command Execution: Unix Shell Expression Found'
   variable: REQUEST_COOKIES|REQUEST_COOKIES_NAMES|ARGS_NAMES|ARGS|XML:/*
@@ -12,6 +25,18 @@
   phase: 2
   severity: '''CRITICAL'''
   block: true
+  transforms:
+    - none
+    - cmdLine
+  tags:
+    - application-multi
+    - language-shell
+    - platform-unix
+    - attack-rce
+    - paranoia-level/1
+    - OWASP_CRS
+    - OWASP_CRS/ATTACK-RCE
+    - capec/1000/152/248/88
 - id: "932140"
   name: 'Remote Command Execution: Windows FOR/IF Command Found'
   variable: REQUEST_COOKIES|REQUEST_COOKIES_NAMES|ARGS_NAMES|ARGS|XML:/*
@@ -19,6 +44,18 @@
   phase: 2
   severity: '''CRITICAL'''
   block: true
+  transforms:
+    - none
+    - cmdLine
+  tags:
+    - application-multi
+    - language-shell
+    - platform-windows
+    - attack-rce
+    - paranoia-level/1
+    - OWASP_CRS
+    - OWASP_CRS/ATTACK-RCE
+    - capec/1000/152/248/88
 - id: "932270"
   name: 'Remote Command Execution: Unix Shell Expression Found'
   variable: REQUEST_COOKIES|REQUEST_COOKIES_NAMES|ARGS_NAMES|ARGS|XML:/*
@@ -26,6 +63,18 @@
   phase: 2
   severity: '''CRITICAL'''
   block: true
+  transforms:
+    - none
+    - cmdLine
+  tags:
+    - application-multi
+    - language-shell
+    - platform-unix
+    - attack-rce
+    - paranoia-level/1
+    - OWASP_CRS
+    - OWASP_CRS/ATTACK-RCE
+    - capec/1000/152/248/88
 - id: "932280"
   name: 'Remote Command Execution: Brace Expansion Found'
   variable: REQUEST_COOKIES|REQUEST_COOKIES_NAMES|ARGS_NAMES|ARGS|XML:/*
@@ -33,6 +82,17 @@
   phase: 2
   severity: '''CRITICAL'''
   block: true
+  transforms:
+    - none
+  tags:
+    - application-multi
+    - language-shell
+    - platform-unix
+    - attack-rce
+    - paranoia-level/1
+    - OWASP_CRS
+    - OWASP_CRS/ATTACK-RCE
+    - capec/1000/152/248/88
 - id: "932330"
   name: 'Remote Command Execution: Unix shell history invocation'
   variable: REQUEST_COOKIES|REQUEST_COOKIES_NAMES|ARGS_NAMES|ARGS|XML:/*
@@ -40,6 +100,17 @@
   phase: 2
   severity: '''CRITICAL'''
   block: true
+  transforms:
+    - none
+  tags:
+    - application-multi
+    - language-shell
+    - platform-unix
+    - attack-rce
+    - paranoia-level/1
+    - OWASP_CRS
+    - OWASP_CRS/ATTACK-RCE
+    - capec/1000/152/248/88
 - id: "932160"
   name: 'Remote Command Execution: Unix Shell Code Found'
   variable: REQUEST_COOKIES|REQUEST_COOKIES_NAMES|ARGS_NAMES|ARGS|XML:/*
@@ -47,6 +118,19 @@
   phase: 2
   severity: '''CRITICAL'''
   block: true
+  transforms:
+    - none
+    - cmdLine
+    - normalizePath
+  tags:
+    - application-multi
+    - language-shell
+    - platform-unix
+    - attack-rce
+    - paranoia-level/1
+    - OWASP_CRS
+    - OWASP_CRS/ATTACK-RCE
+    - capec/1000/152/248/88
 - id: "932170"
   name: 'Remote Command Execution: Shellshock (CVE-2014-6271)'
   variable: REQUEST_HEADERS|REQUEST_LINE
@@ -54,6 +138,18 @@
   phase: 1
   severity: '''CRITICAL'''
   block: true
+  transforms:
+    - none
+    - urlDecodeUni
+  tags:
+    - application-multi
+    - language-shell
+    - platform-unix
+    - attack-rce
+    - paranoia-level/1
+    - OWASP_CRS
+    - OWASP_CRS/ATTACK-RCE
+    - capec/1000/152/248/88
 - id: "932171"
   name: 'Remote Command Execution: Shellshock (CVE-2014-6271)'
   variable: ARGS_NAMES|ARGS|FILES_NAMES
@@ -61,6 +157,18 @@
   phase: 2
   severity: '''CRITICAL'''
   block: true
+  transforms:
+    - none
+    - urlDecodeUni
+  tags:
+    - application-multi
+    - language-shell
+    - platform-unix
+    - attack-rce
+    - paranoia-level/1
+    - OWASP_CRS
+    - OWASP_CRS/ATTACK-RCE
+    - capec/1000/152/248/88
 - id: "932180"
   name: Restricted File Upload Attempt
   variable: FILES|REQUEST_HEADERS:X-Filename|REQUEST_HEADERS:X_Filename|REQUEST_HEADERS:X-File-Name
@@ -68,6 +176,17 @@
   phase: 2
   severity: '''CRITICAL'''
   block: true
+  transforms:
+    - none
+  tags:
+    - application-multi
+    - language-multi
+    - platform-multi
+    - attack-rce
+    - paranoia-level/1
+    - OWASP_CRS
+    - OWASP_CRS/ATTACK-RCE
+    - capec/1000/152/248/88
 - id: "932131"
   name: 'Remote Command Execution: Unix Shell Expression Found'
   variable: REQUEST_HEADERS:User-Agent|REQUEST_HEADERS:Referer
@@ -75,6 +194,18 @@
   phase: 1
   severity: '''CRITICAL'''
   block: true
+  transforms:
+    - none
+    - cmdLine
+  tags:
+    - application-multi
+    - language-shell
+    - platform-unix
+    - attack-rce
+    - paranoia-level/2
+    - OWASP_CRS
+    - OWASP_CRS/ATTACK-RCE
+    - capec/1000/152/248/88
 - id: "932200"
   name: RCE Bypass Technique
   variable: REQUEST_COOKIES|REQUEST_COOKIES_NAMES|ARGS_NAMES|ARGS|XML:/*
@@ -82,20 +213,39 @@
   phase: 2
   severity: '''CRITICAL'''
   block: true
-- id: ""
-  name: ""
-  variable: MATCHED_VARS
-  regex: /
-  phase: 0
-  severity: ""
-  block: false
-- id: ""
-  name: ""
-  variable: MATCHED_VARS
-  regex: \s
-  phase: 0
-  severity: ""
-  block: false
+  transforms:
+    - none
+    - lowercase
+    - urlDecodeUni
+  tags:
+    - application-multi
+    - language-multi
+    - platform-multi
+    - attack-rce
+    - paranoia-level/2
+    - OWASP_CRS
+    - OWASP_CRS/ATTACK-RCE
+    - capec/1000/152/248/88
+  chain:
+    - id: ""
+      name: ""
+      variable: MATCHED_VARS
+      regex: /
+      phase: 0
+      severity: ""
+      block: false
+      transforms:
+        - none
+      chain:
+        - id: ""
+          name: ""
+          variable: MATCHED_VARS
+          regex: \s
+          phase: 0
+          severity: ""
+          block: false
+          transforms:
+            - none
 - id: "932205"
   name: RCE Bypass Technique
   variable: REQUEST_HEADERS:Referer
@@ -103,27 +253,60 @@
   phase: 1
   severity: '''CRITICAL'''
   block: true
-- id: "932206"
-  name: RCE Bypass Technique
-  variable: REQUEST_HEADERS:Referer
-  regex: ^[^\.]*?(?:['\*\?\x5c`][^\n/]+/|/[^/]+?['\*\?\x5c`]|\$[!#\$\(\*\-0-9\?-\[_a-\{])
-  phase: 1
-  severity: '''CRITICAL'''
-  block: true
-- id: ""
-  name: ""
-  variable: MATCHED_VARS
-  regex: /
-  phase: 0
-  severity: ""
-  block: false
-- id: ""
-  name: ""
-  variable: MATCHED_VARS
-  regex: \s
-  phase: 0
-  severity: ""
-  block: false
+  transforms:
+    - none
+    - lowercase
+    - urlDecodeUni
+  tags:
+    - application-multi
+    - language-multi
+    - platform-multi
+    - attack-rce
+    - paranoia-level/2
+    - OWASP_CRS
+    - OWASP_CRS/ATTACK-RCE
+    - capec/1000/152/248/88
+  chain:
+    - id: "932206"
+      name: RCE Bypass Technique
+      variable: REQUEST_HEADERS:Referer
+      regex: ^[^\.]*?(?:['\*\?\x5c`][^\n/]+/|/[^/]+?['\*\?\x5c`]|\$[!#\$\(\*\-0-9\?-\[_a-\{])
+      phase: 1
+      severity: '''CRITICAL'''
+      block: true
+      transforms:
+        - none
+        - lowercase
+        - urlDecodeUni
+      tags:
+        - application-multi
+        - language-multi
+        - platform-multi
+        - attack-rce
+        - paranoia-level/2
+        - OWASP_CRS
+        - OWASP_CRS/ATTACK-RCE
+        - capec/1000/152/248/88
+      chain:
+        - id: ""
+          name: ""
+          variable: MATCHED_VARS
+          regex: /
+          phase: 0
+          severity: ""
+          block: false
+          transforms:
+            - none
+          chain:
+            - id: ""
+              name: ""
+              variable: MATCHED_VARS
+              regex: \s
+              phase: 0
+              severity: ""
+              block: false
+              transforms:
+                - none
 - id: "932207"
   name: RCE Bypass Technique
   variable: REQUEST_HEADERS:Referer
@@ -131,27 +314,49 @@
   phase: 1
   severity: '''CRITICAL'''
   block: true
-- id: ""
-  name: ""
-  variable: MATCHED_VAR
-  regex: /
-  phase: 0
-  severity: ""
-  block: false
-- id: ""
-  name: ""
-  variable: MATCHED_VAR
-  regex: \s
-  phase: 0
-  severity: ""
-  block: false
-- id: ""
-  name: ""
-  variable: MATCHED_VAR
-  regex: '!@beginsWith #:~:text='
-  phase: 0
-  severity: ""
-  block: false
+  transforms:
+    - none
+    - lowercase
+    - urlDecodeUni
+  tags:
+    - application-multi
+    - language-multi
+    - platform-multi
+    - attack-rce
+    - paranoia-level/2
+    - OWASP_CRS
+    - OWASP_CRS/ATTACK-RCE
+    - capec/1000/152/248/88
+  chain:
+    - id: ""
+      name: ""
+      variable: MATCHED_VAR
+      regex: /
+      phase: 0
+      severity: ""
+      block: false
+      transforms:
+        - none
+      chain:
+        - id: ""
+          name: ""
+          variable: MATCHED_VAR
+          regex: \s
+          phase: 0
+          severity: ""
+          block: false
+          transforms:
+            - none
+          chain:
+            - id: ""
+              name: ""
+              variable: MATCHED_VAR
+              regex: '!@beginsWith #:~:text='
+              phase: 0
+              severity: ""
+              block: false
+              transforms:
+                - none
 - id: ""
   name: ""
   variable: MATCHED_VARS
@@ -159,6 +364,8 @@
   phase: 0
   severity: ""
   block: false
+  transforms:
+    - none
 - id: "932281"
   name: 'Remote Command Execution: Brace Expansion Found'
   variable: REQUEST_COOKIES|REQUEST_COOKIES_NAMES|ARGS_NAMES|ARGS|XML:/*
@@ -166,6 +373,17 @@
   phase: 2
   severity: '''CRITICAL'''
   block: true
+  transforms:
+    - none
+  tags:
+    - application-multi
+    - language-shell
+    - platform-unix
+    - attack-rce
+    - paranoia-level/2
+    - OWASP_CRS
+    - OWASP_CRS/ATTACK-RCE
+    - capec/1000/152/248/88
 - id: "932271"
   name: 'Remote Command Execution: Unix Shell Expression Found'
   variable: REQUEST_COOKIES|REQUEST_COOKIES_NAMES|ARGS_NAMES|ARGS|XML:/*
@@ -173,6 +391,18 @@
   phase: 2
   severity: '''CRITICAL'''
   block: true
+  transforms:
+    - none
+    - cmdLine
+  tags:
+    - application-multi
+    - language-shell
+    - platform-unix
+    - attack-rce
+    - paranoia-level/2
+    - OWASP_CRS
+    - OWASP_CRS/ATTACK-RCE
+    - capec/1000/152/248/88
 - id: "932300"
   name: 'Remote Command Execution: SMTP Command Execution'
   variable: REQUEST_COOKIES|REQUEST_COOKIES_NAMES|ARGS_NAMES|ARGS|XML:/*
@@ -180,6 +410,17 @@
   phase: 2
   severity: '''CRITICAL'''
   block: true
+  transforms:
+    - none
+    - escapeSeqDecode
+  tags:
+    - application-multi
+    - platform-multi
+    - attack-rce
+    - paranoia-level/2
+    - OWASP_CRS
+    - OWASP_CRS/ATTACK-RCE
+    - capec/137/134
 - id: "932320"
   name: 'Remote Command Execution: POP3 Command Execution'
   variable: REQUEST_COOKIES|REQUEST_COOKIES_NAMES|ARGS_NAMES|ARGS|XML:/*
@@ -187,6 +428,17 @@
   phase: 2
   severity: '''CRITICAL'''
   block: true
+  transforms:
+    - none
+    - escapeSeqDecode
+  tags:
+    - application-multi
+    - platform-multi
+    - attack-rce
+    - paranoia-level/2
+    - OWASP_CRS
+    - OWASP_CRS/ATTACK-RCE
+    - capec/137/134
 - id: "932161"
   name: 'Remote Command Execution: Unix Shell Code Found in REQUEST_HEADERS'
   variable: REQUEST_HEADERS:User-Agent|REQUEST_HEADERS:Referer
@@ -194,6 +446,19 @@
   phase: 1
   severity: '''CRITICAL'''
   block: true
+  transforms:
+    - none
+    - cmdLine
+    - normalizePath
+  tags:
+    - application-multi
+    - language-shell
+    - platform-unix
+    - attack-rce
+    - paranoia-level/2
+    - OWASP_CRS
+    - OWASP_CRS/ATTACK-RCE
+    - capec/1000/152/248/88
 - id: "932237"
   name: 'Remote Command Execution: Unix Shell Code Found in REQUEST_HEADERS'
   variable: REQUEST_HEADERS:User-Agent|REQUEST_HEADERS:Referer
@@ -201,6 +466,19 @@
   phase: 1
   severity: '''CRITICAL'''
   block: true
+  transforms:
+    - none
+    - cmdLine
+    - normalizePath
+  tags:
+    - application-multi
+    - language-shell
+    - platform-unix
+    - attack-rce
+    - paranoia-level/3
+    - OWASP_CRS
+    - OWASP_CRS/ATTACK-RCE
+    - capec/1000/152/248/88
 - id: "932190"
   name: 'Remote Command Execution: Wildcard bypass technique attempt'
   variable: ARGS
@@ -208,6 +486,19 @@
   phase: 2
   severity: '''CRITICAL'''
   block: true
+  transforms:
+    - none
+    - normalizePath
+    - cmdLine
+  tags:
+    - application-multi
+    - language-shell
+    - platform-unix
+    - attack-rce
+    - paranoia-level/3
+    - OWASP_CRS
+    - OWASP_CRS/ATTACK-RCE
+    - capec/1000/152/248/88
 - id: "932301"
   name: 'Remote Command Execution: SMTP Command Execution'
   variable: REQUEST_COOKIES|REQUEST_COOKIES_NAMES|ARGS_NAMES|ARGS|XML:/*
@@ -215,6 +506,17 @@
   phase: 2
   severity: '''CRITICAL'''
   block: true
+  transforms:
+    - none
+    - escapeSeqDecode
+  tags:
+    - application-multi
+    - platform-multi
+    - attack-rce
+    - paranoia-level/3
+    - OWASP_CRS
+    - OWASP_CRS/ATTACK-RCE
+    - capec/137/134
 - id: "932321"
   name: 'Remote Command Execution: POP3 Command Execution'
   variable: REQUEST_COOKIES|REQUEST_COOKIES_NAMES|ARGS_NAMES|ARGS|XML:/*
@@ -222,6 +524,17 @@
   phase: 2
   severity: '''CRITICAL'''
   block: true
+  transforms:
+    - none
+    - escapeSeqDecode
+  tags:
+    - application-multi
+    - platform-multi
+    - attack-rce
+    - paranoia-level/3
+    - OWASP_CRS
+    - OWASP_CRS/ATTACK-RCE
+    - capec/137/134
 - id: "932331"
   name: 'Remote Command Execution: Unix shell history invocation'
   variable: REQUEST_COOKIES|REQUEST_COOKIES_NAMES|ARGS_NAMES|ARGS|XML:/*
@@ -229,3 +542,14 @@
   phase: 2
   severity: '''CRITICAL'''
   block: true
+  transforms:
+    - none
+  tags:
+    - application-multi
+    - language-shell
+    - platform-unix
+    - attack-rce
+    - paranoia-level/3
+    - OWASP_CRS
+    - OWASP_CRS/ATTACK-RCE
+    - capec/1000/152/248/88

@@ -1,7 +1,9 @@
 package utils
 
 import (
+	"bytes"
 	"encoding/json"
+	"fmt"
 	"io"
 	"mime"
 	"mime/multipart"
@@ -13,23 +15,42 @@ import (
 // ----------------------------
 // FlattenJSON: converts nested JSON into a flat string for regex matching
 // ----------------------------
+// ----------------------------
+// FlattenJSON: converts nested JSON into a flat string for regex matching
+// ----------------------------
 func FlattenJSON(data any) string {
 	switch v := data.(type) {
 	case map[string]any:
 		parts := []string{}
+		fmt.Println("FlattenJSON: entering map =>", v)
 		for key, val := range v {
-			parts = append(parts, key+"="+FlattenJSON(val))
+			flattened := FlattenJSON(val)
+			kv := key + "=" + flattened
+			fmt.Println("FlattenJSON: map entry =>", kv)
+			parts = append(parts, kv)
 		}
-		return strings.Join(parts, "&")
+		joined := strings.Join(parts, "&")
+		fmt.Println("FlattenJSON: map joined =>", joined)
+		return joined
+
 	case []any:
 		parts := []string{}
+		fmt.Println("FlattenJSON: entering slice =>", v)
 		for _, val := range v {
-			parts = append(parts, FlattenJSON(val))
+			flattened := FlattenJSON(val)
+			fmt.Println("FlattenJSON: slice element =>", flattened)
+			parts = append(parts, flattened)
 		}
-		return strings.Join(parts, ",")
+		joined := strings.Join(parts, ",")
+		fmt.Println("FlattenJSON: slice joined =>", joined)
+		return joined
+
 	case string:
+		fmt.Println("FlattenJSON: string =>", v)
 		return v
+
 	default:
+		fmt.Println("FlattenJSON: unknown type =>", v)
 		return ""
 	}
 }
@@ -76,10 +97,20 @@ func NormalizeHTTP(r *http.Request) (method, path string, query map[string][]str
 	body = map[string]any{}
 
 	if r.Body != nil {
-		defer r.Body.Close()
+		raw, err := io.ReadAll(r.Body)
+		if err != nil {
+			fmt.Println("❌ Error reading body:", err)
+		}
+		r.Body.Close()
+
+		fmt.Println("=== Raw Body (as received) ===")
+		fmt.Println(string(raw))
+
+		// Reset body so it can still be parsed later
+		r.Body = io.NopCloser(bytes.NewBuffer(raw))
+
 		ct := strings.ToLower(r.Header.Get("Content-Type"))
 		mediaType, params, _ := mime.ParseMediaType(ct)
-		raw, _ := io.ReadAll(io.LimitReader(r.Body, 1<<20)) // 1MB limit
 
 		switch mediaType {
 		case "application/json":
@@ -87,14 +118,20 @@ func NormalizeHTTP(r *http.Request) (method, path string, query map[string][]str
 
 		case "application/x-www-form-urlencoded":
 			values, _ := url.ParseQuery(string(raw))
-			for k, vals := range values {
-				body[k] = vals
+			if len(values) > 0 {
+				for k, vals := range values {
+					body[k] = vals
+				}
+			} else {
+				// 🚨 fallback: decode raw fully
+				decoded, _ := url.QueryUnescape(string(raw))
+				body["raw"] = decoded
 			}
 
 		case "multipart/form-data":
 			boundary := params["boundary"]
 			if boundary != "" {
-				mr := multipart.NewReader(strings.NewReader(string(raw)), boundary)
+				mr := multipart.NewReader(bytes.NewReader(raw), boundary)
 				form, _ := mr.ReadForm(1 << 20) // 1MB max memory
 				for k, vals := range form.Value {
 					body[k] = vals
@@ -102,23 +139,30 @@ func NormalizeHTTP(r *http.Request) (method, path string, query map[string][]str
 			}
 
 		default:
-			// fallback: store raw body as string
 			body["raw"] = string(raw)
 		}
 	}
+
+	// Print everything after normalization
+	fmt.Println("=== Normalized Request ===")
+	fmt.Println("Method:", method)
+	fmt.Println("Path:", path)
+	fmt.Println("Query:", query)
+	fmt.Println("Headers:", headers)
+	fmt.Println("Body:", body)
 
 	return
 }
 
 // ----------------------------
-// Ingest struct: represents a JSON payload already containing headers, body, query, and path
+// Ingest struct for JSON ingestion
 // ----------------------------
 type Ingest struct {
 	Headers map[string]string   `json:"headers"`
 	Body    map[string]any      `json:"body"`
 	Query   map[string][]string `json:"query"`
 	Path    string              `json:"path"`
-	Method  string              `json:"method"` // optional, default POST
+	Method  string              `json:"method"`
 }
 
 // ----------------------------
@@ -150,6 +194,15 @@ func NormalizeIngest(i *Ingest) (method, path string, query map[string][]string,
 
 	// Flatten body for regex matching
 	flatBody = FlattenJSON(body)
+
+	// Debug prints
+	fmt.Println("=== Normalized Ingest ===")
+	fmt.Println("Method:", method)
+	fmt.Println("Path:", path)
+	fmt.Println("Query:", query)
+	fmt.Println("Headers:", headers)
+	fmt.Println("Body (map):", body)
+	fmt.Println("Flat Body (string):", flatBody)
 
 	return
 }

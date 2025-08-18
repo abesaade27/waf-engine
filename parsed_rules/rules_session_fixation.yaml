@@ -5,6 +5,18 @@
   phase: 2
   severity: '''CRITICAL'''
   block: true
+  transforms:
+    - none
+    - urlDecodeUni
+  tags:
+    - application-multi
+    - language-multi
+    - platform-multi
+    - attack-fixation
+    - paranoia-level/1
+    - OWASP_CRS
+    - OWASP_CRS/ATTACK-SESSION-FIXATION
+    - capec/1000/225/21/593/61
 - id: "943110"
   name: 'Possible Session Fixation Attack: SessionID Parameter Name with Off-Domain Referer'
   variable: ARGS_NAMES
@@ -12,17 +24,43 @@
   phase: 2
   severity: '''CRITICAL'''
   block: true
-- id: ""
-  name: ""
-  variable: REQUEST_HEADERS:Referer
-  regex: ^(?:ht|f)tps?://(.*?)/
-  phase: 0
-  severity: ""
-  block: false
-- id: "943120"
-  name: 'Possible Session Fixation Attack: SessionID Parameter Name with No Referer'
-  variable: ARGS_NAMES
-  regex: ^(?:jsessionid|aspsessionid|asp\.net_sessionid|phpsession|phpsessid|weblogicsession|session_id|session-id|sessionid|cfid|cftoken|cfsid|jservsession|jwsession|_flask_session|_session_id|connect\.sid|laravel_session)$
-  phase: 2
-  severity: '''CRITICAL'''
-  block: true
+  transforms:
+    - none
+    - lowercase
+  tags:
+    - application-multi
+    - language-multi
+    - platform-multi
+    - attack-fixation
+    - paranoia-level/1
+    - OWASP_CRS
+    - OWASP_CRS/ATTACK-SESSION-FIXATION
+    - capec/1000/225/21/593/61
+  chain:
+    - id: ""
+      name: ""
+      variable: REQUEST_HEADERS:Referer
+      regex: ^(?:ht|f)tps?://(.*?)/
+      phase: 0
+      severity: ""
+      block: false
+      chain:
+        - id: "943120"
+          name: 'Possible Session Fixation Attack: SessionID Parameter Name with No Referer'
+          variable: ARGS_NAMES
+          regex: ^(?:jsessionid|aspsessionid|asp\.net_sessionid|phpsession|phpsessid|weblogicsession|session_id|session-id|sessionid|cfid|cftoken|cfsid|jservsession|jwsession|_flask_session|_session_id|connect\.sid|laravel_session)$
+          phase: 2
+          severity: '''CRITICAL'''
+          block: true
+          transforms:
+            - none
+            - lowercase
+          tags:
+            - application-multi
+            - language-multi
+            - platform-multi
+            - attack-fixation
+            - paranoia-level/1
+            - OWASP_CRS
+            - OWASP_CRS/ATTACK-SESSION-FIXATION
+            - capec/1000/225/21/593/61
