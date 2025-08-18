@@ -28,7 +28,7 @@ type Rule struct {
 }
 
 func main() {
-	crsPath := "crs/rules"
+	crsPath := "OWASP_crs_rules"
 	outDir := "parsed_rules"
 	_ = os.MkdirAll(outDir, 0o755)
 
