@@ -430,7 +430,7 @@
 - id: "920440"
   name: URL file extension is restricted by policy
   variable: REQUEST_BASENAME
-  regex: \.([^.]+)$
+  regex: \.(?:php|asp|aspx|dll|bak|sql|config|exe)$
   phase: 1
   severity: '''CRITICAL'''
   block: true
