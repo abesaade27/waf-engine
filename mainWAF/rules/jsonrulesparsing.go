@@ -8,16 +8,6 @@ import (
 	"gopkg.in/yaml.v3"
 )
 
-type Rule struct {
-	ID       string `yaml:"id"`
-	Name     string `yaml:"name"`
-	Variable string `yaml:"variable"`
-	Regex    string `yaml:"regex"`
-	Phase    int    `yaml:"phase"`
-	Severity string `yaml:"severity"`
-	Block    bool   `yaml:"block"`
-}
-
 var allRules []Rule
 
 func LoadAllRules(dir string) {
