@@ -1,13 +1,13 @@
-- id: "950010"
-  name: ""
-  variable: RESPONSE_HEADERS:Content-Encoding
-  regex: (?i)(gzip|compress|deflate|br|zstd)
-  phase: 4
-  severity: ""
-  block: false
-  tags:
-    - OWASP_CRS
-    - OWASP_CRS/DATA-LEAKAGES
+# - id: "950010"
+#   name: ""
+#   variable: RESPONSE_HEADERS:Content-Encoding
+#   regex: (?i)(gzip|compress|deflate|br|zstd)
+#   phase: 4
+#   severity: ""
+#   block: false
+#   tags:
+#     - OWASP_CRS
+#     - OWASP_CRS/DATA-LEAKAGES
 - id: "950130"
   name: Directory Listing
   variable: RESPONSE_BODY
@@ -80,16 +80,16 @@
     - OWASP_CRS
     - OWASP_CRS/DATA-LEAKAGES
     - capec/1000/152
-- id: "951010"
-  name: ""
-  variable: RESPONSE_HEADERS:Content-Encoding
-  regex: (?i)(gzip|compress|deflate|br|zstd)
-  phase: 4
-  severity: ""
-  block: false
-  tags:
-    - OWASP_CRS
-    - OWASP_CRS/DATA-LEAKAGES-SQL
+# - id: "951010"
+#   name: ""
+#   variable: RESPONSE_HEADERS:Content-Encoding
+#   regex: (?i)(gzip|compress|deflate|br|zstd)
+#   phase: 4
+#   severity: ""
+#   block: false
+#   tags:
+#     - OWASP_CRS
+#     - OWASP_CRS/DATA-LEAKAGES-SQL
 - id: "951100"
   name: ""
   variable: RESPONSE_BODY
@@ -395,26 +395,26 @@
     - OWASP_CRS
     - OWASP_CRS/DATA-LEAKAGES-SQL
     - capec/1000/118/116/54
-- id: "952010"
-  name: ""
-  variable: RESPONSE_HEADERS:Content-Encoding
-  regex: (?i)(gzip|compress|deflate|br|zstd)
-  phase: 4
-  severity: ""
-  block: false
-  tags:
-    - OWASP_CRS
-    - OWASP_CRS/DATA-LEAKAGES-JAVA
-- id: "953010"
-  name: ""
-  variable: RESPONSE_HEADERS:Content-Encoding
-  regex: (?i)(gzip|compress|deflate|br|zstd)
-  phase: 4
-  severity: ""
-  block: false
-  tags:
-    - OWASP_CRS
-    - OWASP_CRS/DATA-LEAKAGES-PHP
+# - id: "952010"
+#   name: ""
+#   variable: RESPONSE_HEADERS:Content-Encoding
+#   regex: (?i)(gzip|compress|deflate|br|zstd)
+#   phase: 4
+#   severity: ""
+#   block: false
+#   tags:
+#     - OWASP_CRS
+#     - OWASP_CRS/DATA-LEAKAGES-JAVA
+# - id: "953010"
+#   name: ""
+#   variable: RESPONSE_HEADERS:Content-Encoding
+#   regex: (?i)(gzip|compress|deflate|br|zstd)
+#   phase: 4
+#   severity: ""
+#   block: false
+#   tags:
+#     - OWASP_CRS
+#     - OWASP_CRS/DATA-LEAKAGES-PHP
 - id: "953100"
   name: PHP Information Leakage
   variable: RESPONSE_BODY
@@ -487,16 +487,16 @@
     - OWASP_CRS
     - OWASP_CRS/DATA-LEAKAGES-PHP
     - capec/1000/118/116
-- id: "954010"
-  name: ""
-  variable: RESPONSE_HEADERS:Content-Encoding
-  regex: (?i)(gzip|compress|deflate|br|zstd)
-  phase: 4
-  severity: ""
-  block: false
-  tags:
-    - OWASP_CRS
-    - OWASP_CRS/DATA-LEAKAGES-IIS
+# - id: "954010"
+#   name: ""
+#   variable: RESPONSE_HEADERS:Content-Encoding
+#   regex: (?i)(gzip|compress|deflate|br|zstd)
+#   phase: 4
+#   severity: ""
+#   block: false
+#   tags:
+#     - OWASP_CRS
+#     - OWASP_CRS/DATA-LEAKAGES-IIS
 - id: "954100"
   name: Disclosure of IIS install location
   variable: RESPONSE_BODY
@@ -583,16 +583,16 @@
       block: false
       transforms:
         - none
-- id: "955010"
-  name: ""
-  variable: RESPONSE_HEADERS:Content-Encoding
-  regex: (?i)(gzip|compress|deflate|br|zstd)
-  phase: 4
-  severity: ""
-  block: false
-  tags:
-    - OWASP_CRS
-    - OWASP_CRS/WEB-SHELLS
+# - id: "955010"
+#   name: ""
+#   variable: RESPONSE_HEADERS:Content-Encoding
+#   regex: (?i)(gzip|compress|deflate|br|zstd)
+#   phase: 4
+#   severity: ""
+#   block: false
+#   tags:
+#     - OWASP_CRS
+#     - OWASP_CRS/WEB-SHELLS
 - id: "955100"
   name: PHP Web shell detected
   variable: RESPONSE_BODY
@@ -1003,16 +1003,16 @@
     - OWASP_CRS
     - OWASP_CRS/WEB-SHELLS
     - capec/1000/225/122/17/650
-- id: "956010"
-  name: ""
-  variable: RESPONSE_HEADERS:Content-Encoding
-  regex: (?i)(gzip|compress|deflate|br|zstd)
-  phase: 4
-  severity: ""
-  block: false
-  tags:
-    - OWASP_CRS
-    - OWASP_CRS/DATA-LEAKAGES-RUBY
+# - id: "956010"
+#   name: ""
+#   variable: RESPONSE_HEADERS:Content-Encoding
+#   regex: (?i)(gzip|compress|deflate|br|zstd)
+#   phase: 4
+#   severity: ""
+#   block: false
+#   tags:
+#     - OWASP_CRS
+#     - OWASP_CRS/DATA-LEAKAGES-RUBY
 - id: "956100"
   name: RUBY Information Leakage
   variable: RESPONSE_BODY
