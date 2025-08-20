@@ -2,6 +2,7 @@ package main
 
 import (
 	"bytes"
+	"encoding/json"
 	"fmt"
 	"io"
 	"net/http"
@@ -36,6 +37,13 @@ type Decision struct {
 	Score         int
 	Message       string
 	MatchedRuleID string
+}
+
+// Final JSON response struct (no matched_rules array anymore)
+type WAFResponse struct {
+	Decision     string `json:"decision"`      // "allow" or "block"
+	Score        int    `json:"score"`         // total score
+	MatchedCount int    `json:"matched_count"` // number of rules matched
 }
 
 // ==========================
@@ -192,15 +200,29 @@ func HTTPHandler(eval *Evaluator) http.Handler {
 			dec.Block,
 		)
 
-		// Respond
-		if dec.Block {
-			fmt.Println("🚫 [DEBUG] Blocking request due to rule match")
-			http.Error(w, "🚫 Request blocked by WAF", http.StatusForbidden)
-			return
+		// Build JSON response (no matchedRules array anymore)
+		resp := WAFResponse{
+			Decision: func() string {
+				if dec.Block {
+					return "block"
+				} else {
+					return "allow"
+				}
+			}(),
+			Score:        dec.Score,
+			MatchedCount: len(matchedRules),
 		}
 
-		fmt.Printf("✅ [DEBUG] Allowed request. Final Score=%d, Matches=%d\n", dec.Score, len(matchedRules))
-		fmt.Fprintf(w, "✅ Allowed. Score=%d. MatchedRules=%d", dec.Score, len(matchedRules))
+		// Always return JSON to reverse proxy
+		w.Header().Set("Content-Type", "application/json")
+		if dec.Block {
+			fmt.Println("🚫 [DEBUG] Blocking request due to rule match")
+			w.WriteHeader(http.StatusForbidden)
+		} else {
+			fmt.Printf("✅ [DEBUG] Allowed request. Final Score=%d, Matches=%d\n", dec.Score, len(matchedRules))
+			w.WriteHeader(http.StatusOK)
+		}
+		_ = json.NewEncoder(w).Encode(resp)
 	})
 }
 
