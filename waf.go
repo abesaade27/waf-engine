@@ -29,11 +29,11 @@ func main() {
 
 	// 4️⃣ Start server
 	srv := &http.Server{
-		Addr:              ":8080",
+		Addr:              ":9000",
 		Handler:           mux,
 		ReadHeaderTimeout: 5 * time.Second,
 	}
 
-	fmt.Println("🚀 WAF listening on :8080")
+	fmt.Println("🚀 WAF listening on :9000")
 	log.Fatal(srv.ListenAndServe())
 }
