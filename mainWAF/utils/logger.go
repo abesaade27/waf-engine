@@ -20,15 +20,22 @@ type MatchedRuleLog struct {
 	Description string `json:"description"`
 }
 
-// RequestLog represents the full request log
-type RequestLog struct {
-	Timestamp    string           `json:"timestamp"`
-	ClientIP     string           `json:"client_ip"`
-	Method       string           `json:"method"`
-	URI          string           `json:"uri"`
-	MatchedRules []MatchedRuleLog `json:"matched_rules"`
-	TotalScore   int              `json:"total_score"`
-	Blocked      bool             `json:"blocked"`
+// MatchedRuleLogSimple is used for logging only
+type MatchedRuleLogSimple struct {
+	RuleID      string `json:"rule_id"`
+	Block       bool   `json:"block"`
+	Description string `json:"description"`
+}
+
+// RequestLogSimple represents the simplified request log
+type RequestLogSimple struct {
+	Timestamp    string                 `json:"timestamp"`
+	ClientIP     string                 `json:"client_ip"`
+	Method       string                 `json:"method"`
+	URI          string                 `json:"uri"`
+	MatchedRules []MatchedRuleLogSimple `json:"matched_rules"`
+	TotalScore   int                    `json:"total_score"`
+	Blocked      bool                   `json:"blocked"`
 }
 
 // InitLogger initializes the global logger
@@ -40,14 +47,24 @@ func InitLogger() {
 	Logger = log.New(file, "[WAF] ", log.LstdFlags)
 }
 
-// LogRequest logs a request in structured JSON format
+// LogRequest logs a request in simplified JSON format
 func LogRequest(clientIP, method, uri string, matchedRules []MatchedRuleLog, totalScore int, blocked bool) {
-	logEntry := RequestLog{
+	// Convert full matched rules to simplified version
+	simpleRules := make([]MatchedRuleLogSimple, len(matchedRules))
+	for i, rule := range matchedRules {
+		simpleRules[i] = MatchedRuleLogSimple{
+			RuleID:      rule.RuleID,
+			Block:       rule.Block,
+			Description: rule.Description,
+		}
+	}
+
+	logEntry := RequestLogSimple{
 		Timestamp:    time.Now().Format(time.RFC3339),
 		ClientIP:     clientIP,
 		Method:       method,
 		URI:          uri,
-		MatchedRules: matchedRules,
+		MatchedRules: simpleRules,
 		TotalScore:   totalScore,
 		Blocked:      blocked,
 	}
