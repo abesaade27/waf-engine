@@ -127,21 +127,30 @@ func main() {
 func normalizeOperator(pattern string) string {
 	switch {
 	case strings.HasPrefix(pattern, "@rx "):
+		// Normal regex
 		return strings.TrimPrefix(pattern, "@rx ")
+
 	case strings.HasPrefix(pattern, "@pm "):
+		// Phrase match (more efficient than regex union)
+		// Store as special marker for evaluator
 		words := strings.Fields(strings.TrimPrefix(pattern, "@pm "))
 		if len(words) == 0 {
 			return ""
 		}
-		return "(?i)(" + strings.Join(words, "|") + ")"
+		return "PM:" + strings.Join(words, ",")
+
 	case strings.HasPrefix(pattern, "@streq "):
 		val := strings.TrimPrefix(pattern, "@streq ")
 		return "^" + regexp.QuoteMeta(strings.TrimSpace(val)) + "$"
+
 	case strings.HasPrefix(pattern, "@detectSQLi"):
-		// basic libinjection regex approximation
-		return `(?i)(union(\s+all)?\s+select|select.+from|insert\s+into|drop\s+table|update.+set|or\s+1=1)`
+		// libinjection SQLi detection marker
+		return "DETECT:SQLI"
+
 	case strings.HasPrefix(pattern, "@detectXSS"):
-		return `(?i)(<script|onerror\s*=|onload\s*=|javascript:|alert\s*\()`
+		// libinjection XSS detection marker
+		return "DETECT:XSS"
+
 	default:
 		// Some CRS rules put plain regex without @rx
 		return pattern
@@ -191,37 +200,80 @@ func detectCategory(filename string) string {
 	}
 }
 
+// func parseActions(variable, pattern, actions string) Rule {
+// 	r := Rule{
+// 		Variable: variable,
+// 		Regex:    pattern,
+// 		Block:    strings.Contains(actions, "block") || strings.Contains(actions, "deny"),
+// 	}
+// 	for _, part := range strings.Split(actions, ",") {
+// 		part = strings.TrimSpace(part)
+// 		switch {
+// 		case strings.HasPrefix(part, "id:"):
+// 			r.ID = strings.TrimPrefix(part, "id:")
+// 		case strings.HasPrefix(part, "msg:"):
+// 			r.Name = strings.Trim(strings.TrimPrefix(part, "msg:"), "'\"")
+// 		case strings.HasPrefix(part, "phase:"):
+// 			fmt.Sscanf(strings.TrimPrefix(part, "phase:"), "%d", &r.Phase)
+// 		case strings.HasPrefix(strings.ToLower(part), "severity:"):
+// 			r.Severity = strings.TrimPrefix(part, "severity:")
+// 		case strings.HasPrefix(part, "t:"):
+// 			r.Transforms = append(r.Transforms, strings.TrimPrefix(part, "t:"))
+// 		case strings.HasPrefix(part, "tag:"):
+// 			tag := strings.Trim(strings.TrimPrefix(part, "tag:"), "'\"")
+// 			r.Tags = append(r.Tags, tag)
+// 		case strings.HasPrefix(part, "paranoia-level:"):
+// 			if lvl, err := strconv.Atoi(strings.TrimPrefix(part, "paranoia-level:")); err == nil {
+// 				r.Paranoia = lvl
+// 			}
+// 		case strings.HasPrefix(part, "ctl:"):
+// 			r.Controls = append(r.Controls, strings.TrimPrefix(part, "ctl:"))
+// 		}
+// 	}
+// 	return r
+// }
+
 func parseActions(variable, pattern, actions string) Rule {
 	r := Rule{
 		Variable: variable,
-		Regex:    pattern,
+		Regex:    normalizeEmpty(pattern),
 		Block:    strings.Contains(actions, "block") || strings.Contains(actions, "deny"),
 	}
 	for _, part := range strings.Split(actions, ",") {
 		part = strings.TrimSpace(part)
 		switch {
 		case strings.HasPrefix(part, "id:"):
-			r.ID = strings.TrimPrefix(part, "id:")
+			r.ID = normalizeEmpty(strings.TrimPrefix(part, "id:"))
 		case strings.HasPrefix(part, "msg:"):
-			r.Name = strings.Trim(strings.TrimPrefix(part, "msg:"), "'\"")
+			r.Name = normalizeEmpty(strings.Trim(strings.TrimPrefix(part, "msg:"), "'\""))
 		case strings.HasPrefix(part, "phase:"):
 			fmt.Sscanf(strings.TrimPrefix(part, "phase:"), "%d", &r.Phase)
 		case strings.HasPrefix(strings.ToLower(part), "severity:"):
-			r.Severity = strings.TrimPrefix(part, "severity:")
+			sev := strings.TrimPrefix(part, "severity:")
+			r.Severity = normalizeEmpty(strings.Trim(sev, "'\""))
 		case strings.HasPrefix(part, "t:"):
-			r.Transforms = append(r.Transforms, strings.TrimPrefix(part, "t:"))
+			r.Transforms = append(r.Transforms, normalizeEmpty(strings.TrimPrefix(part, "t:")))
 		case strings.HasPrefix(part, "tag:"):
 			tag := strings.Trim(strings.TrimPrefix(part, "tag:"), "'\"")
-			r.Tags = append(r.Tags, tag)
+			r.Tags = append(r.Tags, normalizeEmpty(tag))
 		case strings.HasPrefix(part, "paranoia-level:"):
 			if lvl, err := strconv.Atoi(strings.TrimPrefix(part, "paranoia-level:")); err == nil {
 				r.Paranoia = lvl
 			}
 		case strings.HasPrefix(part, "ctl:"):
-			r.Controls = append(r.Controls, strings.TrimPrefix(part, "ctl:"))
+			r.Controls = append(r.Controls, normalizeEmpty(strings.TrimPrefix(part, "ctl:")))
 		}
 	}
 	return r
+}
+
+// normalizeEmpty removes quotes and replaces empty strings with "NONE"
+func normalizeEmpty(s string) string {
+	s = strings.TrimSpace(strings.Trim(s, "'\""))
+	if s == "" {
+		return "NONE"
+	}
+	return s
 }
 
 func saveYAML(path string, data any) {
