@@ -18,6 +18,7 @@
   block: false
   controls:
     - requestBodyProcessor=URLENCODED
+
 - id: "901410"
   name: "Suspicious UNIQUE_ID format"
   variable: UNIQUE_ID

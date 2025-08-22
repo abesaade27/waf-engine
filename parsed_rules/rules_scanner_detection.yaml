@@ -3,7 +3,7 @@
   variable: REQUEST_HEADERS:User-Agent
   regex: '@pmFromFile scanners-user-agents.data'
   phase: 1
-  severity: '''CRITICAL'''
+  severity: CRITICAL
   block: true
   transforms:
     - none

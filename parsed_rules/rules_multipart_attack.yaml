@@ -3,7 +3,7 @@
   variable: '&MULTIPART_PART_HEADERS:_charset_'
   regex: '!@eq 0'
   phase: 2
-  severity: '''CRITICAL'''
+  severity: CRITICAL
   block: true
   transforms:
     - none
@@ -22,7 +22,7 @@
       variable: MULTIPART_PART_HEADERS
       regex: ^content-type\s*:\s*(.*)$
       phase: 2
-      severity: '''CRITICAL'''
+      severity: CRITICAL
       block: true
       transforms:
         - none
@@ -43,7 +43,7 @@
           variable: MULTIPART_PART_HEADERS
           regex: content-transfer-encoding:(.*)
           phase: 2
-          severity: '''CRITICAL'''
+          severity: CRITICAL
           block: true
           transforms:
             - none
@@ -61,9 +61,9 @@
 - id: "922130"
   name: Multipart header contains characters outside of valid range
   variable: MULTIPART_PART_HEADERS
-  regex: '[^\x21-\x7E][\x21-\x39\x3B-\x7E]*:'
+  regex: '^[^\x21-\x7E][\x21-\x39\x3B-\x7E]*:'
   phase: 2
-  severity: '''CRITICAL'''
+  severity: CRITICAL
   block: true
   transforms:
     - none

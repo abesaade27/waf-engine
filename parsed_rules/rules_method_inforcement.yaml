@@ -3,7 +3,7 @@
   variable: REQUEST_METHOD
   regex: '!@within %{tx.allowed_methods}'
   phase: 1
-  severity: '''CRITICAL'''
+  severity: CRITICAL
   block: true
   tags:
     - application-multi

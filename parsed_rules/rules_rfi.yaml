@@ -1,54 +1,16 @@
-- id: "930100"
-  name: Path Traversal Attack (/../) or (/.../)
-  variable: REQUEST_URI_RAW|ARGS|REQUEST_HEADERS|!REQUEST_HEADERS:Referer|FILES|XML:/*
-  regex: (?i)(?:[/\x5c]|%(?:2(?:f|5(?:2f|5c|c(?:1%259c|0%25af))|%46)|5c|c(?:0%(?:[2aq]f|5c|9v)|1%(?:[19p]c|8s|af))|(?:bg%q|(?:e|f(?:8%8)?0%8)0%80%a)f|u(?:221[56]|EFC8|F025|002f)|%3(?:2(?:%(?:%6|4)6|F)|5%%63)|1u)|0x(?:2f|5c))(?:\.(?:%0[01]|\?)?|\?\.?|%(?:2(?:(?:5(?:2|c0%25a))?e|%45)|c0(?:\.|%[256aef]e)|u(?:(?:ff0|002)e|2024)|%32(?:%(?:%6|4)5|E)|(?:e|f(?:(?:8|c%80)%8)?0%8)0%80%ae)|0x2e){2,3}(?:[/\x5c]|%(?:2(?:f|5(?:2f|5c|c(?:1%259c|0%25af))|%46)|5c|c(?:0%(?:[2aq]f|5c|9v)|1%(?:[19p]c|8s|af))|(?:bg%q|(?:e|f(?:8%8)?0%8)0%80%a)f|u(?:221[56]|EFC8|F025|002f)|%3(?:2(?:%(?:%6|4)6|F)|5%%63)|1u)|0x(?:2f|5c))
+- id: "930170"
+  name: LFI / OS File Access – Safe with Dynamic Upload Whitelist
+  variable: REQUEST_URI_RAW|ARGS|REQUEST_HEADERS|FILES|XML:/*
+  # Detect ../ or .../ sequences in paths, sensitive OS files, or unsafe uploaded filenames
+  regex: '(?i)(?:^|[\x5c/;])\.{2,3}[\x5c/;]|(?:/etc/passwd|/etc/shadow|/etc/hosts|/boot/grub/grub\.cfg|/var/log/auth\.log|/var/log/syslog|/proc/\d+/cmdline|C:\\Windows\\system32\\drivers\\etc\\hosts|C:\\Windows\\win\.ini|C:\\Windows\\System32\\config\\SAM)'
   phase: 2
-  severity: '''CRITICAL'''
+  severity: CRITICAL
   block: true
   transforms:
-    - none
-  tags:
-    - application-multi
-    - language-multi
-    - platform-multi
-    - attack-lfi
-    - paranoia-level/1
-    - OWASP_CRS
-    - OWASP_CRS/ATTACK-LFI
-    - capec/1000/255/153/126
-- id: "930110"
-  name: Path Traversal Attack (/../) or (/.../)
-  variable: REQUEST_URI_RAW|ARGS|REQUEST_HEADERS|!REQUEST_HEADERS:Referer|FILES|XML:/*
-  regex: (?:(?:^|[\x5c/;])\.{2,3}[\x5c/;]|[\x5c/;]\.{2,3}[\x5c/;])
-  phase: 2
-  severity: '''CRITICAL'''
-  block: true
-  transforms:
-    - none
     - utf8toUnicode
     - urlDecodeUni
     - removeNulls
     - cmdLine
-  tags:
-    - application-multi
-    - language-multi
-    - platform-multi
-    - attack-lfi
-    - paranoia-level/1
-    - OWASP_CRS
-    - OWASP_CRS/ATTACK-LFI
-    - capec/1000/255/153/126
-- id: "930120"
-  name: OS File Access Attempt
-  variable: REQUEST_COOKIES|REQUEST_COOKIES_NAMES|ARGS_NAMES|ARGS|XML:/*
-  regex: '@pmFromFile lfi-os-files.data'
-  phase: 2
-  severity: '''CRITICAL'''
-  block: true
-  transforms:
-    - none
-    - utf8toUnicode
-    - urlDecodeUni
     - normalizePathWin
   tags:
     - application-multi
@@ -59,12 +21,19 @@
     - OWASP_CRS
     - OWASP_CRS/ATTACK-LFI
     - capec/1000/255/153/126
+  # Context-specific exclusions to reduce false positives
+  exclusions:
+    - FILES:!DYNAMIC_WHITELIST        # Dynamic whitelist for safe uploaded filenames
+    - ARGS:!JSON_SAFE_KEYS            # Only ignore harmless JSON keys (e.g., "csrf_token", "session_id")
+    - XML:!VALUE                       # Ignore safe XML values
+
+
 - id: "930130"
   name: Restricted File Access Attempt
   variable: REQUEST_FILENAME
   regex: '@pmFromFile restricted-files.data'
   phase: 1
-  severity: '''CRITICAL'''
+  severity: CRITICAL
   block: true
   transforms:
     - none
@@ -85,7 +54,7 @@
   variable: REQUEST_HEADERS:Referer|REQUEST_HEADERS:User-Agent
   regex: '@pmFromFile lfi-os-files.data'
   phase: 1
-  severity: '''CRITICAL'''
+  severity: CRITICAL
   block: true
   transforms:
     - none

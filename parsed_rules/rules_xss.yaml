@@ -15,9 +15,9 @@
 - id: "941100"
   name: XSS Attack Detected via libinjection
   variable: REQUEST_COOKIES|REQUEST_COOKIES_NAMES|REQUEST_HEADERS:User-Agent|ARGS_NAMES|ARGS|XML:/*
-  regex: (?i)(<script|onerror\s*=|onload\s*=|javascript:|alert\s*\()
+  regex: DETECT:XSS
   phase: 2
-  severity: '''CRITICAL'''
+  severity: CRITICAL
   block: true
   transforms:
     - none
@@ -40,9 +40,9 @@
 - id: "941110"
   name: 'XSS Filter - Category 1: Script Tag Vector'
   variable: REQUEST_COOKIES|REQUEST_COOKIES_NAMES|REQUEST_FILENAME|REQUEST_HEADERS:User-Agent|REQUEST_HEADERS:Referer|ARGS_NAMES|ARGS|XML:/*
-  regex: (?i)<script[^>]*>[\s\S]*?
+  regex: (?i)<script(?!\s+src\s*=)[^>]*>\s*.*?(?:alert|confirm|prompt|document\.write|innerHTML|eval|setTimeout|setInterval)
   phase: 2
-  severity: '''CRITICAL'''
+  severity: CRITICAL
   block: true
   transforms:
     - none
@@ -67,7 +67,7 @@
   variable: REQUEST_COOKIES|REQUEST_COOKIES_NAMES|REQUEST_HEADERS:User-Agent|ARGS_NAMES|ARGS|REQUEST_FILENAME|XML:/*
   regex: (?i).(?:\b(?:(?:x(?:link:href|html|mlns)|data:text/html|formaction)\b|pattern[\s\x0b]*=)|(?:!ENTITY[\s\x0b]+(?:%[\s\x0b]+)?[^\s\x0b]+[\s\x0b]+(?:SYSTEM|PUBLIC)|@import|;base64)\b)
   phase: 2
-  severity: '''CRITICAL'''
+  severity: CRITICAL
   block: true
   transforms:
     - none
@@ -92,7 +92,7 @@
   variable: REQUEST_COOKIES|REQUEST_COOKIES_NAMES|REQUEST_HEADERS:User-Agent|REQUEST_HEADERS:Referer|ARGS_NAMES|ARGS|REQUEST_FILENAME|XML:/*
   regex: (?i)[a-z]+=(?:[^:=]+:.+;)*?[^:=]+:url\(javascript
   phase: 2
-  severity: '''CRITICAL'''
+  severity: CRITICAL
   block: true
   transforms:
     - none
@@ -116,9 +116,9 @@
 - id: "941180"
   name: Node-Validator Deny List Keywords
   variable: REQUEST_COOKIES|REQUEST_COOKIES_NAMES|ARGS_NAMES|ARGS|REQUEST_FILENAME|XML:/*
-  regex: (?i)(document.cookie|document.domain|document.querySelector|document.body.appendChild|document.write|.parentnode|.innerhtml|window.location|-moz-binding|<!--|<![cdata[)
+  regex: PM:document.cookie,document.domain,document.querySelector,document.body.appendChild,document.write,.parentnode,.innerhtml,window.location,-moz-binding,<!--,<![cdata[
   phase: 2
-  severity: '''CRITICAL'''
+  severity: CRITICAL
   block: true
   transforms:
     - none
@@ -143,7 +143,7 @@
   variable: REQUEST_COOKIES|REQUEST_COOKIES_NAMES|ARGS_NAMES|ARGS|REQUEST_FILENAME|XML:/*
   regex: (?i:<style.*?>.*?(?:@[i\x5c]|(?:[:=]|&#x?0*(?:58|3A|61|3D);?).*?(?:[(\x5c]|&#x?0*(?:40|28|92|5C);?)))
   phase: 2
-  severity: '''CRITICAL'''
+  severity: CRITICAL
   block: true
   transforms:
     - none
@@ -168,7 +168,7 @@
   variable: REQUEST_COOKIES|REQUEST_COOKIES_NAMES|ARGS_NAMES|ARGS|REQUEST_FILENAME|XML:/*
   regex: (?i:<.*[:]?vmlframe.*?[\s/+]*?src[\s/+]*=)
   phase: 2
-  severity: '''CRITICAL'''
+  severity: CRITICAL
   block: true
   transforms:
     - none
@@ -193,7 +193,7 @@
   variable: REQUEST_COOKIES|REQUEST_COOKIES_NAMES|ARGS_NAMES|ARGS|REQUEST_FILENAME|XML:/*
   regex: (?i)(?:j|&#(?:0*(?:74|106)|x0*[46]A);)(?:[\t\n\r]|&(?:#(?:0*(?:9|1[03])|x0*[AD]);?|(?:tab|newline);))*(?:a|&#(?:0*(?:65|97)|x0*[46]1);)(?:[\t\n\r]|&(?:#(?:0*(?:9|1[03])|x0*[AD]);?|(?:tab|newline);))*(?:v|&#(?:0*(?:86|118)|x0*[57]6);)(?:[\t\n\r]|&(?:#(?:0*(?:9|1[03])|x0*[AD]);?|(?:tab|newline);))*(?:a|&#(?:0*(?:65|97)|x0*[46]1);)(?:[\t\n\r]|&(?:#(?:0*(?:9|1[03])|x0*[AD]);?|(?:tab|newline);))*(?:s|&#(?:0*(?:115|83)|x0*[57]3);)(?:[\t\n\r]|&(?:#(?:0*(?:9|1[03])|x0*[AD]);?|(?:tab|newline);))*(?:c|&#(?:x0*[46]3|0*(?:99|67));)(?:[\t\n\r]|&(?:#(?:0*(?:9|1[03])|x0*[AD]);?|(?:tab|newline);))*(?:r|&#(?:x0*[57]2|0*(?:114|82));)(?:[\t\n\r]|&(?:#(?:0*(?:9|1[03])|x0*[AD]);?|(?:tab|newline);))*(?:i|&#(?:x0*[46]9|0*(?:105|73));)(?:[\t\n\r]|&(?:#(?:0*(?:9|1[03])|x0*[AD]);?|(?:tab|newline);))*(?:p|&#(?:x0*[57]0|0*(?:112|80));)(?:[\t\n\r]|&(?:#(?:0*(?:9|1[03])|x0*[AD]);?|(?:tab|newline);))*(?:t|&#(?:x0*[57]4|0*(?:116|84));)(?:[\t\n\r]|&(?:#(?:0*(?:9|1[03])|x0*[AD]);?|(?:tab|newline);))*(?::|&(?:#(?:0*58|x0*3A);?|colon;)).
   phase: 2
-  severity: '''CRITICAL'''
+  severity: CRITICAL
   block: true
   transforms:
     - none
@@ -218,7 +218,7 @@
   variable: REQUEST_COOKIES|REQUEST_COOKIES_NAMES|ARGS_NAMES|ARGS|REQUEST_FILENAME|XML:/*
   regex: (?i)(?:v|&#(?:0*(?:118|86)|x0*[57]6);)(?:[\t\n\r]|&(?:#(?:0*(?:9|1[03])|x0*[AD]);?|(?:tab|newline);))*(?:b|&#(?:0*(?:98|66)|x0*[46]2);)(?:[\t\n\r]|&(?:#(?:0*(?:9|1[03])|x0*[AD]);?|(?:tab|newline);))*(?:s|&#(?:0*(?:115|83)|x0*[57]3);)(?:[\t\n\r]|&(?:#(?:0*(?:9|1[03])|x0*[AD]);?|(?:tab|newline);))*(?:c|&#(?:x0*[46]3|0*(?:99|67));)(?:[\t\n\r]|&(?:#(?:0*(?:9|1[03])|x0*[AD]);?|(?:tab|newline);))*(?:r|&#(?:x0*[57]2|0*(?:114|82));)(?:[\t\n\r]|&(?:#(?:0*(?:9|1[03])|x0*[AD]);?|(?:tab|newline);))*(?:i|&#(?:x0*[46]9|0*(?:105|73));)(?:[\t\n\r]|&(?:#(?:0*(?:9|1[03])|x0*[AD]);?|(?:tab|newline);))*(?:p|&#(?:x0*[57]0|0*(?:112|80));)(?:[\t\n\r]|&(?:#(?:0*(?:9|1[03])|x0*[AD]);?|(?:tab|newline);))*(?:t|&#(?:x0*[57]4|0*(?:116|84));)(?:[\t\n\r]|&(?:#(?:0*(?:9|1[03])|x0*[AD]);?|(?:tab|newline);))*(?::|&(?:#(?:0*58|x0*3A);?|colon;)).
   phase: 2
-  severity: '''CRITICAL'''
+  severity: CRITICAL
   block: true
   transforms:
     - none
@@ -243,7 +243,7 @@
   variable: REQUEST_COOKIES|REQUEST_COOKIES_NAMES|ARGS_NAMES|ARGS|REQUEST_FILENAME|XML:/*
   regex: (?i)<EMBED[\s/+].*?(?:src|type).*?=
   phase: 2
-  severity: '''CRITICAL'''
+  severity: CRITICAL
   block: true
   transforms:
     - none
@@ -268,7 +268,7 @@
   variable: REQUEST_COOKIES|REQUEST_COOKIES_NAMES|ARGS_NAMES|ARGS|REQUEST_FILENAME|XML:/*
   regex: <[?]?import[\s/+\S]*?implementation[\s/+]*?=
   phase: 2
-  severity: '''CRITICAL'''
+  severity: CRITICAL
   block: true
   transforms:
     - none
@@ -294,7 +294,7 @@
   variable: REQUEST_COOKIES|REQUEST_COOKIES_NAMES|ARGS_NAMES|ARGS|REQUEST_FILENAME|XML:/*
   regex: (?i:<META[\s/+].*?charset[\s/+]*=)
   phase: 2
-  severity: '''CRITICAL'''
+  severity: CRITICAL
   block: true
   transforms:
     - none
@@ -319,7 +319,7 @@
   variable: REQUEST_COOKIES|REQUEST_COOKIES_NAMES|ARGS_NAMES|ARGS|REQUEST_FILENAME|XML:/*
   regex: (?i)<LINK[\s/+].*?href[\s/+]*=
   phase: 2
-  severity: '''CRITICAL'''
+  severity: CRITICAL
   block: true
   transforms:
     - none
@@ -344,7 +344,7 @@
   variable: REQUEST_COOKIES|REQUEST_COOKIES_NAMES|ARGS_NAMES|ARGS|REQUEST_FILENAME|XML:/*
   regex: (?i)<BASE[\s/+].*?href[\s/+]*=
   phase: 2
-  severity: '''CRITICAL'''
+  severity: CRITICAL
   block: true
   transforms:
     - none
@@ -369,7 +369,7 @@
   variable: REQUEST_COOKIES|REQUEST_COOKIES_NAMES|ARGS_NAMES|ARGS|REQUEST_FILENAME|XML:/*
   regex: (?i)<APPLET[\s/+>]
   phase: 2
-  severity: '''CRITICAL'''
+  severity: CRITICAL
   block: true
   transforms:
     - none
@@ -394,7 +394,7 @@
   variable: REQUEST_COOKIES|REQUEST_COOKIES_NAMES|ARGS_NAMES|ARGS|REQUEST_FILENAME|XML:/*
   regex: (?i)<OBJECT[\s/+].*?(?:type|codetype|classid|code|data)[\s/+]*=
   phase: 2
-  severity: '''CRITICAL'''
+  severity: CRITICAL
   block: true
   transforms:
     - none
@@ -419,7 +419,7 @@
   variable: REQUEST_COOKIES|REQUEST_COOKIES_NAMES|ARGS_NAMES|ARGS|REQUEST_FILENAME|XML:/*
   regex: \xbc[^\xbe>]*[\xbe>]|<[^\xbe]*\xbe
   phase: 2
-  severity: '''CRITICAL'''
+  severity: CRITICAL
   block: true
   transforms:
     - none
@@ -450,7 +450,7 @@
   variable: REQUEST_COOKIES|REQUEST_COOKIES_NAMES|ARGS_NAMES|ARGS|REQUEST_FILENAME|XML:/*
   regex: \+ADw-.*(?:\+AD4-|>)|<.*\+AD4-
   phase: 2
-  severity: '''CRITICAL'''
+  severity: CRITICAL
   block: true
   transforms:
     - none
@@ -472,7 +472,7 @@
   variable: REQUEST_COOKIES|REQUEST_COOKIES_NAMES|ARGS_NAMES|ARGS|REQUEST_FILENAME|XML:/*
   regex: '![!+ ]\[\]'
   phase: 2
-  severity: '''CRITICAL'''
+  severity: CRITICAL
   block: true
   transforms:
     - none
@@ -490,7 +490,7 @@
   variable: REQUEST_COOKIES|REQUEST_COOKIES_NAMES|ARGS|REQUEST_FILENAME|XML:/*
   regex: (?:self|document|this|top|window)\s*(?:/\*|[\[)]).+?(?:\]|\*/)
   phase: 2
-  severity: '''CRITICAL'''
+  severity: CRITICAL
   block: true
   transforms:
     - none
@@ -508,9 +508,9 @@
 - id: "941390"
   name: Javascript method detected
   variable: REQUEST_COOKIES|REQUEST_COOKIES_NAMES|ARGS_NAMES|ARGS|REQUEST_FILENAME|XML:/*
-  regex: (?i)\b(?:eval|set(?:timeout|interval)|new[\s\x0b]+Function|a(?:lert|tob)|btoa|(?:promp|impor)t|con(?:firm|sole\.(?:log|dir))|fetch)[\s\x0b]*[\(\{]
+  regex: (?i)\b(?:eval|set(?:timeout|interval)|new\s+Function|alert|confirm|prompt|fetch|atob|btoa|document\.write|innerHTML\s*=\s*["'<])
   phase: 2
-  severity: '''CRITICAL'''
+  severity: CRITICAL
   block: true
   transforms:
     - none
@@ -531,7 +531,7 @@
   variable: REQUEST_COOKIES|REQUEST_COOKIES_NAMES|ARGS_NAMES|ARGS|REQUEST_FILENAME|XML:/*
   regex: ((?:\[[^\]]*\][^.]*\.)|Reflect[^.]*\.).*(?:map|sort|apply)[^.]*\..*call[^`]*`.*`
   phase: 2
-  severity: '''CRITICAL'''
+  severity: CRITICAL
   block: true
   transforms:
     - none
@@ -549,9 +549,9 @@
 - id: "941101"
   name: XSS Attack Detected via libinjection
   variable: REQUEST_FILENAME|REQUEST_HEADERS:Referer
-  regex: (?i)(<script|onerror\s*=|onload\s*=|javascript:|alert\s*\()
+  regex: DETECT:XSS
   phase: 1
-  severity: '''CRITICAL'''
+  severity: CRITICAL
   block: true
   transforms:
     - none
@@ -576,7 +576,7 @@
   variable: REQUEST_COOKIES|REQUEST_COOKIES_NAMES|REQUEST_HEADERS:User-Agent|ARGS_NAMES|ARGS|REQUEST_FILENAME|XML:/*
   regex: (?i)\b(?:s(?:tyle|rc)|href)\b[\s\S]*?=
   phase: 2
-  severity: '''CRITICAL'''
+  severity: CRITICAL
   block: true
   transforms:
     - none
@@ -601,7 +601,7 @@
   variable: REQUEST_COOKIES|REQUEST_COOKIES_NAMES|ARGS_NAMES|ARGS|REQUEST_FILENAME|XML:/*
   regex: '@contains -->'
   phase: 2
-  severity: '''CRITICAL'''
+  severity: CRITICAL
   block: true
   transforms:
     - none
@@ -625,9 +625,9 @@
 - id: "941320"
   name: Possible XSS Attack Detected - HTML Tag Handler
   variable: REQUEST_COOKIES|!REQUEST_COOKIES:/_pk_ref/|REQUEST_COOKIES_NAMES|ARGS_NAMES|ARGS|REQUEST_FILENAME|XML:/*
-  regex: <(?:a|abbr|acronym|address|applet|area|audioscope|b|base|basefront|bdo|bgsound|big|blackface|blink|blockquote|body|bq|br|button|caption|center|cite|code|col|colgroup|comment|dd|del|dfn|dir|div|dl|dt|em|embed|fieldset|fn|font|form|frame|frameset|h1|head|hr|html|i|iframe|ilayer|img|input|ins|isindex|kdb|keygen|label|layer|legend|li|limittext|link|listing|map|marquee|menu|meta|multicol|nobr|noembed|noframes|noscript|nosmartquotes|object|ol|optgroup|option|p|param|plaintext|pre|q|rt|ruby|s|samp|script|select|server|shadow|sidebar|small|spacer|span|strike|strong|style|sub|sup|table|tbody|td|textarea|tfoot|th|thead|title|tr|tt|u|ul|var|wbr|xml|xmp)\W
+  regex: (?i)<(?:script|iframe|object|embed|svg)[^>]*>|on\w+\s*=
   phase: 2
-  severity: '''CRITICAL'''
+  severity: CRITICAL
   block: true
   transforms:
     - none
@@ -648,7 +648,7 @@
   variable: REQUEST_COOKIES|REQUEST_COOKIES_NAMES|ARGS_NAMES|ARGS|REQUEST_FILENAME|XML:/*
   regex: '{{.*?}}'
   phase: 2
-  severity: '''CRITICAL'''
+  severity: CRITICAL
   block: true
   transforms:
     - none

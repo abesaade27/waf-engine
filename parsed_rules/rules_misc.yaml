@@ -1,19 +1,19 @@
-# - id: "950010"
-#   name: ""
-#   variable: RESPONSE_HEADERS:Content-Encoding
-#   regex: (?i)(gzip|compress|deflate|br|zstd)
-#   phase: 4
-#   severity: ""
-#   block: false
-#   tags:
-#     - OWASP_CRS
-#     - OWASP_CRS/DATA-LEAKAGES
+- id: "950010"
+  name: ""
+  variable: RESPONSE_HEADERS:Content-Encoding
+  regex: PM:gzip,compress,deflate,br,zstd
+  phase: 4
+  severity: ""
+  block: false
+  tags:
+    - OWASP_CRS
+    - OWASP_CRS/DATA-LEAKAGES
 - id: "950130"
   name: Directory Listing
   variable: RESPONSE_BODY
   regex: (?:<(?:TITLE>Index of.*?<H|title>Index of.*?<h)1>Index of|>\[To Parent Directory\]</[Aa]><br>)
   phase: 4
-  severity: '''ERROR'''
+  severity: ERROR
   block: true
   transforms:
     - none
@@ -31,7 +31,7 @@
   variable: RESPONSE_BODY
   regex: ^#\!\s?/
   phase: 4
-  severity: '''ERROR'''
+  severity: ERROR
   block: true
   transforms:
     - none
@@ -49,7 +49,7 @@
   variable: RESPONSE_BODY
   regex: '@pmFromFile asp-dotnet-errors.data'
   phase: 4
-  severity: '''ERROR'''
+  severity: ERROR
   block: true
   transforms:
     - none
@@ -67,7 +67,7 @@
   variable: RESPONSE_STATUS
   regex: ^5\d{2}$
   phase: 3
-  severity: '''ERROR'''
+  severity: ERROR
   block: true
   transforms:
     - none
@@ -80,16 +80,16 @@
     - OWASP_CRS
     - OWASP_CRS/DATA-LEAKAGES
     - capec/1000/152
-# - id: "951010"
-#   name: ""
-#   variable: RESPONSE_HEADERS:Content-Encoding
-#   regex: (?i)(gzip|compress|deflate|br|zstd)
-#   phase: 4
-#   severity: ""
-#   block: false
-#   tags:
-#     - OWASP_CRS
-#     - OWASP_CRS/DATA-LEAKAGES-SQL
+- id: "951010"
+  name: ""
+  variable: RESPONSE_HEADERS:Content-Encoding
+  regex: PM:gzip,compress,deflate,br,zstd
+  phase: 4
+  severity: ""
+  block: false
+  tags:
+    - OWASP_CRS
+    - OWASP_CRS/DATA-LEAKAGES-SQL
 - id: "951100"
   name: ""
   variable: RESPONSE_BODY
@@ -112,7 +112,7 @@
   variable: RESPONSE_BODY
   regex: (?i:JET Database Engine|Access Database Engine|\[Microsoft\]\[ODBC Microsoft Access Driver\])
   phase: 4
-  severity: '''CRITICAL'''
+  severity: CRITICAL
   block: true
   transforms:
     - none
@@ -130,7 +130,7 @@
   variable: RESPONSE_BODY
   regex: '(?i)\bORA-[0-9][0-9][0-9][0-9][0-9]:|java\.sql\.SQLException|Oracle(?: erro|[^\(\)]{0,20}Drive)r|Warning.{1,10}o(?:ci_.{1,30}|ra_.{1,20})'
   phase: 4
-  severity: '''CRITICAL'''
+  severity: CRITICAL
   block: true
   transforms:
     - none
@@ -148,7 +148,7 @@
   variable: RESPONSE_BODY
   regex: (?i:DB2 SQL error:|\[IBM\]\[CLI Driver\]\[DB2/6000\]|CLI Driver.*DB2|DB2 SQL error|db2_\w+\()
   phase: 4
-  severity: '''CRITICAL'''
+  severity: CRITICAL
   block: true
   transforms:
     - none
@@ -166,7 +166,7 @@
   variable: RESPONSE_BODY
   regex: (?i:\[DM_QUERY_E_SYNTAX\]|has occurred in the vicinity of:)
   phase: 4
-  severity: '''CRITICAL'''
+  severity: CRITICAL
   block: true
   transforms:
     - none
@@ -184,7 +184,7 @@
   variable: RESPONSE_BODY
   regex: (?i)Dynamic SQL Error
   phase: 4
-  severity: '''CRITICAL'''
+  severity: CRITICAL
   block: true
   transforms:
     - none
@@ -202,7 +202,7 @@
   variable: RESPONSE_BODY
   regex: (?i)Exception (?:condition )?\d+\. Transaction rollback\.
   phase: 4
-  severity: '''CRITICAL'''
+  severity: CRITICAL
   block: true
   transforms:
     - none
@@ -220,7 +220,7 @@
   variable: RESPONSE_BODY
   regex: (?i)org\.hsqldb\.jdbc
   phase: 4
-  severity: '''CRITICAL'''
+  severity: CRITICAL
   block: true
   transforms:
     - none
@@ -238,7 +238,7 @@
   variable: RESPONSE_BODY
   regex: (?i:An illegal character has been found in the statement|com\.informix\.jdbc|Exception.*Informix)
   phase: 4
-  severity: '''CRITICAL'''
+  severity: CRITICAL
   block: true
   transforms:
     - none
@@ -256,7 +256,7 @@
   variable: RESPONSE_BODY
   regex: (?i:Warning.*ingres_|Ingres SQLSTATE|Ingres\W.*Driver)
   phase: 4
-  severity: '''CRITICAL'''
+  severity: CRITICAL
   block: true
   transforms:
     - none
@@ -274,7 +274,7 @@
   variable: RESPONSE_BODY
   regex: '(?i:<b>Warning</b>: ibase_|Unexpected end of command in statement)'
   phase: 4
-  severity: '''CRITICAL'''
+  severity: CRITICAL
   block: true
   transforms:
     - none
@@ -292,7 +292,7 @@
   variable: RESPONSE_BODY
   regex: (?i:SQL error.*POS[0-9]+.*|Warning.*maxdb.*)
   phase: 4
-  severity: '''CRITICAL'''
+  severity: CRITICAL
   block: true
   transforms:
     - none
@@ -310,7 +310,7 @@
   variable: RESPONSE_BODY
   regex: (?i)(?:System\.Data\.OleDb\.OleDbException|\[Microsoft\]\[ODBC SQL Server Driver\]|\[Macromedia\]\[SQLServer JDBC Driver\]|\[SqlException|System\.Data\.SqlClient\.SqlException|Unclosed quotation mark after the character string|'80040e14'|mssql_query\(\)|Microsoft OLE DB Provider for ODBC Drivers|Microsoft OLE DB Provider for SQL Server|Incorrect syntax near|Sintaxis incorrecta cerca de|Syntax error in string in query expression|Procedure or function '.{1,128}' expects parameter|Unclosed quotation mark before the character string|Syntax error .* in query expression|Data type mismatch in criteria expression\.|ADODB\.Field \(0x800A0BCD\)|the used select statements have different number of columns|OLE DB.*SQL Server|Warning.*mssql_.*|Driver.*SQL[ _-]*Server|Exception.*\WSystem\.Data\.SqlClient\.|Conversion failed when converting the varchar value .*? to data type int\.)
   phase: 4
-  severity: '''CRITICAL'''
+  severity: CRITICAL
   block: true
   transforms:
     - none
@@ -328,7 +328,7 @@
   variable: RESPONSE_BODY
   regex: '(?i)(?:supplied argument is not a valid |SQL syntax.*)MySQL|Column count doesn''t match(?: value count at row)?|mysql_fetch_array\(\)|on MySQL result index|You have an error in your SQL syntax(?:;| near)|MyS(?:QL server version for the right syntax to use|qlClient\.)|\[MySQL\]\[ODBC|(?:Table ''[^'']+'' doesn''t exis|valid MySQL resul)t|Warning.{1,10}mysql_(?:[\(\)_a-z]{1,26})?|(?:ERROR [0-9]{4} \([0-9a-z]{5}\)|XPATH syntax error):'
   phase: 4
-  severity: '''CRITICAL'''
+  severity: CRITICAL
   block: true
   transforms:
     - none
@@ -346,7 +346,7 @@
   variable: RESPONSE_BODY
   regex: '(?i)P(?:ostgreSQL(?: query failed:|.{1,20}ERROR)|G::[a-z]*Error)|(?:pg_(?:query|exec)\(\) \[|org\.postgresql\.util\.PSQLException):|Warning.{1,20}\bpg_.*|valid PostgreSQL result|Npgsql\.|Supplied argument is not a valid PostgreSQL .*? resource|(?:Unable to connect to PostgreSQL serv|invalid input syntax for integ)er'
   phase: 4
-  severity: '''CRITICAL'''
+  severity: CRITICAL
   block: true
   transforms:
     - none
@@ -364,7 +364,7 @@
   variable: RESPONSE_BODY
   regex: (?i)(?:Warning.*sqlite_|Warning.*SQLite3::|SQLite/JDBCDriver|SQLite\.Exception|System\.Data\.SQLite\.SQLiteException)
   phase: 4
-  severity: '''CRITICAL'''
+  severity: CRITICAL
   block: true
   transforms:
     - none
@@ -382,7 +382,7 @@
   variable: RESPONSE_BODY
   regex: (?i)(?:Sybase message:|Warning.{2,20}sybase|Sybase.*Server message)
   phase: 4
-  severity: '''CRITICAL'''
+  severity: CRITICAL
   block: true
   transforms:
     - none
@@ -395,32 +395,32 @@
     - OWASP_CRS
     - OWASP_CRS/DATA-LEAKAGES-SQL
     - capec/1000/118/116/54
-# - id: "952010"
-#   name: ""
-#   variable: RESPONSE_HEADERS:Content-Encoding
-#   regex: (?i)(gzip|compress|deflate|br|zstd)
-#   phase: 4
-#   severity: ""
-#   block: false
-#   tags:
-#     - OWASP_CRS
-#     - OWASP_CRS/DATA-LEAKAGES-JAVA
-# - id: "953010"
-#   name: ""
-#   variable: RESPONSE_HEADERS:Content-Encoding
-#   regex: (?i)(gzip|compress|deflate|br|zstd)
-#   phase: 4
-#   severity: ""
-#   block: false
-#   tags:
-#     - OWASP_CRS
-#     - OWASP_CRS/DATA-LEAKAGES-PHP
+- id: "952010"
+  name: ""
+  variable: RESPONSE_HEADERS:Content-Encoding
+  regex: PM:gzip,compress,deflate,br,zstd
+  phase: 4
+  severity: ""
+  block: false
+  tags:
+    - OWASP_CRS
+    - OWASP_CRS/DATA-LEAKAGES-JAVA
+- id: "953010"
+  name: ""
+  variable: RESPONSE_HEADERS:Content-Encoding
+  regex: PM:gzip,compress,deflate,br,zstd
+  phase: 4
+  severity: ""
+  block: false
+  tags:
+    - OWASP_CRS
+    - OWASP_CRS/DATA-LEAKAGES-PHP
 - id: "953100"
   name: PHP Information Leakage
   variable: RESPONSE_BODY
   regex: '@pmFromFile php-errors.data'
   phase: 4
-  severity: '''ERROR'''
+  severity: ERROR
   block: true
   transforms:
     - none
@@ -438,7 +438,7 @@
   variable: RESPONSE_BODY
   regex: (?:\b(?:f(?:tp_(?:nb_)?f?(?:ge|pu)t|get(?:s?s|c)|scanf|write|open|read)|gz(?:(?:encod|writ)e|compress|open|read)|s(?:ession_start|candir)|read(?:(?:gz)?file|dir)|move_uploaded_file|(?:proc_|bz)open|call_user_func)|\$_(?:(?:pos|ge)t|session))\b
   phase: 4
-  severity: '''ERROR'''
+  severity: ERROR
   block: true
   transforms:
     - none
@@ -456,7 +456,7 @@
   variable: RESPONSE_BODY
   regex: (?i)<\?(?:=|php)?\s+
   phase: 4
-  severity: '''ERROR'''
+  severity: ERROR
   block: true
   transforms:
     - none
@@ -474,7 +474,7 @@
   variable: RESPONSE_BODY
   regex: '@pmFromFile php-errors-pl2.data'
   phase: 4
-  severity: '''ERROR'''
+  severity: ERROR
   block: true
   transforms:
     - none
@@ -487,22 +487,22 @@
     - OWASP_CRS
     - OWASP_CRS/DATA-LEAKAGES-PHP
     - capec/1000/118/116
-# - id: "954010"
-#   name: ""
-#   variable: RESPONSE_HEADERS:Content-Encoding
-#   regex: (?i)(gzip|compress|deflate|br|zstd)
-#   phase: 4
-#   severity: ""
-#   block: false
-#   tags:
-#     - OWASP_CRS
-#     - OWASP_CRS/DATA-LEAKAGES-IIS
+- id: "954010"
+  name: ""
+  variable: RESPONSE_HEADERS:Content-Encoding
+  regex: PM:gzip,compress,deflate,br,zstd
+  phase: 4
+  severity: ""
+  block: false
+  tags:
+    - OWASP_CRS
+    - OWASP_CRS/DATA-LEAKAGES-IIS
 - id: "954100"
   name: Disclosure of IIS install location
   variable: RESPONSE_BODY
   regex: (?i)[a-z]:[\x5c/]inetpub\b
   phase: 4
-  severity: '''ERROR'''
+  severity: ERROR
   block: true
   transforms:
     - none
@@ -521,7 +521,7 @@
   variable: RESPONSE_BODY
   regex: '(?:Microsoft OLE DB Provider for SQL Server(?:</font>.{1,20}?error ''800(?:04005|40e31)''.{1,40}?Timeout expired| \(0x80040e31\)<br>Timeout expired<br>)|<h1>internal server error</h1>.*?<h2>part of the server has crashed or it has a configuration error\.</h2>|cannot connect to the server: timed out)'
   phase: 4
-  severity: '''ERROR'''
+  severity: ERROR
   block: true
   transforms:
     - none
@@ -540,7 +540,7 @@
   variable: RESPONSE_BODY
   regex: '@pmFromFile iis-errors.data'
   phase: 4
-  severity: '''ERROR'''
+  severity: ERROR
   block: true
   transforms:
     - none
@@ -559,7 +559,7 @@
   variable: RESPONSE_STATUS
   regex: '!@rx ^404$'
   phase: 4
-  severity: '''ERROR'''
+  severity: ERROR
   block: true
   transforms:
     - none
@@ -583,22 +583,22 @@
       block: false
       transforms:
         - none
-# - id: "955010"
-#   name: ""
-#   variable: RESPONSE_HEADERS:Content-Encoding
-#   regex: (?i)(gzip|compress|deflate|br|zstd)
-#   phase: 4
-#   severity: ""
-#   block: false
-#   tags:
-#     - OWASP_CRS
-#     - OWASP_CRS/WEB-SHELLS
+- id: "955010"
+  name: ""
+  variable: RESPONSE_HEADERS:Content-Encoding
+  regex: PM:gzip,compress,deflate,br,zstd
+  phase: 4
+  severity: ""
+  block: false
+  tags:
+    - OWASP_CRS
+    - OWASP_CRS/WEB-SHELLS
 - id: "955100"
   name: PHP Web shell detected
   variable: RESPONSE_BODY
   regex: '@pmFromFile web-shells-php.data'
   phase: 4
-  severity: '''CRITICAL'''
+  severity: CRITICAL
   block: true
   transforms:
     - none
@@ -615,7 +615,7 @@
   variable: RESPONSE_BODY
   regex: <title>r57 Shell Version [0-9.]+</title>|<title>r57 shell</title>
   phase: 4
-  severity: '''CRITICAL'''
+  severity: CRITICAL
   block: true
   transforms:
     - none
@@ -632,7 +632,7 @@
   variable: RESPONSE_BODY
   regex: '^<html><head><meta http-equiv=''Content-Type'' content=''text/html; charset=(?:Windows-1251|UTF-8)?''><title>.*?(?: -)? W[Ss][Oo] [0-9.]+</title>'
   phase: 4
-  severity: '''CRITICAL'''
+  severity: CRITICAL
   block: true
   transforms:
     - none
@@ -649,7 +649,7 @@
   variable: RESPONSE_BODY
   regex: B4TM4N SH3LL</title>[^<]*<meta name='author' content='k4mpr3t'/>
   phase: 4
-  severity: '''CRITICAL'''
+  severity: CRITICAL
   block: true
   transforms:
     - none
@@ -666,7 +666,7 @@
   variable: RESPONSE_BODY
   regex: <title>Mini Shell</title>[^D]*Developed By LameHacker
   phase: 4
-  severity: '''CRITICAL'''
+  severity: CRITICAL
   block: true
   transforms:
     - none
@@ -683,7 +683,7 @@
   variable: RESPONSE_BODY
   regex: '<title>\.:: [^~]*~ Ashiyane V [0-9.]+ ::\.</title>'
   phase: 4
-  severity: '''CRITICAL'''
+  severity: CRITICAL
   block: true
   transforms:
     - none
@@ -700,7 +700,7 @@
   variable: RESPONSE_BODY
   regex: <title>Symlink_Sa [0-9.]+</title>
   phase: 4
-  severity: '''CRITICAL'''
+  severity: CRITICAL
   block: true
   transforms:
     - none
@@ -717,7 +717,7 @@
   variable: RESPONSE_BODY
   regex: <title>CasuS [0-9.]+ by MafiABoY</title>
   phase: 4
-  severity: '''CRITICAL'''
+  severity: CRITICAL
   block: true
   transforms:
     - none
@@ -732,9 +732,9 @@
 - id: "955180"
   name: GRP WebShell
   variable: RESPONSE_BODY
-  regex: '^<html>\r\n<head>\r\n<title>GRP WebShell [0-9.]+ '
+  regex: ^<html>\r\n<head>\r\n<title>GRP WebShell [0-9.]+
   phase: 4
-  severity: '''CRITICAL'''
+  severity: CRITICAL
   block: true
   transforms:
     - none
@@ -751,7 +751,7 @@
   variable: RESPONSE_BODY
   regex: <small>NGHshell [0-9.]+ by Cr4sh</body></html>\n$
   phase: 4
-  severity: '''CRITICAL'''
+  severity: CRITICAL
   block: true
   transforms:
     - none
@@ -766,9 +766,9 @@
 - id: "955200"
   name: SimAttacker web shell
   variable: RESPONSE_BODY
-  regex: '<title>SimAttacker - (?:Version|Vrsion) : [0-9.]+ - '
+  regex: '<title>SimAttacker - (?:Version|Vrsion) : [0-9.]+ -'
   phase: 4
-  severity: '''CRITICAL'''
+  severity: CRITICAL
   block: true
   transforms:
     - none
@@ -785,7 +785,7 @@
   variable: RESPONSE_BODY
   regex: ^<!DOCTYPE html>\n<html>\n<!-- By Artyum [^<]*<title>Web Shell</title>
   phase: 4
-  severity: '''CRITICAL'''
+  severity: CRITICAL
   block: true
   transforms:
     - none
@@ -802,7 +802,7 @@
   variable: RESPONSE_BODY
   regex: <title>lama's'hell v. [0-9.]+</title>
   phase: 4
-  severity: '''CRITICAL'''
+  severity: CRITICAL
   block: true
   transforms:
     - none
@@ -817,9 +817,9 @@
 - id: "955230"
   name: lostDC web shell
   variable: RESPONSE_BODY
-  regex: '^ *<html>\n[ ]+<head>\n[ ]+<title>lostDC - '
+  regex: ^ *<html>\n[ ]+<head>\n[ ]+<title>lostDC -
   phase: 4
-  severity: '''CRITICAL'''
+  severity: CRITICAL
   block: true
   transforms:
     - none
@@ -836,7 +836,7 @@
   variable: RESPONSE_BODY
   regex: ^<title>PHP Web Shell</title>\r\n<html>\r\n<body>\r\n    <!-- Replaces command with Base64-encoded Data -->
   phase: 4
-  severity: '''CRITICAL'''
+  severity: CRITICAL
   block: true
   transforms:
     - none
@@ -851,9 +851,9 @@
 - id: "955260"
   name: Ru24PostWebShell web shell
   variable: RESPONSE_BODY
-  regex: '^<html>\n<head>\n<title>Ru24PostWebShell '
+  regex: ^<html>\n<head>\n<title>Ru24PostWebShell
   phase: 4
-  severity: '''CRITICAL'''
+  severity: CRITICAL
   block: true
   transforms:
     - none
@@ -870,7 +870,7 @@
   variable: RESPONSE_BODY
   regex: <title>s72 Shell v[0-9.]+ Codinf by Cr@zy_King</title>
   phase: 4
-  severity: '''CRITICAL'''
+  severity: CRITICAL
   block: true
   transforms:
     - none
@@ -885,9 +885,9 @@
 - id: "955290"
   name: g00nshell web shell
   variable: RESPONSE_BODY
-  regex: '^ <html>\n\n<head>\n\n<title>g00nshell v[0-9.]+ '
+  regex: ^ <html>\n\n<head>\n\n<title>g00nshell v[0-9.]+
   phase: 4
-  severity: '''CRITICAL'''
+  severity: CRITICAL
   block: true
   transforms:
     - none
@@ -904,7 +904,7 @@
   variable: RESPONSE_BODY
   regex: '@contains <title>punkholicshell</title>'
   phase: 4
-  severity: '''CRITICAL'''
+  severity: CRITICAL
   block: true
   transforms:
     - none
@@ -923,7 +923,7 @@
   variable: RESPONSE_BODY
   regex: ^<html>\n      <head>\n             <title>azrail [0-9.]+ by C-W-M</title>
   phase: 4
-  severity: '''CRITICAL'''
+  severity: CRITICAL
   block: true
   transforms:
     - none
@@ -940,7 +940,7 @@
   variable: RESPONSE_BODY
   regex: '>SmEvK_PaThAn Shell v[0-9]+ coded by <a href='
   phase: 4
-  severity: '''CRITICAL'''
+  severity: CRITICAL
   block: true
   transforms:
     - none
@@ -957,7 +957,7 @@
   variable: RESPONSE_BODY
   regex: ^<html>\n<title>[^~]*~ Shell I</title>\n<head>\n<style>
   phase: 4
-  severity: '''CRITICAL'''
+  severity: CRITICAL
   block: true
   transforms:
     - none
@@ -974,7 +974,7 @@
   variable: RESPONSE_BODY
   regex: '^ <html><head><title>:: b374k m1n1 [0-9.]+ ::</title>'
   phase: 4
-  severity: '''CRITICAL'''
+  severity: CRITICAL
   block: true
   transforms:
     - none
@@ -991,7 +991,7 @@
   variable: RESPONSE_BODY
   regex: '@pmFromFile web-shells-asp.data'
   phase: 4
-  severity: '''CRITICAL'''
+  severity: CRITICAL
   block: true
   transforms:
     - none
@@ -1003,22 +1003,22 @@
     - OWASP_CRS
     - OWASP_CRS/WEB-SHELLS
     - capec/1000/225/122/17/650
-# - id: "956010"
-#   name: ""
-#   variable: RESPONSE_HEADERS:Content-Encoding
-#   regex: (?i)(gzip|compress|deflate|br|zstd)
-#   phase: 4
-#   severity: ""
-#   block: false
-#   tags:
-#     - OWASP_CRS
-#     - OWASP_CRS/DATA-LEAKAGES-RUBY
+- id: "956010"
+  name: ""
+  variable: RESPONSE_HEADERS:Content-Encoding
+  regex: PM:gzip,compress,deflate,br,zstd
+  phase: 4
+  severity: ""
+  block: false
+  tags:
+    - OWASP_CRS
+    - OWASP_CRS/DATA-LEAKAGES-RUBY
 - id: "956100"
   name: RUBY Information Leakage
   variable: RESPONSE_BODY
   regex: '@pmFromFile ruby-errors.data'
   phase: 4
-  severity: '''ERROR'''
+  severity: ERROR
   block: true
   transforms:
     - none
@@ -1036,7 +1036,7 @@
   variable: RESPONSE_BODY
   regex: (?i)(?:<%=?\s+|#\{[^}]*\})
   phase: 4
-  severity: '''ERROR'''
+  severity: ERROR
   block: true
   transforms:
     - none

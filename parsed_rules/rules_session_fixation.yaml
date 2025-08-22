@@ -3,7 +3,7 @@
   variable: REQUEST_COOKIES|REQUEST_COOKIES_NAMES|ARGS_NAMES|ARGS|XML:/*
   regex: (?i:\.cookie\b.*?;\W*?(?:expires|domain)\W*?=|\bhttp-equiv\W+set-cookie\b)
   phase: 2
-  severity: '''CRITICAL'''
+  severity: CRITICAL
   block: true
   transforms:
     - none
@@ -22,7 +22,7 @@
   variable: ARGS_NAMES
   regex: ^(?:jsessionid|aspsessionid|asp\.net_sessionid|phpsession|phpsessid|weblogicsession|session_id|session-id|sessionid|cfid|cftoken|cfsid|jservsession|jwsession|_flask_session|_session_id|connect\.sid|laravel_session)$
   phase: 2
-  severity: '''CRITICAL'''
+  severity: CRITICAL
   block: true
   transforms:
     - none
@@ -50,7 +50,7 @@
           variable: ARGS_NAMES
           regex: ^(?:jsessionid|aspsessionid|asp\.net_sessionid|phpsession|phpsessid|weblogicsession|session_id|session-id|sessionid|cfid|cftoken|cfsid|jservsession|jwsession|_flask_session|_session_id|connect\.sid|laravel_session)$
           phase: 2
-          severity: '''CRITICAL'''
+          severity: CRITICAL
           block: true
           transforms:
             - none
