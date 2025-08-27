@@ -21,7 +21,9 @@ Clone this repository:
 ```bash
 git clone https://github.com/abesaade27/waf-engine
 cd waf-engine
+```
+---
+Go to waf.go file and click on run without debugging, running any other file will give launch.json error.
 
-go to waf.go file and click on run without debugging
-
-The cwaf will start running on 127.0.0.1:9000
+The waf will start running on 127.0.0.1:9000
+---
