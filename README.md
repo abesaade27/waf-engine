@@ -10,7 +10,6 @@ It is built to work in combination with a reverse proxy (e.g., Nginx, Envoy, or 
 - Normalizes and inspects HTTP requests.
 - Detects malicious patterns (SQLi, XSS, etc.).
 - Returns **allow** or **block** decisions to the reverse proxy.
-- Can run as a standalone service (Flask API).
 
 ---
 
