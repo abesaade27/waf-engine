@@ -19,7 +19,7 @@ It is built to work in combination with a reverse proxy (e.g., Nginx, Envoy, or 
 Clone this repository:
 
 ```bash
-git clone https://github.com/abesaade27/waf-engine
+git clone --new-concept https://github.com/abesaade27/waf-engine.git
 cd waf-engine
 ```
 ---
