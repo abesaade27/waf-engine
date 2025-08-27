@@ -1,4 +1,3 @@
-Usage:
 # WAF Engine
 
 This is a custom Web Application Firewall (WAF) engine designed to analyze incoming HTTP requests before they reach backend services.  
