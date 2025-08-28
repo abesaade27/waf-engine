@@ -1,10 +1,8 @@
 package main
 
 import (
-	"bytes"
 	"encoding/json"
 	"fmt"
-	"io"
 	"net/http"
 	"net/url"
 	"strings"
@@ -129,61 +127,44 @@ func (e *Evaluator) InspectPhases(req *Request) (Decision, []utils.MatchedRuleLo
 func HTTPHandler(eval *Evaluator) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		fmt.Println("\n================ New Request ================")
-		method, _, _, _, _ := utils.NormalizeHTTP(r)
+
+		// ✅ Use updated NormalizeHTTP (handles raw + JSON)
+		method, headers, body := utils.NormalizeHTTP(r)
 		fmt.Printf("🔹 [DEBUG] HTTPHandler received %s %s\n", method, r.RequestURI)
 
 		req := &Request{
 			Method:       method,
 			Path:         r.RequestURI,
 			Query:        make(map[string][]string),
-			Headers:      make(map[string]string),
-			Body:         make(map[string]any),
+			Headers:      headers,
+			Body:         body, // only raw + JSON here
 			FlattenCache: make(map[string][]string),
 		}
 
-		// Query parameters
+		// ✅ Flatten normalized body
+		req.FlattenCache["REQUEST_BODY"] = []string{utils.FlattenJSON(body)}
+
+		// ✅ Query parameters (only in Query + FlattenCache, not in Body)
 		qParams, _ := url.ParseQuery(r.URL.RawQuery)
 		for k, v := range qParams {
 			req.Query[k] = v
-			req.Body[k] = strings.Join(v, ",")
 			req.FlattenCache["ARGS:"+k] = v
 			fmt.Printf("   ↪ Parsed query param %s=%v\n", k, v)
 		}
 
-		// Body
-		if r.Method == http.MethodPost || r.Method == http.MethodPut {
-			bodyBytes, _ := io.ReadAll(r.Body)
-			r.Body.Close()
-			r.Body = io.NopCloser(bytes.NewBuffer(bodyBytes))
-			req.Body["_raw"] = string(bodyBytes)
-			req.FlattenCache["REQUEST_BODY"] = []string{string(bodyBytes)}
-			fmt.Printf("   📦 Raw body: %s\n", string(bodyBytes))
-
-			_ = r.ParseForm()
-			for k, v := range r.PostForm {
-				req.Query[k] = v
-				req.FlattenCache["ARGS:"+k] = v
-				fmt.Printf("   ↪ Parsed form field %s=%v\n", k, v)
-			}
+		// ✅ Headers
+		for k, v := range headers {
+			req.FlattenCache["REQUEST_HEADERS:"+k] = []string{v}
+			fmt.Printf("   ↪ Header %s=%s\n", k, v)
 		}
 
-		// Headers
-		for k, v := range r.Header {
-			if len(v) > 0 {
-				req.Headers[strings.ToLower(k)] = v[0]
-				req.FlattenCache["REQUEST_HEADERS:"+strings.ToLower(k)] = []string{v[0]}
-				fmt.Printf("   ↪ Header %s=%s\n", strings.ToLower(k), v[0])
-			}
-		}
-
-		// Cookies
+		// ✅ Cookies
 		for _, c := range r.Cookies() {
-			req.Body["REQUEST_COOKIES:"+c.Name] = c.Value
 			req.FlattenCache["REQUEST_COOKIES:"+c.Name] = []string{c.Value}
 			fmt.Printf("   🍪 Cookie %s=%s\n", c.Name, c.Value)
 		}
 
-		// Request URI
+		// ✅ Request URI
 		req.FlattenCache["REQUEST_URI"] = []string{req.Path}
 		fmt.Printf("   🌐 Request URI stored: %s\n", req.Path)
 
@@ -200,14 +181,13 @@ func HTTPHandler(eval *Evaluator) http.Handler {
 			dec.Block,
 		)
 
-		// Build JSON response (no matchedRules array anymore)
+		// Build JSON response
 		resp := WAFResponse{
 			Decision: func() string {
 				if dec.Block {
 					return "block"
-				} else {
-					return "allow"
 				}
+				return "allow"
 			}(),
 			Score:        dec.Score,
 			MatchedCount: len(matchedRules),
