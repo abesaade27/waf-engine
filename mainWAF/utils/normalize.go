@@ -6,54 +6,12 @@ import (
 	"fmt"
 	"io"
 	"mime"
-	"mime/multipart"
 	"net/http"
 	"net/url"
 	"strings"
+
+	"golang.org/x/text/unicode/norm"
 )
-
-// ----------------------------
-// FlattenJSON: converts nested JSON into a flat string for regex matching
-// ----------------------------
-// ----------------------------
-// FlattenJSON: converts nested JSON into a flat string for regex matching
-// ----------------------------
-func FlattenJSON(data any) string {
-	switch v := data.(type) {
-	case map[string]any:
-		parts := []string{}
-		fmt.Println("FlattenJSON: entering map =>", v)
-		for key, val := range v {
-			flattened := FlattenJSON(val)
-			kv := key + "=" + flattened
-			fmt.Println("FlattenJSON: map entry =>", kv)
-			parts = append(parts, kv)
-		}
-		joined := strings.Join(parts, "&")
-		fmt.Println("FlattenJSON: map joined =>", joined)
-		return joined
-
-	case []any:
-		parts := []string{}
-		fmt.Println("FlattenJSON: entering slice =>", v)
-		for _, val := range v {
-			flattened := FlattenJSON(val)
-			fmt.Println("FlattenJSON: slice element =>", flattened)
-			parts = append(parts, flattened)
-		}
-		joined := strings.Join(parts, ",")
-		fmt.Println("FlattenJSON: slice joined =>", joined)
-		return joined
-
-	case string:
-		fmt.Println("FlattenJSON: string =>", v)
-		return v
-
-	default:
-		fmt.Println("FlattenJSON: unknown type =>", v)
-		return ""
-	}
-}
 
 // ----------------------------
 // Helper: lowerKeys converts all map keys to lowercase
@@ -67,33 +25,70 @@ func lowerKeys(in map[string]string) map[string]string {
 }
 
 // ----------------------------
+// RecursiveUnescape decodes repeatedly until stable (max 5 iterations to prevent loops)
+// ----------------------------
+func RecursiveUnescape(input string) string {
+	prev := input
+	for i := 0; i < 5; i++ {
+		decoded, err := url.QueryUnescape(prev)
+		if err != nil || decoded == prev {
+			break
+		}
+		prev = decoded
+	}
+	return prev
+}
+
+// ----------------------------
+// NormalizeUnicode canonicalizes Unicode into NFKC form
+// ----------------------------
+func NormalizeUnicode(input string) string {
+	return norm.NFKC.String(input)
+}
+
+// ----------------------------
+// ReplaceHomoglyphs maps common full-width ASCII characters to normal ASCII
+// ----------------------------
+func ReplaceHomoglyphs(input string) string {
+	out := []rune{}
+	for _, r := range input {
+		// full-width ASCII range U+FF01–U+FF5E
+		if r >= 0xFF01 && r <= 0xFF5E {
+			r = rune(r - 0xFEE0)
+		}
+		out = append(out, r)
+	}
+	return string(out)
+}
+
+// ----------------------------
+// Canonicalize applies full normalization pipeline
+// ----------------------------
+func Canonicalize(input string) string {
+	s := RecursiveUnescape(input)
+	s = NormalizeUnicode(s)
+	s = ReplaceHomoglyphs(s)
+	return s
+}
+
+// ----------------------------
 // NormalizeHTTP: fully normalizes HTTP requests for WAF inspection
 // ----------------------------
-func NormalizeHTTP(r *http.Request) (method, path string, query map[string][]string, headers map[string]string, body map[string]any) {
+// ----------------------------
+// NormalizeHTTP: fully normalizes HTTP requests for WAF inspection
+// ----------------------------
+func NormalizeHTTP(r *http.Request) (method string, headers map[string]string, body map[string]any) {
 	method = r.Method
 
-	// Decode URL path
-	path, _ = url.PathUnescape(r.URL.Path)
-
-	// Decode query parameters
-	query = make(map[string][]string)
-	for k, vals := range r.URL.Query() {
-		key, _ := url.QueryUnescape(k)
-		for _, v := range vals {
-			val, _ := url.QueryUnescape(v)
-			query[key] = append(query[key], val)
-		}
-	}
-
-	// Normalize headers
+	// ✅ Normalize headers (raw + JSON detection)
 	headers = make(map[string]string, len(r.Header))
 	for k, v := range r.Header {
 		if len(v) > 0 {
-			headers[strings.ToLower(k)] = v[0]
+			headers[strings.ToLower(k)] = Canonicalize(v[0])
 		}
 	}
 
-	// Initialize body map
+	// ✅ Initialize body map
 	body = map[string]any{}
 
 	if r.Body != nil {
@@ -110,44 +105,20 @@ func NormalizeHTTP(r *http.Request) (method, path string, query map[string][]str
 		r.Body = io.NopCloser(bytes.NewBuffer(raw))
 
 		ct := strings.ToLower(r.Header.Get("Content-Type"))
-		mediaType, params, _ := mime.ParseMediaType(ct)
+		mediaType, _, _ := mime.ParseMediaType(ct)
 
-		switch mediaType {
-		case "application/json":
-			_ = json.Unmarshal(raw, &body)
-
-		case "application/x-www-form-urlencoded":
-			values, _ := url.ParseQuery(string(raw))
-			if len(values) > 0 {
-				for k, vals := range values {
-					body[k] = vals
-				}
-			} else {
-				// 🚨 fallback: decode raw fully
-				decoded, _ := url.QueryUnescape(string(raw))
-				body["raw"] = decoded
-			}
-
-		case "multipart/form-data":
-			boundary := params["boundary"]
-			if boundary != "" {
-				mr := multipart.NewReader(bytes.NewReader(raw), boundary)
-				form, _ := mr.ReadForm(1 << 20) // 1MB max memory
-				for k, vals := range form.Value {
-					body[k] = vals
-				}
-			}
-
-		default:
-			body["raw"] = string(raw)
+		if strings.Contains(mediaType, "json") {
+			// ✅ Handle JSON body
+			body = NormalizeOrSalvageJSON(raw)
+		} else {
+			// ✅ Fallback: treat as raw text body
+			body["raw"] = Canonicalize(string(raw))
 		}
 	}
 
-	// Print everything after normalization
+	// ✅ Debug print
 	fmt.Println("=== Normalized Request ===")
 	fmt.Println("Method:", method)
-	fmt.Println("Path:", path)
-	fmt.Println("Query:", query)
 	fmt.Println("Headers:", headers)
 	fmt.Println("Body:", body)
 
@@ -163,43 +134,80 @@ type Ingest struct {
 	Query   map[string][]string `json:"query"`
 	Path    string              `json:"path"`
 	Method  string              `json:"method"`
+	RawBody []byte
 }
 
 // ----------------------------
 // NormalizeIngest: normalizes ingested JSON events for WAF inspection
 // ----------------------------
-func NormalizeIngest(i *Ingest) (method, path string, query map[string][]string, headers map[string]string, body map[string]any, flatBody string) {
+func NormalizeIngest(i *Ingest) (
+	method string,
+	path string,
+	query map[string][]string,
+	headers map[string]string,
+	body map[string]any,
+	flatBody string,
+) {
 	// Default method to POST if not provided
 	method = i.Method
 	if method == "" {
 		method = "POST"
 	}
 
-	// Lowercase headers
+	// Lowercase + canonicalize headers
 	headers = lowerKeys(i.Headers)
+	for k, v := range headers {
+		headers[k] = Canonicalize(v)
+	}
 
-	// Copy path and query (with URL decoding)
-	path = i.Path
+	// Canonicalize path
+	path = Canonicalize(i.Path)
+
+	// Copy + canonicalize query
 	query = make(map[string][]string, len(i.Query))
 	for k, vals := range i.Query {
-		key, _ := url.QueryUnescape(k)
+		key := Canonicalize(RecursiveUnescape(k))
 		for _, v := range vals {
-			val, _ := url.QueryUnescape(v)
+			val := Canonicalize(RecursiveUnescape(v))
 			query[key] = append(query[key], val)
 		}
 	}
 
 	// Copy body map
-	body = i.Body
+	body = map[string]any{}
+	for k, v := range i.Body {
+		// For string slices
+		if arr, ok := v.([]string); ok {
+			cVals := []string{}
+			for _, s := range arr {
+				cVals = append(cVals, Canonicalize(s))
+			}
+			body[Canonicalize(k)] = cVals
+			continue
+		}
+		// For direct strings
+		if s, ok := v.(string); ok {
+			body[Canonicalize(k)] = Canonicalize(s)
+			continue
+		}
+		// Fallback: keep as is
+		body[Canonicalize(k)] = v
+	}
 
 	// --- FIX: detect malformed ARGS (like single "a") and treat as raw ---
 	if len(body) == 1 {
 		for k, v := range body {
-			// If key has no '=' and value is empty slice, treat as raw
 			if vSlice, ok := v.([]any); ok && len(vSlice) == 0 {
-				body = map[string]any{"raw": k}
+				body = map[string]any{"raw": Canonicalize(k)}
 				break
 			}
+		}
+	}
+
+	// --- NEW: salvage fallback if JSON is broken ---
+	if ct, ok := headers["content-type"]; ok && strings.Contains(ct, "json") {
+		if len(i.RawBody) > 0 {
+			body = NormalizeOrSalvageJSON(i.RawBody)
 		}
 	}
 
@@ -216,4 +224,96 @@ func NormalizeIngest(i *Ingest) (method, path string, query map[string][]string,
 	fmt.Println("Flat Body (string):", flatBody)
 
 	return
+}
+
+// ----------------------------
+// FlattenJSON: converts nested JSON into a flat string for regex matching
+// ----------------------------
+func FlattenJSON(data any) string {
+	switch v := data.(type) {
+	case map[string]any:
+		parts := []string{}
+		for key, val := range v {
+			flattened := FlattenJSON(val)
+			kv := Canonicalize(key) + "=" + flattened
+			parts = append(parts, kv)
+		}
+		return strings.Join(parts, "&")
+
+	case []any:
+		parts := []string{}
+		for _, val := range v {
+			flattened := FlattenJSON(val)
+			parts = append(parts, flattened)
+		}
+		return strings.Join(parts, ",")
+
+	case string:
+		return Canonicalize(v)
+
+	// ✅ FIX: handle numbers
+	case float64, int, int64:
+		return fmt.Sprintf("%v", v)
+
+	// ✅ FIX: handle booleans
+	case bool:
+		return fmt.Sprintf("%t", v)
+
+	// ✅ FIX: handle null
+	case nil:
+		return "null"
+
+	default:
+		return fmt.Sprintf("%v", v) // fallback generic
+	}
+}
+
+// --- Helper: Normalize or salvage JSON body ---
+func NormalizeOrSalvageJSON(raw []byte) map[string]any {
+	result := map[string]any{}
+
+	tryDecode := func(data []byte) (map[string]any, bool) {
+		tmp := map[string]any{}
+		if err := json.Unmarshal(data, &tmp); err == nil {
+			return tmp, true
+		}
+		return nil, false
+	}
+
+	// ✅ 1. First attempt
+	if tmp, ok := tryDecode(raw); ok {
+		return canonicalizeMap(tmp)
+	}
+
+	// ✅ 2. Try unescaping + re-decode
+	unescaped := RecursiveUnescape(string(raw))
+	if tmp, ok := tryDecode([]byte(unescaped)); ok {
+		return canonicalizeMap(tmp)
+	}
+
+	// ✅ 3. Fallback salvage (raw + key:value split)
+	canonical := Canonicalize(unescaped)
+	result["raw"] = canonical
+
+	stripped := strings.Trim(canonical, "{} ")
+	for _, p := range strings.Split(stripped, ",") {
+		kv := strings.SplitN(p, ":", 2)
+		if len(kv) == 2 {
+			k := Canonicalize(strings.TrimSpace(kv[0]))
+			v := Canonicalize(strings.TrimSpace(kv[1]))
+			if k != "" && v != "" {
+				result[k] = v
+			}
+		}
+	}
+	return result
+}
+
+// ✅ Helper: canonicalize map keys + preserve structure
+func canonicalizeMap(in map[string]any) map[string]any {
+	out := make(map[string]any)
+	for k, v := range in {
+		out[Canonicalize(k)] = v // keep structure intact
+	}
+	return out
 }
